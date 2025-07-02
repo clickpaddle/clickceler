@@ -9,22 +9,21 @@ PORT = 65432
 
 prolog = Prolog()
 try:
-    success = prolog.consult('rules/rules.pl')
+    success = prolog.consult('../rules/rules.pl')
     print("Consult success:", success)
 except Exception as e:
     print("Erreur consult:", e)
-
-# Vérifie si critical_event/2 est bien défini
+# Validate critical_event/2 definition 
 for sol in prolog.query("current_predicate(critical_event/2)"):
     print("critical_event/2 existe dans la base.")
 
 events = []
-lock = threading.Lock()  # Pour l'accès concurrent
+lock = threading.Lock()  # Lock for multi-threading
 
 def format_prolog_dict(event):
     """
-    Convertit un dictionnaire Python en _{key:value, ...}.
-    Chaînes entourées de guillemets sauf pour les atomes connus.
+    Convert a Python Dictionary into en _{key:value, ...}.
+    Strings are wrapped with quotes execepted well-known atoms.
     """
     parts = []
     for key, value in event.items():
@@ -50,35 +49,35 @@ def add_event_to_prolog(event):
             print("Erreur : l'événement n'a pas de champ 'id'")
             return
 
-        # Retirer 'id' du dict
+        # remove 'id' of dict
         event_body = {k: v for k, v in event.items() if k != "id"}
         dict_str = format_prolog_dict(event_body)
         fact = f"event({eid}, {dict_str})"
 
         try:
             prolog.assertz(fact)
-            print(f"✅ Ajouté dans Prolog : {fact}")
+            print(f" Fact added in Prolog : {fact}")
 
-            # Vérification immédiate
+            # Validation
             result = list(prolog.query("event(ID, Evt)"))
             if result:
-                print(f"📌 Faits event/2 enregistrés : {len(result)}. Exemple : {result[0]}")
+                print(f"📌 Fact event/2 registered : {len(result)}. Exemple : {result[0]}")
             else:
-                print("⚠️ Aucun fait event/2 trouvé après insertion.")
+                print("⚠️ No fact event/2 found after registration.")
         except Exception as e:
-            print(f"❌ Erreur lors de l'insertion Prolog : {e}")
-            print(f"⛔ Fait problématique : {fact}")
+            print(f"❌ Insert error in Prolog : {e}")
+            print(f"⛔ Fact issue : {fact}")
 
 def execute_prolog_query(query_str):
     """
-    Exécute une query Prolog.
+    Execute a Prolog Query 
     """
     try:
         with lock:
             results = list(prolog.query(query_str))
             return True, results
     except Exception as e:
-        return False, f"Erreur Prolog : {str(e)}"
+        return False, f"Prolog error: {str(e)}"
 
 def process_message(message: str) -> str:
     if message.startswith("EVENT "):
@@ -88,16 +87,16 @@ def process_message(message: str) -> str:
             if isinstance(parsed, list):
                 for event in parsed:
                     if not isinstance(event, dict):
-                        return "ERROR: Chaque élément doit être un objet JSON"
+                        return "ERROR: Each event must be a JSON obect"
                     add_event_to_prolog(event)
-                return f"OK: {len(parsed)} événements ajoutés"
+                return f"OK: {len(parsed)} Event added"
             elif isinstance(parsed, dict):
                 add_event_to_prolog(parsed)
-                return "OK: 1 événement ajouté"
+                return "OK: 1 Event Added"
             else:
-                return "ERROR: JSON doit être un objet ou une liste d'objets"
+                return "ERROR: JSON x must object or list of objects"
         except json.JSONDecodeError:
-            return "ERROR: JSON invalide"
+            return "ERROR: JSON invalid"
 
     elif message.startswith("QUERY "):
         query_str = message[len("QUERY "):].strip()
@@ -111,7 +110,7 @@ def process_message(message: str) -> str:
             return f"ERROR: {results_or_error}"
 
     else:
-        return "ERROR: Commande inconnue, doit commencer par EVENT ou QUERY"
+        return "ERROR: Unknown Command,Must start with EVENT or QUERY"
 
 def handle_client(conn, addr):
     print(f"Connexion de {addr}")
@@ -122,7 +121,7 @@ def handle_client(conn, addr):
             while True:
                 data = conn.recv(1024)
                 if not data:
-                    print(f"Déconnexion de {addr}")
+                    print(f"Disconnect {addr}")
                     break
                 text = data.decode('utf-8')
                 lines = text.splitlines()
@@ -136,7 +135,7 @@ def handle_client(conn, addr):
                     else:
                         buffer_lines.append(line)
     except Exception as e:
-        print(f"Erreur avec client {addr}: {e}")
+        print(f"Error with client {addr}: {e}")
     finally:
         try:
             conn.shutdown(socket.SHUT_RDWR)
@@ -145,9 +144,9 @@ def handle_client(conn, addr):
         conn.close()
 
 def main():
-    print(f"🟢 Démarrage serveur sur {HOST}:{PORT}")
+    print(f"🟢 Starting server {HOST}:{PORT}")
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        # Pour relancer sans TIME_WAIT bloquant
+        # relaunch on blocking TIME_WAIT 
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         try:
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)

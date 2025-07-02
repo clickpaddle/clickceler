@@ -1,6 +1,6 @@
 import json
-from events.error_event import ErrorEvent
-from events.info_event import InfoEvent
+from classes.error_event import ErrorEvent
+from classes.info_event import InfoEvent
 
 def load_events_from_json(filename):
     with open(filename, "r", encoding="utf-8") as f:

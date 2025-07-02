@@ -1,13 +1,13 @@
-% Chargement des faits des événements (à inclure ou à charger dans ton environnement Prolog)
+%Load facts to be included into Prolog env.
 :- dynamic event/2.
 
-% Exemple de règle simple qui affiche les événements critiques
+% Rule showing critical events
 critical_event(Id, Message) :-
     event(Id, Event),
     get_dict(severity, Event, critical),
     get_dict(message, Event, Message).
 
-% Règle pour afficher les événements avec une sévérité donnée (insensible à la casse)
+% Rule to display event with a specific severity
 event_with_severity(Id, Type, Severity, Message) :-
     event(Id, Event),
     get_dict(severity, Event, Sev),
@@ -17,10 +17,24 @@ event_with_severity(Id, Type, Severity, Message) :-
     ( Type = error_event ; Type = info_event ),
     get_dict(type, Event, Type).
 
-% Règle pour lister tous les événements
-list_all_events :-
-    event(Id, Event),
-    format('Event ~w: ~w~n', [Id, Event]),
-    fail.
-list_all_events.
+
+load_facts(File) :-
+    consult(File).
+
+
+%  Reset critical severity events to major.
+reset_severity :-
+    % search critical events
+    event(Id, EventDict),
+    get_dict(severity, EventDict, critical),
+    % Remove event
+    retract(event(Id, EventDict)),
+    % Create anew Dict with the new severity set
+    UpdatedDict = EventDict.put(severity, major),
+    % ReCreate event with new severity
+    assert(event(Id, UpdatedDict)),
+    % continue la récursion
+    refine_severity.
+refine_severity.
+
 
