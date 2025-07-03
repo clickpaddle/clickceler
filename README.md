@@ -2,7 +2,7 @@
 
 ## Overview
 
-JollyClick is a simple educational implementation inspired by early expert systems for event management. Its goal is to help new generations understand how event-driven expert systems were designed and operated, using logic programming (Prolog) and rule-based reasoning.
+JollyClick is an early and simple educational implementation inspired by early expert systems for event management. Its goal is to help new generations understand how event-driven expert systems were designed and operated, using logic programming (Prolog) and rule-based reasoning.
 
 This project demonstrates the core concepts of:
 
@@ -11,7 +11,7 @@ This project demonstrates the core concepts of:
 - Using logic inference to reason on event data  
 - Handling concurrent event inputs and queries via a server-client architecture  
 
-It is not a production-ready system but a didactic tool to explore foundational ideas in expert systems and event management.
+It is not a production-ready system but a didactic tool to explore foundational ideas in expert systems and event or facts management.
 
 ## How It Works
 
