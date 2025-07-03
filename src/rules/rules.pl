@@ -34,7 +34,8 @@ reset_severity :-
     % ReCreate event with new severity
     assert(event(Id, UpdatedDict)),
     % continue la récursion
-    refine_severity.
-refine_severity.
+    reset_severity.
+    
+reset_severity.
 
 
