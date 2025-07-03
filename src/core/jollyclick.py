@@ -1,7 +1,6 @@
 import socket
 import threading
 import json
-import struct
 from pyswip import Prolog
 
 HOST = '127.0.0.1'
@@ -12,19 +11,14 @@ try:
     success = prolog.consult('../rules/rules.pl')
     print("Consult success:", success)
 except Exception as e:
-    print("Erreur consult:", e)
-# Validate critical_event/2 definition 
-for sol in prolog.query("current_predicate(critical_event/2)"):
-    print("critical_event/2 existe dans la base.")
+    print("Consult error:", e)
+
 
 events = []
-lock = threading.Lock()  # Lock for multi-threading
+lock = threading.Lock()
+event_counter = 1  # auto-incrementing ID
 
 def format_prolog_dict(event):
-    """
-    Convert a Python Dictionary into en _{key:value, ...}.
-    Strings are wrapped with quotes execepted well-known atoms.
-    """
     parts = []
     for key, value in event.items():
         if isinstance(value, str):
@@ -40,38 +34,23 @@ def format_prolog_dict(event):
     return "_{" + ", ".join(parts) + "}"
 
 def add_event_to_prolog(event):
-    """
-    Ajoute un fait Prolog sous la forme : event(ID, _{...}).
-    """
+    global event_counter
     with lock:
-        eid = event.get("id")
-        if eid is None:
-            print("Erreur : l'événement n'a pas de champ 'id'")
-            return
+        eid = event_counter
+        event_counter += 1
 
-        # remove 'id' of dict
         event_body = {k: v for k, v in event.items() if k != "id"}
         dict_str = format_prolog_dict(event_body)
         fact = f"event({eid}, {dict_str})"
 
         try:
             prolog.assertz(fact)
-            print(f" Fact added in Prolog : {fact}")
-
-            # Validation
-            result = list(prolog.query("event(ID, Evt)"))
-            if result:
-                print(f"📌 Fact event/2 registered : {len(result)}. Exemple : {result[0]}")
-            else:
-                print("⚠️ No fact event/2 found after registration.")
+            print(f"✅ Fact added to Prolog: {fact}")
         except Exception as e:
-            print(f"❌ Insert error in Prolog : {e}")
-            print(f"⛔ Fact issue : {fact}")
+            print(f"❌ Prolog insertion error: {e}")
+            print(f"⛔ Problematic fact: {fact}")
 
 def execute_prolog_query(query_str):
-    """
-    Execute a Prolog Query 
-    """
     try:
         with lock:
             results = list(prolog.query(query_str))
@@ -84,19 +63,18 @@ def process_message(message: str) -> str:
         json_part = message[len("EVENT "):].strip()
         try:
             parsed = json.loads(json_part)
-            if isinstance(parsed, list):
-                for event in parsed:
-                    if not isinstance(event, dict):
-                        return "ERROR: Each event must be a JSON obect"
-                    add_event_to_prolog(event)
-                return f"OK: {len(parsed)} Event added"
-            elif isinstance(parsed, dict):
-                add_event_to_prolog(parsed)
-                return "OK: 1 Event Added"
-            else:
-                return "ERROR: JSON x must object or list of objects"
-        except json.JSONDecodeError:
-            return "ERROR: JSON invalid"
+            if not isinstance(parsed, list):
+                return "ERROR: The event must be a JSON list of event objects"
+
+            for event in parsed:
+                if not isinstance(event, dict):
+                    return "ERROR: Each list element must be a JSON object"
+                add_event_to_prolog(event)
+
+            return f"OK: {len(parsed)} event(s) added"
+
+        except json.JSONDecodeError as e:
+            return f"ERROR: Invalid JSON: {str(e)}"
 
     elif message.startswith("QUERY "):
         query_str = message[len("QUERY "):].strip()
@@ -105,15 +83,15 @@ def process_message(message: str) -> str:
             if results_or_error:
                 return f"OK: {results_or_error}"
             else:
-                return "OK: Aucun résultat"
+                return "OK: No results"
         else:
             return f"ERROR: {results_or_error}"
 
     else:
-        return "ERROR: Unknown Command,Must start with EVENT or QUERY"
+        return "ERROR: Unknown command. Use EVENT or QUERY."
 
 def handle_client(conn, addr):
-    print(f"Connexion de {addr}")
+    print(f"Connection from {addr}")
     buffer_lines = []
 
     try:
@@ -121,7 +99,7 @@ def handle_client(conn, addr):
             while True:
                 data = conn.recv(1024)
                 if not data:
-                    print(f"Disconnect {addr}")
+                    print(f"Disconnection from {addr}")
                     break
                 text = data.decode('utf-8')
                 lines = text.splitlines()
@@ -144,15 +122,13 @@ def handle_client(conn, addr):
         conn.close()
 
 def main():
-    print(f"🟢 Starting server {HOST}:{PORT}")
+    print(f"🟢 Server started on {HOST}:{PORT}")
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        # relaunch on blocking TIME_WAIT 
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         try:
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
         except OSError:
-            pass  # Non dispo partout
-
+            pass
         s.bind((HOST, PORT))
         s.listen()
 

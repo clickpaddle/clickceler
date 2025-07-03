@@ -25,23 +25,23 @@ def main():
                 if not buffer_lines:
                     continue
                 query = '\n'.join(buffer_lines).strip()
-                message = f"QUERY {query}\n\n"  #  Double CR for the end of the query
+                message = f"QUERY {query}\n\n"  # Double CR to mark end of query
                 s.sendall(message.encode('utf-8'))
 
-                # Read Full Answer
+                # Read full response
                 response_chunks = []
                 while True:
                     chunk = s.recv(4096)
                     if not chunk:
                         break
                     response_chunks.append(chunk)
-                    # On suppose que la réponse se termine par \n
+                    # We assume the response ends with a newline character
                     if b'\n' in chunk:
                         break
                 response = b''.join(response_chunks).decode('utf-8').strip()
                 print("Server Answer:", response)
                 buffer_lines = []
-                break  
+                break
             else:
                 buffer_lines.append(line)
 
