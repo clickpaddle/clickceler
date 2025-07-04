@@ -26,7 +26,7 @@ def main():
                 if not buffer_lines:
                     continue
                 json_str = '\n'.join(buffer_lines)
-                message = f"EVENT {json_str}\n\n"  # Important: double \n to mark end
+                message = f"{json_str}\n\n"  # Important: double \n to mark end
                 try:
                     s.sendall(message.encode('utf-8'))
                     response = s.recv(4096).decode('utf-8').strip()
