@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -g -I/usr/lib/swi-prolog/include
+CFLAGS = -Wall -Wextra -g -O0 -I/usr/lib/swi-prolog/include
 LDFLAGS = -L/usr/lib/swi-prolog/lib -lswipl -lpthread
 
 TARGET = build/jollyclick
@@ -12,5 +12,5 @@ $(TARGET): $(SRC)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 clean:
-	rm -f build/jollyclick
+	rm -f $(TARGET)
 

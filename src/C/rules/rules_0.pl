@@ -1,13 +1,24 @@
-:- module(_, [thread_goal/1, assert_json_event/2]).
-:- use_module(library(http/json)).     % atom_json_dict/3
+:- module(rules_0, [thread_goal_0/1, assert_json_event/2, event/2, print_all_events/0]).
+:- use_module(library(http/json)).
 :- dynamic event/2.
 
-thread_goal(Id) :-
-    format("Thread ~w (rules_0) prêt !~n", [Id]).
+thread_goal_0(Id) :-
+    format("Thread ~w (rules_0) ready!~n", [Id]).
+
+print_all_events :-
+    with_mutex(event_update,
+        forall(event(Id, Event),
+        format("[rules_0] Event ~w: ~w~n", [Id, Event]))).
 
 assert_json_event(Id, JsonAtom) :-
-    catch(atom_json_dict(JsonAtom, D, []), E,
-          (print_message(error,E), fail)),
-    assertz(event(Id, D)),
-    format("T~w a ajouté : ~w~n", [Id, D]).
+    catch(atom_json_dict(JsonAtom, Events, []), E,
+          (print_message(error, E), fail)),
+    is_list(Events),
+    with_mutex(event_update,
+        forall(member(Event, Events),
+            ( assertz(event(Id, Event)),
+              format("[rules_0] Added event for ~w: ~w~n", [Id, Event])
+            ))
+    ),
+    print_all_events.
 

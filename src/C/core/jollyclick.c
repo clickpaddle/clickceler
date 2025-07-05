@@ -23,7 +23,9 @@ typedef struct {
 //Load rules for Prolog Thread 
 static int load_rules_for_thread(intptr_t tid, module_t *out_module) {
     char modname[32];
-    snprintf(modname, sizeof modname, "thread_%ld", (long)tid);
+    char thread_goal[32];
+    snprintf(modname, sizeof modname, "rules_%ld", (long)tid);
+    snprintf(thread_goal, sizeof thread_goal, "thread_goal_%ld", (long)tid);
     *out_module = PL_new_module(PL_new_atom(modname));
 
     char filename[64];
@@ -42,7 +44,7 @@ static int load_rules_for_thread(intptr_t tid, module_t *out_module) {
     }
 
     // Init Module 
-    predicate_t p = PL_predicate("thread_goal", 1, modname);
+    predicate_t p = PL_predicate(&thread_goal, 1, modname);
     term_t t = PL_new_term_ref(); PL_put_integer(t, (long)tid);
     (void)PL_call_predicate(*out_module, PL_Q_NORMAL, p, t);
 
@@ -116,7 +118,7 @@ void *event_collector_handler(void *arg) {
     return NULL;
 }
 
-// Thread to execute the clien_1 ruleset eules_1.pl
+// Thread to execute the client_1 ruleset rules_1.pl
 void *query_executor_handler(void *arg) {
     thread_arg_t *targ = (thread_arg_t *)arg;
     int sockfd = targ->sockfd;
@@ -139,43 +141,76 @@ void *query_executor_handler(void *arg) {
     char buffer[MAX_LINE];
     ssize_t nbytes;
 
-    printf("[Thread  Request  %ld] edy to receive queries Prolog.\n", logical_id);
+    printf("[Thread  Request  %ld] ready to receive queries Prolog.\n", logical_id);
     while ((nbytes = recv(sockfd, buffer, sizeof(buffer) - 1, 0)) > 0) {
         buffer[nbytes] = '\0';
         printf("[Thread Request %ld] Query received: %s\n", logical_id, buffer);
 
-        term_t goal = PL_new_term_ref();
-        // Converrt string in Prolog terms (goal)
-        if (!PL_chars_to_term(buffer, goal)) {
-            fprintf(stderr, "[Thread Request %ld] Error: ersing eror of the request '%s'.\n", logical_id, buffer);
-            send(sockfd, "Error: Invalid query format.\n", 28, 0);
-            continue;
-        }
+//--------------------------------------------------------------------------------------------------
 
-        // Execute query 
-        qid_t q = PL_open_query(mod, PL_Q_CATCH_EXCEPTION, goal, NULL);
-        if (PL_next_solution(q)) {
-            // at
-            send(sockfd, "Query successful.\n", 18, 0);
+char *execute_prolog_query_with_output(const char *query_str, atom_t module) {
+    // Step 1: Parse the predicate name from query_str
+    char predicate_name[256];
+    if (sscanf(query_str, "%255[^ (]", predicate_name) != 1) {
+        fprintf(stderr, "[ERROR] Could not parse predicate from: %s\n", query_str);
+        return NULL;
+    }
+
+    // Step 2: Construct goal: predicate_name(Var)
+    functor_t functor = PL_new_functor(PL_new_atom(predicate_name), 1);
+    term_t var = PL_new_term_ref();             // This will capture the result
+    term_t goal = PL_new_term_ref();            // This holds the full call: functor(var)
+    PL_cons_functor(goal, functor, var);        // goal = predicate_name(var)
+
+    // Step 3: Call Prolog
+    module_t mod = PL_new_module(module);
+    qid_t qid = PL_open_query(mod, PL_Q_CATCH_EXCEPTION, goal, NULL);
+
+    char *output = NULL;
+
+    if (PL_next_solution(qid)) {
+        // Extract result
+        char *str;
+        if (PL_get_chars(var, &str, CVT_WRITE | CVT_ALL | BUF_DISCARDABLE)) {
+            output = strdup(str);  // Copy result so it's safe to return
         } else {
-            term_t ex = PL_exception(q);
-            if (ex) {
-                char *ex_str = NULL;
-                if (PL_get_chars(ex, &ex_str, CVT_ALL)) {
-                    fprintf(stderr,"[Thread Request %ld] Prolog Error: %s\n", logical_id, ex_str);
-                    char response_buf[MAX_LINE];
-                    snprintf(response_buf, sizeof(response_buf), "Prolog Error: %s\n", ex_str);
-                    send(sockfd, response_buf, strlen(response_buf), 0);
-                } else {
-                    fprintf(stderr,"[Thread Request %ld] Prolog Error (non-stringifiable exception)\n", logical_id);
-                    send(sockfd, "Prolog Error (non-stringifiable exception)\n", 44, 0);
-                }
-            } else {
-                fprintf(stderr,"[Thread Request %ld] Query failed (no exception caught).\n", logical_id);
-                send(sockfd, "Query failed.\n", 14, 0);
-            }
+            fprintf(stderr, "[ERROR] Could not convert result to string.\n");
         }
-        PL_close_query(q);
+    } else {
+        // Query failed or exception
+        term_t ex = PL_exception(qid);
+        if (ex) {
+            char *err;
+            if (PL_get_chars(ex, &err, CVT_WRITE | CVT_ALL | BUF_DISCARDABLE)) {
+                fprintf(stderr, "[ERROR] Exception: %s\n", err);
+            }
+        } else {
+            fprintf(stderr, "[INFO] Query returned no results.\n");
+        }
+    }
+
+    PL_close_query(qid);
+    return output;  // Might be NULL on error
+}
+
+
+
+char *result = execute_prolog_query_with_output("get_all_my_events(J).", PL_new_atom("rules_1"));
+if (result) {
+    send(sockfd, result, strlen(result), 0);
+    free(result);
+} else {
+    send(sockfd, "Error: Could not retrieve results.\n", 35, 0);
+}
+
+
+
+
+//--------------------------------------------------------------------------------------------------
+
+
+
+
     }
 
     if (nbytes == 0)
@@ -193,7 +228,7 @@ void *severity_updater_thread(void *arg) {
     intptr_t logical_id = (intptr_t)arg; // ID 2 for this thread 
 
     if (!PL_thread_attach_engine(NULL)) {
-        fprintf(stderr, "[ERR] Severity Updater Thread %ld: PL_thread_attach_engine failed\n", logical_id);
+        fprintf(stderr, "[ERR] Severitviy Updater Thread %ld: PL_thread_attach_engine failed\n", logical_id);
         return NULL;
     }
 
@@ -274,6 +309,22 @@ int main(int argc, char **argv) {
         return 1;
     }
 
+/*
+    predicate_t pred = PL_predicate("mutex_create", 1, NULL);
+    term_t t0 = PL_new_term_refs(1);
+    PL_put_atom_chars(t0, "event_update");
+
+    qid_t q = PL_open_query(NULL, PL_Q_NORMAL, pred, t0);
+    int result = PL_next_solution(q);
+    PL_close_query(q);
+
+    if (!result) {
+        fprintf(stderr, "Failed to create mutex event_update or it already exists.\n");
+    } else {
+        printf("Mutex event_update created successfully.\n");
+    }
+
+*/
     // Launch thread internal rules (ID 2)
     pthread_t severity_pthread_id;
     if (pthread_create(&severity_pthread_id, NULL, severity_updater_thread, (void*)2) != 0) {
@@ -287,7 +338,7 @@ int main(int argc, char **argv) {
     int event_server_fd = setup_and_listen_server(SERVER_PORT_EVENTS);
     if (event_server_fd < 0) { PL_halt(1); }
 
-    // Luanch server and listen for external queries (ID  1)
+    // Launch server and listen for external queries (ID  1)
     int query_server_fd = setup_and_listen_server(SERVER_PORT_QUERIES);
     if (query_server_fd < 0) { close(event_server_fd); PL_halt(1); }
 
@@ -318,7 +369,7 @@ int main(int argc, char **argv) {
             if (!targ) { fprintf(stderr, "[ERR] malloc\n"); close(new_sock); continue; }
 
             targ->sockfd = new_sock;
-            targ->thread_logical_id = 0; // ID logique 0 pour le collecteur d'événements
+            targ->thread_logical_id = 0; // ID 0 for event collector 
 
             pthread_t tid;
             if (pthread_create(&tid, NULL, event_collector_handler, targ) != 0) {
@@ -328,7 +379,7 @@ int main(int argc, char **argv) {
                 continue;
             }
             pthread_detach(tid);
-            printf("[INFO] Nouvelle connexion sur le port événements (Collecteur #0)\n");
+            printf("[INFO] New connection for events(Collector #0)\n");
         }
 
         if (FD_ISSET(query_server_fd, &read_fds)) {
@@ -341,7 +392,7 @@ int main(int argc, char **argv) {
             if (!targ) { fprintf(stderr, "[ERR] malloc\n"); close(new_sock); continue; }
 
             targ->sockfd = new_sock;
-            targ->thread_logical_id = 1; // ID 1 for the client_1 
+            targ->thread_logical_id = 1; // ID 1 for the query collector 
 
             pthread_t tid;
             if (pthread_create(&tid, NULL, query_executor_handler, targ) != 0) {
@@ -351,7 +402,7 @@ int main(int argc, char **argv) {
                 continue;
             }
             pthread_detach(tid);
-            printf("[INFO] New connection for queries (Exécuteur #1)\n");
+            printf("[INFO] New connection for queries (Collector 1)\n");
         }
     }
 

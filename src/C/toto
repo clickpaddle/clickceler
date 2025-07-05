@@ -1,0 +1,40 @@
+:- module(thread_example, []).
+
+:- dynamic shared_fact/1.
+:- use_module(library(thread)).
+
+% mutex pour synchronisation
+:- mutex_create(facts_mutex).
+
+start :-
+    % lancer les 3 threads
+    thread_create(thread1, T1, []),
+    thread_create(thread2, T2, []),
+    thread_create(thread3, T3, []),
+
+    % attendre la fin des threads (optionnel ici)
+    thread_join(T1, _),
+    thread_join(T2, _),
+    thread_join(T3, _).
+
+% Thread 1 : ajoute initialement des faits
+thread1 :-
+    with_mutex(facts_mutex,
+        (assertz(shared_fact(foo)),
+         assertz(shared_fact(bar)),
+         format('Thread 1: facts asserted~n'))).
+
+% Thread 2 : ajoute un autre fait
+thread2 :-
+    sleep(1), % pour que thread1 ait fini
+    with_mutex(facts_mutex,
+        (assertz(shared_fact(baz)),
+         format('Thread 2: added fact baz~n'))).
+
+% Thread 3 : lit et affiche les faits
+thread3 :-
+    sleep(2), % pour que les autres aient fini
+    with_mutex(facts_mutex,
+        (findall(X, shared_fact(X), L),
+         format('Thread 3: facts read: ~w~n', [L]))).
+
