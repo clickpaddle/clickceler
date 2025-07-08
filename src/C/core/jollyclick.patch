@@ -1,0 +1,116 @@
+--- jollyclick.c	2025-07-07 10:00:00
++++ jollyclick.c	2025-07-07 10:30:00
+@@ -8,7 +8,6 @@
+ #include <sys/socket.h>
+ #include <sys/types.h>
+ #include <SWI-Prolog.h>
+-
+-#define SERVER_PORT_EVENTS 65432
+-#define SERVER_PORT_QUERIES 65433 // Nouveau port pour le client externe (requêtes)
++#define SERVER_PORT_EVENTS 65432
+ #define MAX_CLIENTS 10
+ #define MAX_LINE 8192
+@@ void *event_collector_handler(void *arg) {
+     printf("[Thread Collect %ld] ready to received JSON events JSON.\n", logical_id);
+     while ((nbytes = recv(sockfd, buffer, sizeof(buffer) - 1, 0)) > 0) {
+         buffer[nbytes] = '\0';
+-        printf("[Thread Collecte %ld] Reçu JSON: %s\n", logical_id, buffer);
+-
+-        term_t args = PL_new_term_refs(2);
+-        PL_put_integer(args, (long)logical_id);
+-        PL_put_atom_chars(args + 1, buffer);
+-
+-        qid_t q = PL_open_query(mod, PL_Q_CATCH_EXCEPTION, p_assert, args);
+-        if (!PL_next_solution(q)) {
+-            term_t ex = PL_exception(q);
+-            if (ex) {
+-                char *ex_str = NULL;
+-                if (PL_get_chars(ex, &ex_str, CVT_ALL)) {
+-                    fprintf(stderr,"[Thread Collecte %ld] Prolog Error: %s\n", logical_id, ex_str);
+-                } else {
+-                    fprintf(stderr,"[Thread Collecte %ld] Prolog Error (non-stringifiable exception)\n", logical_id);
+-                }
+-            }
+-        }
+-        PL_close_query(q);
++        if (strncmp(buffer, "EVENT ", 6) == 0) {
++            char *event_json = buffer + 6;
++            printf("[Thread Collecte %ld] Reçu EVENT: %s\n", logical_id, event_json);
++
++            term_t args = PL_new_term_refs(2);
++            PL_put_integer(args, (long)logical_id);
++            PL_put_atom_chars(args + 1, event_json);
++
++            qid_t q = PL_open_query(mod, PL_Q_CATCH_EXCEPTION, p_assert, args);
++            if (!PL_next_solution(q)) {
++                term_t ex = PL_exception(q);
++                if (ex) {
++                    char *ex_str = NULL;
++                    if (PL_get_chars(ex, &ex_str, CVT_ALL)) {
++                        fprintf(stderr,"[Thread Collecte %ld] Prolog Error: %s\n", logical_id, ex_str);
++                    } else {
++                        fprintf(stderr,"[Thread Collecte %ld] Prolog Error (non-stringifiable exception)\n", logical_id);
++                    }
++                }
++            }
++            PL_close_query(q);
++        } else if (strncmp(buffer, "QUERY ", 6) == 0) {
++            char *query_str = buffer + 6;
++            printf("[Thread Collecte %ld] Reçu QUERY: %s\n", logical_id, query_str);
++
++            char *result = execute_prolog_query_with_output(query_str, PL_new_atom(PL_module_name(mod)));
++            if (result) {
++                send(sockfd, result, strlen(result), 0);
++                free(result);
++            } else {
++                send(sockfd, "Error: Could not retrieve results.\n", 35, 0);
++            }
++        } else {
++            fprintf(stderr, "[Thread Collecte %ld] Reçu message inconnu (ni EVENT ni QUERY): %s\n", logical_id, buffer);
++        }
+     }
+@@ int main(int argc, char **argv) {
+-    // Launch server and listen for external queries (ID  1)
+-    int query_server_fd = setup_and_listen_server(SERVER_PORT_QUERIES);
+-    if (query_server_fd < 0) { close(event_server_fd); PL_halt(1); }
+-
+     // Loop to accept TCP connections 
+     while (1) {
+         fd_set read_fds;
+         FD_ZERO(&read_fds);
+         FD_SET(event_server_fd, &read_fds);
+-        FD_SET(query_server_fd, &read_fds);
+-
+-        int max_fd = (event_server_fd > query_server_fd) ? event_server_fd : query_server_fd;
++        int max_fd = event_server_fd;
+@@ while (1) {
+-        if (FD_ISSET(query_server_fd, &read_fds)) {
+-            struct sockaddr_in client_addr;
+-            socklen_t client_len = sizeof(client_addr);
+-            int new_sock = accept(query_server_fd, (struct sockaddr *)&client_addr, &client_len);
+-            if (new_sock < 0) { perror("[ERR] accept on query port"); continue; }
+-
+-            thread_arg_t *targ = malloc(sizeof(thread_arg_t));
+-            if (!targ) { fprintf(stderr, "[ERR] malloc\n"); close(new_sock); continue; }
+-
+-            targ->sockfd = new_sock;
+-            targ->thread_logical_id = 1; // ID 1 for the query collector 
+-
+-            pthread_t tid;
+-            if (pthread_create(&tid, NULL, query_executor_handler, targ) != 0) {
+-                perror("[ERR] pthread_create query_executor_handler");
+-                close(new_sock);
+-                free(targ);
+-                continue;
+-            }
+-            pthread_detach(tid);
+-            printf("[INFO] New connection for queries (Collector 1)\n");
+-        }
+     }
+ 
+     close(event_server_fd);
+-    close(query_server_fd);
+     PL_halt(0);
+     return 0;
+ }
+

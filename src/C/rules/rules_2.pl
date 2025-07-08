@@ -11,6 +11,7 @@ thread_goal_2(Id) :-
 update_event_severity :-
     catch(
         with_mutex(event_update,
+        (format(user_output, 'DEBUG[~w]: Thread ~w ACQUIRED mutex "~w". Asserting events...~n', [thread_self(), thread_self(), event_update]),
             forall(rules_0:event(Id, Dict0),
                    (
                        % only update if Dict0 is a dict
@@ -20,7 +21,8 @@ update_event_severity :-
                            rules_0:assertz(event(Id, Dict1))
                        ;   format("[rules_2] Skipped non-dict value: ~w~n", [Dict0])
                        )
-                   ))
+                   )),
+        format(user_output, 'DEBUG[~w]: Thread ~w finished asserting. Releasing mutex "~w".~n', [thread_self(), thread_self(), event_update])  )
         ),
         Error,
         (

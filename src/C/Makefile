@@ -1,9 +1,9 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -g -O0 -I/usr/lib/swi-prolog/include
-LDFLAGS = -L/usr/lib/swi-prolog/lib -lswipl -lpthread
+CFLAGS = -Wall -Wextra -g -O0 -I/usr/local/lib/swipl/include/ -w
+LDFLAGS = -L/usr/local/lib/swipl/lib/x86_64-linux/ -lswipl -lpthread
 
 TARGET = build/jollyclick
-SRC = core/jollyclick.c
+SRC = core/j1.c
 
 all: $(TARGET)
 
