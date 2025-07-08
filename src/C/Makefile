@@ -1,6 +1,8 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -g -O0 -I/usr/local/lib/swipl/include/ -w
-LDFLAGS = -L/usr/local/lib/swipl/lib/x86_64-linux/ -lswipl -lpthread
+#CFLAGS = -Wall -Wextra -g -O0 -I /usr/local/lib/swipl/include/ -w
+CFLAGS = -Wall -Wextra -g -O0 -I /usr/lib/swi-prolog/include/ -w
+#LDFLAGS = -L/usr/local/lib/swipl/lib/x86_64-linux/ -lswipl -lpthread
+LDFLAGS =  -lswipl -lpthread
 
 TARGET = build/jollyclick
 SRC = core/jollyclick.c

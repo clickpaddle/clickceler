@@ -1,9 +1,6 @@
-:- module(rules_2,
-          [ thread_goal_2/1,
-            update_event_severity/0
-          ]).
+:- module(rules_2, [ thread_goal_2/1, update_event_severity/0  ]).
 
-:- use_module(rules_0,[event/2]).  % for access to rules_0:event/2
+:- use_module(rules_1,[event/2]).  % for access to rules_0:event/2
 
 thread_goal_2(Id) :-
     format("[rules_2] Thread ~w is operational.~n", [Id]).
@@ -12,7 +9,7 @@ update_event_severity :-
     catch(
         with_mutex(event_update,
         (format(user_output, 'DEBUG[~w]: Thread ~w ACQUIRED mutex "~w". Asserting events...~n', [thread_self(), thread_self(), event_update]),
-            forall(rules_0:event(Id, Dict0),
+            forall(event(Id, Dict0),
                    (
                        % only update if Dict0 is a dict
                        ( is_dict(Dict0) ->
@@ -30,4 +27,7 @@ update_event_severity :-
             format("[rules_2] Error caught in update_event_severity.~n")
         )
     ).
+
+
+
 

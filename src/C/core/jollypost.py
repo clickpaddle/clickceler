@@ -38,7 +38,7 @@ def main():
             json_str = "\n".join(buffer_lines)
             message = f"EVENT {json_str}\n\n"
             print("Dernier message à envoyer :", message)
-            # s.sendall(message.encode('utf-8'))
+            s.sendall(message.encode('utf-8'))
 
 
 if __name__ == "__main__":
