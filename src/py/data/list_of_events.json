@@ -6,6 +6,7 @@
     "severity": "critical",
     "error_code": 507
   },
+
   {
     "type": "INFO",
     "message": "Backup completed",
@@ -13,6 +14,7 @@
     "severity": "ok",
     "source": "System Monitor"
   },
+
   {
     "type": "ERROR",
     "message": "CPU Overheat",

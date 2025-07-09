@@ -1,4 +1,6 @@
+#!/home/luc/python3/bin/python
 import socket
+
 
 HOST = '127.0.0.1'
 PORT = 65432
@@ -25,8 +27,9 @@ def main():
                 if not buffer_lines:
                     continue
                 query = '\n'.join(buffer_lines).strip()
-                message = f"QUERY {query}\n\n"  # Double CR to mark end of query
+                message = f"QUERY {query}"  # Double CR to mark end of query
                 s.sendall(message.encode('utf-8'))
+                #s.sendall(message)
 
                 # Read full response
                 response_chunks = []

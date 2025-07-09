@@ -1,6 +1,5 @@
 [
   {
-    "id": 1,
     "type": "ERROR",
     "message": "Disk full",
     "timestamp": "2025-07-01T12:34:56Z",
@@ -9,7 +8,6 @@
   },
 
   {
-    "id": 2,
     "type": "INFO",
     "message": "Backup completed",
     "timestamp": "2025-07-01T13:00:00Z",
@@ -18,7 +16,6 @@
   },
 
   {
-    "id": 3,
     "type": "ERROR",
     "message": "CPU Overheat",
     "timestamp": "2025-07-01T13:15:00Z",
