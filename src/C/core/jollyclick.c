@@ -291,8 +291,8 @@ void *per_client_thread(void *arg) {
 
   close(targ->sockfd);
   PL_thread_destroy_engine();
-  free(targ);
   fprintf(stderr, "[DEBUG] [Thread Per-Client %ld] Exiting per_client_thread.\n", targ->thread_logical_id);
+  free(targ);
   return NULL;
 }
 
