@@ -6,10 +6,11 @@ permissions:
   actions: write
 
 on:
-  push:
+  pull_request:
     branches:
-      - main
-  workflow_dispatch:
+      - main          
+    paths:
+      - 'src/**'     
 
 jobs:
   build:
