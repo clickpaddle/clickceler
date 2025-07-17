@@ -1,6 +1,10 @@
 # .github/workflows/build-jollyclick.yml
 name: Build Jollyclick (C)
 
+permissions:
+  contents: read
+  actions: write
+
 on:
   push:
     branches:
