@@ -13,7 +13,7 @@ on:
 
 jobs:
   build:
-    runs-on: arc-runner-set  # doit matcher ton RunnerDeployment Kubernetes
+    runs-on: trex  # doit matcher ton RunnerDeployment Kubernetes
     container:
       image: ubuntu:24.04  # ou toute image Linux avec make & gcc
 
@@ -27,7 +27,7 @@ jobs:
           apt-get install -y build-essential swi-prolog
 
       - name: Build Jollyclick
-        working-directory: ./jollyclick/src
+        working-directory: ./jollyclick/src/C
         run: |
           make clean || true
           make
