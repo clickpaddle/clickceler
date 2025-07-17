@@ -8,24 +8,22 @@ permissions:
 on:
   pull_request:
     branches:
-      - main          
+      - main
     paths:
-      - 'src/**'     
+      - 'src/**'
 
 jobs:
   build:
-    runs-on: trex  # doit matcher ton RunnerDeployment Kubernetes
-    container:
-      image: ubuntu:24.04  # ou toute image Linux avec make & gcc
+    runs-on: trex  # ton runner Kubernetes auto-hébergé
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Install build essentials
         run: |
-          apt-get update && \
-          apt-get install -y build-essential swi-prolog
+          sudo apt-get update && \
+          sudo apt-get install -y build-essential swi-prolog
 
       - name: Build Jollyclick
         working-directory: ./jollyclick/src/C
