@@ -1,0 +1,35 @@
+# .github/workflows/build-jollyclick.yml
+name: Build Jollyclick (C)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: arc-runner-set  # doit matcher ton RunnerDeployment Kubernetes
+    container:
+      image: ubuntu:24.04  # ou toute image Linux avec make & gcc
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Install build essentials
+        run: |
+          apt-get update && \
+          apt-get install -y build-essential swi-prolog
+
+      - name: Build Jollyclick
+        working-directory: ./jollyclick/src
+        run: |
+          make clean || true
+          make
+
+      - name: Archive binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: jollyclick-bin
+          path: ./jollyclick/src/jollyclick
