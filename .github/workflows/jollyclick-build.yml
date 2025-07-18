@@ -15,7 +15,7 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted  # ton runner Kubernetes auto-hébergé
+    runs-on: arc-runner  # ton runner Kubernetes auto-hébergé
 
     steps:
       - name: Checkout repository
