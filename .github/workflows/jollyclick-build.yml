@@ -36,4 +36,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jollyclick-bin
-          path: ./src/build/jollyclick
+          path: ./src/C/build/jollyclick
