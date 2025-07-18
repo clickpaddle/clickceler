@@ -27,7 +27,7 @@ jobs:
           sudo apt-get install -y build-essential swi-prolog
 
       - name: Build Jollyclick
-        working-directory: ./jollyclick/src/C
+        working-directory: ./src/C
         run: |
           make clean || true
           make
