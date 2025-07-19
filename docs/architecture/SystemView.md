@@ -1,20 +1,20 @@
 ```mermaid
 graph TD
     subgraph Utilisateur
-        User[Utilisateur<br/>(Organisateur ou Participant)]
+        User[Utilisateurbr(Organisateur ou Participant)]
     end
 
     subgraph Frontend
-        FE[Application Web<br/>(React.js)]
+        FE[Application Web(React.js)]
     end
 
     subgraph Backend
-        API[API Backend<br/>(Node.js/Express)]
+        API[API Backend(Node.js/Express)]
     end
 
     subgraph Services
         DB[(MongoDB Atlas)]
-        Auth[Service d'authentification<br/>(Auth0, JWT...)]
+        Auth[Service d'authentification(Auth0, JWT...)]
         Storage[Stockage de fichiers<br/>(Cloudinary, etc.)]
     end
 
