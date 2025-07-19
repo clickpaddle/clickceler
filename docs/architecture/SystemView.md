@@ -1,7 +1,7 @@
 ```mermaid
 graph TD
     subgraph Utilisateur
-        User[Utilisateurbr(Organisateur ou Participant)]
+        User[Utilisateur(Organisateur ou Participant)]
     end
 
     subgraph Frontend
