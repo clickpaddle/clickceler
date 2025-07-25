@@ -1,0 +1,72 @@
+{
+  "error_code":507,
+  "id":17534518502010001,
+  "message":"Disk full",
+  "severity":"critical",
+  "timestamp":"2025-07-01T12:34:56Z",
+  "type":"ERROR"
+}
+{
+  "id":17534518502020002,
+  "message":"Backup completed",
+  "severity":"ok",
+  "source":"System Monitor",
+  "timestamp":"2025-07-01T13:00:00Z",
+  "type":"INFO"
+}
+{
+  "error_code":510,
+  "id":17534518502020003,
+  "message":"CPU Overheat",
+  "severity":"warning",
+  "timestamp":"2025-07-01T13:15:00Z",
+  "type":"ERROR"
+}
+{
+  "error_code":507,
+  "id":17534519254310001,
+  "message":"Disk full",
+  "severity":"critical",
+  "timestamp":"2025-07-01T12:34:56Z",
+  "type":"ERROR"
+}
+{
+  "id":17534519254320002,
+  "message":"Backup completed",
+  "severity":"ok",
+  "source":"System Monitor",
+  "timestamp":"2025-07-01T13:00:00Z",
+  "type":"INFO"
+}
+{
+  "error_code":510,
+  "id":17534519254320003,
+  "message":"CPU Overheat",
+  "severity":"warning",
+  "timestamp":"2025-07-01T13:15:00Z",
+  "type":"ERROR"
+}
+{
+  "error_code":507,
+  "id":17534520644360001,
+  "message":"Disk full",
+  "severity":"critical",
+  "timestamp":"2025-07-01T12:34:56Z",
+  "type":"ERROR"
+}
+{
+  "id":17534520644370002,
+  "message":"Backup completed",
+  "severity":"ok",
+  "source":"System Monitor",
+  "timestamp":"2025-07-01T13:00:00Z",
+  "type":"INFO"
+}
+{
+  "error_code":510,
+  "id":17534520644370003,
+  "message":"CPU Overheat",
+  "severity":"warning",
+  "timestamp":"2025-07-01T13:15:00Z",
+  "type":"ERROR"
+}
