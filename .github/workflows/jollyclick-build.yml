@@ -28,7 +28,7 @@ jobs:
           id
           
       - name: Build Jollyclick
-        working-directory: ./src/C
+        working-directory: ./src/C/core
         run: |
           make clean || true
           make
