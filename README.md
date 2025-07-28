@@ -1,8 +1,8 @@
-# JollyClick — Educational Event Management Expert System
+# ClickCeler — Educational Event Management Expert System
 
 ## Overview
 
-JollyClick is simple educational implementation inspired by early expert systems for event management. Its goal is to help new generations understand how event-driven expert systems were designed and operated, using logic programming (Prolog) and rule-based reasoning.
+ClickCeler is simple educational implementation inspired by early expert systems for event management. Its goal is to help new generations understand how event-driven expert systems were designed and operated, using logic programming (Prolog) and rule-based reasoning.
 
 This project demonstrates the core concepts of:
 
@@ -26,18 +26,18 @@ This bridges modern application programming with classic logic-based reasoning e
 1. Load your events as JSON objects: events.json
 2. Convert them to Prolog facts using the provided Python scripts: jollypost.py < events.json
 3. Define your own Prolog rules for event enrich, reset, link, launch, filter: rules.pl
-4. Run the server to accept events and queries over TCP: jollyclick.py
+4. Run the server to accept events and queries over TCP: ClickCeler.py
 5. Explore how logic rules process your events step by step: jollyquery.py
 
 ---
 
 ## Future Plans
 
-JollyClick is an evolving educational project, and we have several exciting plans to enhance its capabilities and demonstrate more advanced concepts in event management and expert systems. Our future roadmap focuses on improving the solution's architecture, user interaction, automation, and deployment.
+ClickCeler is an evolving educational project, and we have several exciting plans to enhance its capabilities and demonstrate more advanced concepts in event management and expert systems. Our future roadmap focuses on improving the solution's architecture, user interaction, automation, and deployment.
 
 ### Architectural Documentation
 
-We aim to create comprehensive documentation detailing the **As-Is** and **To-Be** architecture of JollyClick. This will provide a clear understanding of the current system design and how we envision its evolution, particularly regarding event flow, data persistence, and rule execution.
+We aim to create comprehensive documentation detailing the **As-Is** and **To-Be** architecture of ClickCeler. This will provide a clear understanding of the current system design and how we envision its evolution, particularly regarding event flow, data persistence, and rule execution.
 
 ### Event Visualization Web Interface
 
@@ -53,18 +53,18 @@ Currently, rule execution might require manual triggers. Our goal is to **automa
 
 ### NoSQL Database Integration
 
-To ensure robust event persistence and enable seamless server restarts without data loss, we intend to integrate JollyClick with a **NoSQL database**. This will allow us to:
+To ensure robust event persistence and enable seamless server restarts without data loss, we intend to integrate ClickCeler with a **NoSQL database**. This will allow us to:
 
 * Store all incoming and processed events reliably.
 * Reload events efficiently upon server restarts, maintaining the system's state.
 
 ### OCI Container Packaging
 
-For easier distribution, deployment, and portability, we will **package JollyClick within an Open Container Initiative (OCI) compliant container**. This will encapsulate all necessary dependencies, ensuring the application runs consistently across different environments.
+For easier distribution, deployment, and portability, we will **package ClickCeler within an Open Container Initiative (OCI) compliant container**. This will encapsulate all necessary dependencies, ensuring the application runs consistently across different environments.
 
 ### Kubernetes Deployment with ArgoCD
 
-Finally, to demonstrate modern deployment practices for event-driven systems, we plan to **deploy the JollyClick OCI image on a Kubernetes cluster using a GitOps tool like ArgoCD**. This will showcase:
+Finally, to demonstrate modern deployment practices for event-driven systems, we plan to **deploy the ClickCeler OCI image on a Kubernetes cluster using a GitOps tool like ArgoCD**. This will showcase:
 
 * Automated, declarative deployments.
 * Scalability and resilience within a container orchestration environment.
