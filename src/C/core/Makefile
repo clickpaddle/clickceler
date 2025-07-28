@@ -1,5 +1,5 @@
 # Final executable name
-TARGET = jollyclick
+TARGET = clickceler
 
 # Directory where header files are located
 INCLUDE_DIR = -I include -I /usr/lib/swipl/include/
@@ -24,7 +24,7 @@ $(TARGET): $(OBJS)
 	$(CC) $(OBJS) -o ../build/$@ $(LDFLAGS)
 
 # Compile each .c file into a .o object file
-%.o: %.c $(INCLUDE_DIR)/jollyclick.h
+%.o: %.c $(INCLUDE_DIR)/clickceler.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Remove generated files

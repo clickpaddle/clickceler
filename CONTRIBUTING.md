@@ -1,10 +1,10 @@
-# 🤝 Contributing to Jollyclick
+# 🤝 Contributing to Clickceler
 
-Thanks for your interest in contributing to **Jollyclick**! This is a collaborative, educational, and experimental project licensed under the **GPL**. Everyone is welcome to participate — whether you're writing code, suggesting ideas, improving docs, or just asking questions.
+Thanks for your interest in contributing to **Clickceler**! This is a collaborative, educational, and experimental project licensed under the **GPL**. Everyone is welcome to participate — whether you're writing code, suggesting ideas, improving docs, or just asking questions.
 
-## 📚 What is Jollyclick?
+## 📚 What is Clickceler?
 
-Jollyclick is an open-source, community-centered platform focused on experimentation and learning in building digital tools for human connection. Think of it as a sandbox to explore ideas, not a commercial-grade product.
+Clickceler is an open-source, community-centered platform focused on experimentation and learning in building digital tools for human connection. Think of it as a sandbox to explore ideas, not a commercial-grade product.
 
 ---
 
@@ -36,5 +36,5 @@ Jollyclick is an open-source, community-centered platform focused on experimenta
 
 Clone the repo:
 ```bash
-git clone https://github.com/clickpaddle/jollyclick.git
-cd jollyclick
+git clone https://github.com/clickpaddle/clickceler.git
+cd clickceler

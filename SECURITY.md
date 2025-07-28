@@ -1,8 +1,8 @@
-# 🔐 Security Policy for Jollyclick
+# 🔐 Security Policy for ClickCeler
 
 ## 📅 Supported Versions
 
-Jollyclick is an educational and community-driven project. As such, it is not maintained with commercial-grade security patching timelines, but we still care about responsible disclosures and the safety of contributors and users.
+ClickCeler is an educational and community-driven project. As such, it is not maintained with commercial-grade security patching timelines, but we still care about responsible disclosures and the safety of contributors and users.
 
 | Version         | Supported          |
 |-----------------|--------------------|
@@ -13,11 +13,11 @@ If you’re using the codebase, always pull from the `main` branch for the lates
 
 ## 🛡️ Reporting a Vulnerability
 
-If you discover a security issue related to the Jollyclick codebase or one of its dependencies:
+If you discover a security issue related to the ClickCeler codebase or one of its dependencies:
 
 1. **Do not** open a public GitHub issue.
 2. **Email us instead** at:  
-   📧 **security@jollyclick.org** *(replace with actual contact email)*
+   📧 **security@clickpaddle.com** *(replace with actual contact email)*
 
 Please include:
 
@@ -38,10 +38,10 @@ We strongly support **coordinated vulnerability disclosure**. If you report resp
 
 ## 🚫 Out of Scope
 
-Since Jollyclick is a project for learning and experimentation, the following are considered **out of scope** for responsible disclosure:
+Since ClickCeler is a project for learning and experimentation, the following are considered **out of scope** for responsible disclosure:
 
 - Attacks requiring physical access to the contributor's or user's machine
-- Issues in third-party dependencies unless they directly affect Jollyclick
+- Issues in third-party dependencies unless they directly affect ClickCeler
 - Social engineering attacks against maintainers or contributors
 - Denial of service via voluntary misuse or unrealistic abuse
 
@@ -60,4 +60,4 @@ All code in this repository is under the **GPL license**. Please be aware that w
 
 ---
 
-*Thank you for helping keep Jollyclick safe, responsible, and open for everyone.*
+*Thank you for helping keep ClickCeler safe, responsible, and open for everyone.*

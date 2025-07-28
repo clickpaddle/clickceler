@@ -24,10 +24,10 @@ This bridges modern application programming with classic logic-based reasoning e
 ## Usage
 
 1. Load your events as JSON objects: events.json
-2. Convert them to Prolog facts using the provided Python scripts: jollypost.py < events.json
+2. Convert them to Prolog facts using the provided Python scripts: clickpost.py < events.json
 3. Define your own Prolog rules for event enrich, reset, link, launch, filter: rules.pl
 4. Run the server to accept events and queries over TCP: ClickCeler.py
-5. Explore how logic rules process your events step by step: jollyquery.py
+5. Explore how logic rules process your events step by step: clickquery.py
 
 ---
 
