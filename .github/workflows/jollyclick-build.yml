@@ -1,0 +1,53 @@
+# .github/workflows/build-jollyclick.yml
+name: Build Jollyclick (C)
+
+permissions:
+  contents: read
+  actions: write
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+
+jobs:
+  build:
+    runs-on: arc-runner-set  # ton runner Kubernetes auto-hébergé
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build essentials
+        run: |
+          sudo apt-get update && \
+          sudo apt-get install -y build-essential ninja-build cmake zlib1g-dev libedit-dev
+          
+      - name: Build swipl-devel and install it
+        working-directory:  ..
+        run: |
+          cd ..
+          git clone https://github.com/SWI-Prolog/swipl-devel.git
+          cd swipl-devel
+          git submodule update --init
+          mkdir build
+          cd build
+          cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=PGO -G Ninja ..
+          ninja
+          ctest -j $(nproc) --output-on-failure
+          ninja install
+                    
+      - name: Build Jollyclick
+        working-directory: ./src/C/core
+        run: |
+          make clean || true
+          make
+
+      - name: Archive binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: jollyclick-bin
+          path: ./src/C/build/jollyclick

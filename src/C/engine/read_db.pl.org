@@ -1,0 +1,49 @@
+:- module(read_db, [ reload_eventdb/1, show_all_events/1 ]).
+
+% Reloads all events from the event database file as Prolog terms
+reload_eventdb(Events) :-
+    open('../logs/eventdb.log', read, Stream),
+    read_terms(Stream, Events),
+    close(Stream).
+
+% Reads all terms from the stream until end_of_file, returns list of events
+read_terms(Stream, []) :-
+    at_end_of_stream(Stream), !.
+
+read_terms(Stream, [Event | Rest]) :-
+    read(Stream, Term),
+    ( Term == end_of_file ->
+        Rest = [],
+        Event = []
+    ;   
+        Event = Term,
+        read_terms(Stream, Rest)
+    ).
+
+<<<<<<<< HEAD:src/C/engine/read_db.pl.org
+% Parses a single event line in the format: TYPE ID [key1-val1,key2-val2,...]
+parse_event_line(Line, event(TypeAtom, AttrDict)) :-
+    re_matchsub("^([^ ]+) \\[(.*)\\]$", Line, Sub, []),
+    TypeStr = Sub.1,
+    AttrPart = Sub.2,
+    string_upper(TypeStr, TypeUpper),
+    atom_string(TypeAtom, TypeUpper),
+    split_string(AttrPart, ",", "", PairsStrings),
+    maplist(split_pair, PairsStrings, Pairs),
+    dict_create(AttrDict, event, Pairs).
+
+% Converts a "key-value" string into a Key-Value pair using a robust regex
+split_pair(String, Key-Value) :-
+    re_matchsub("^(\\w+)-(.*)$", String, Sub, []),
+    atom_string(Key, Sub.1),
+    atom_string(Value, Sub.2).
+
+% Displays all events with their attributes
+========
+% Prints all events in a readable format
+>>>>>>>> 9954a3f (Event Normalized event(Type,Dict) in Terms in Memory & logs):src/C/rules/read_db.pl
+show_all_events([]).
+show_all_events([Event|Rest]) :-
+    format("~q.~n", [Event]),
+    show_all_events(Rest).
+

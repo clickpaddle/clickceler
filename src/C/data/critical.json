@@ -1,0 +1,9 @@
+{
+    "id": 1,
+    "type": "ERROR",
+    "message": "Disk full",
+    "timestamp": "2025-07-01T12:34:56Z",
+    "severity": "critical",
+    "error_code": 507
+  }
+
