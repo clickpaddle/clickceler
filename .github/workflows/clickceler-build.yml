@@ -1,5 +1,5 @@
 # .github/workflows/build-clickceller.yml
-name: Build Jollyclick (C)
+name: Build ClickCeler (C)
 
 permissions:
   contents: read
