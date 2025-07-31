@@ -1,33 +1,26 @@
 #!/bin/bash
-
-# Vérification des variables d'environnement requises
-: "${GITHUB_URL:?Variable d'environnement GITHUB_URL non définie}"
-: "${GITHUB_TOKEN:?Variable d'environnement GITHUB_TOKEN non définie}"
-: "${RUNNER_NAME:?Variable d'environnement RUNNER_NAME non définie}"
-: "${RUNNER_WORKDIR:=_work}"  # Valeur par défaut _work si non définie
-
 set -e
 
-echo "Registering runner..."
 
-# Configuration du runner en mode unattended
-./config.sh --unattended \
-  --url "$GITHUB_URL" \
-  --token "$GITHUB_TOKEN" \
-  --name "$RUNNER_NAME" \
-  --work "$RUNNER_WORKDIR" \
-  --replace
+echo "Fetching registration token from GitHub API..."
 
-cleanup() {
-  echo "Removing runner..."
-  # Supprime proprement le runner lors de l'arrêt du container
-  ./config.sh remove --unattended --token "$GITHUB_TOKEN"
-}
+# 1. Obtenir le registration token depuis l'API GitHub Actions
+REGISTRATION_TOKEN=$(curl -s -X POST \
+  -H "Authorization: token $GITHUB_TOKEN" \
+  -H "Accept: application/vnd.github+json" \
+  "$GITHUB_URL/actions/runners/registration-token" | jq -r '.token')
 
-# Capturer les signaux SIGINT (Ctrl+C) et SIGTERM pour un nettoyage propre
-trap 'cleanup; exit 130' INT
-trap 'cleanup; exit 143' TERM
+if [ -z "$REGISTRATION_TOKEN" ] || [ "$REGISTRATION_TOKEN" == "null" ]; then
+  echo "Failed to get registration token from GitHub API."
+  exit 1
+fi
 
-echo "Starting runner..."
+echo "Registration token obtained."
+
+# 2. Configurer le runner (remplace work directory si besoin)
+./config.sh --unattended --url "$GITHUB_URL" --token "$REGISTRATION_TOKEN" \
+  --name "$RUNNER_NAME" --labels "$RUNNER_LABELS" --work "_work" --replace
+
+# 3. Lancer le runner
 ./run.sh
 
