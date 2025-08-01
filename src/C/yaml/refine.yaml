@@ -1,0 +1,11 @@
+- refine_rule:
+    event_type: server
+    priority: 100
+    name: close_low_severity_in_dev
+    conditions:
+      - eq: [status, open]
+      - eq: [severity, critical]
+    transformations:
+      - set_field: [status, closed]
+      - set_field: [severity,  warning]
+

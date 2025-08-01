@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import os
 
 categories = ["ERROR", "INFO", "DEBUG"]
-classes = ["Log", "Server", "CPU", "Disk", "Router", "Memory"]
+classes = ["log", "server", "cpu", "disk", "router", "memory"]
 
 log_messages = [
     "Disk full", "Backup completed", "CPU Overheat", "Memory usage high",
@@ -20,7 +20,7 @@ cpu_states = ["normal", "overheated", "throttled"]
 disk_states = ["healthy", "degraded", "failed"]
 router_states = ["online", "offline", "congested"]
 memory_states = ["normal", "high_usage", "error"]
-status_states = ["open","ack","closed"]
+status_states = ["open","open","open"]
 
 hostnames = ["server01", "server02", "server03", "backup01", "router01", "auth01", "sensor01", "maint01"]
 sources = ["StorageSystem", "System Monitor", "ThermalSensor", "MemoryMonitor", "NetworkMonitor", "Auth Service", "Maintenance Scheduler", "PowerManagement"]
@@ -48,7 +48,8 @@ def generate_event():
         "hostname": host,
         "source": src,
         "sub_source": sub_src,
-        "origin": orig
+        "origin": orig,
+        "severity": "critical"
     }
     event["status"] = random.choice(status_states)
     if event_class == "Log":

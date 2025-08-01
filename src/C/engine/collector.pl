@@ -52,8 +52,13 @@ ensure_default_event(DictIn) :-
       put_dict(id, DictIn, Id, DictWithId)
     ),
     ensure_field(status, open, DictWithId, DictWithStatus),
-    ensure_field(counter, 0, DictWithStatus, DictFinal),
-    ( get_dict(type, DictFinal, Type) -> true ; Type = unknown ),
+    ensure_field(counter, 0, DictWithStatus, DictWithCounter),
+    ( get_dict(type, DictWithCounter, TypeRaw) ->
+        atom_string(Type, TypeRaw),
+        del_dict(type, DictWithCounter, _, DictFinal)
+    ; Type = unknown,
+      DictFinal = DictWithCounter
+    ),
     Event = event(Type, DictFinal),
     assert_event(Event),
     log_event(Event),

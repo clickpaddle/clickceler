@@ -87,6 +87,9 @@ match_all_conditions([], _).
 match_all_conditions([Cond | Rest], Dict) :-
     match_condition(Cond, Dict),
     match_all_conditions(Rest, Dict).
+
+
+
 % apply_matching_rules(+Rules, +DictIn, -DictOut)
 apply_matching_rules([], Dict, Dict).
 
@@ -141,6 +144,97 @@ apply_transformations([Unknown|Rest], DictIn, DictOut) :-
 assert_event(event(Type, Dict)) :-
     eventlog_mutex(Mutex),
     with_mutex(Mutex,
+      (
+        retractall(kb_shared:event(Type, Dict)),
         assertz(kb_shared:event(Type, Dict))
+      )
     ).
+
+
+% match_condition(+Condition, +Dict)
+% Convertit un atom ou string en string (pour comparaison)
+to_string(Value, Str) :-
+    ( atom(Value) -> atom_string(Value, Str)
+    ; string(Value) -> Str = Value
+    ; % sinon convertit avec term_to_atom en dernier recours
+      term_to_atom(Value, Str)
+    ).
+
+% Comparaison égale, avec conversion atom <-> string
+equal_values(V1, V2) :-
+    to_string(V1, S1),
+    to_string(V2, S2),
+    S1 == S2.
+
+% Comparaison non égale
+not_equal_values(V1, V2) :-
+    \+ equal_values(V1, V2).
+
+% Comparaison > (pour atomes ou nombres convertis en string)
+greater_than(V1, V2) :-
+    to_string(V1, S1),
+    to_string(V2, S2),
+    S1 @> S2.
+
+% Comparaison >=
+greater_equal(V1, V2) :-
+    to_string(V1, S1),
+    to_string(V2, S2),
+    S1 @>= S2.
+
+% Comparaison <
+less_than(V1, V2) :-
+    to_string(V1, S1),
+    to_string(V2, S2),
+    S1 @< S2.
+
+% Comparaison <=
+less_equal(V1, V2) :-
+    to_string(V1, S1),
+    to_string(V2, S2),
+    S1 @=< S2.
+
+% membership avec conversion
+memberchk_conv(V, List) :-
+    to_string(V, S),
+    memberchkchk_string(S, List).
+
+memberchkchk_string(_, []) :- fail.
+memberchkchk_string(S, [H|T]) :-
+    to_string(H, SH),
+    ( S == SH -> true ; memberchkchk_string(S, T) ).
+
+% match_condition(+Condition, +Dict)
+match_condition(eq(Field, Value), Dict) :-
+    get_dict(Field, Dict, V),
+    equal_values(V, Value).
+
+match_condition(neq(Field, Value), Dict) :-
+    get_dict(Field, Dict, V),
+    not_equal_values(V, Value).
+
+match_condition(gt(Field, Value), Dict) :-
+    get_dict(Field, Dict, V),
+    greater_than(V, Value).
+
+match_condition(gte(Field, Value), Dict) :-
+    get_dict(Field, Dict, V),
+    greater_equal(V, Value).
+
+match_condition(lt(Field, Value), Dict) :-
+    get_dict(Field, Dict, V),
+    less_than(V, Value).
+
+match_condition(lte(Field, Value), Dict) :-
+    get_dict(Field, Dict, V),
+    less_equal(V, Value).
+
+match_condition(in(Field, List), Dict) :-
+    get_dict(Field, Dict, V),
+    memberchk_conv(V, List).
+
+match_condition(nin(Field, List), Dict) :-
+    get_dict(Field, Dict, V),
+    \+ memberchk_conv(V, List).
+
 
