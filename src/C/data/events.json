@@ -1,118 +1,14 @@
 [
-  {
-    "type": "CPU",
-    "category": "ERROR",
-    "timestamp": "2025-07-01T11:48:00Z",
-    "hostname": "auth01",
-    "source": "Maintenance Scheduler",
-    "sub_source": "SchedulerCore",
-    "origin": "datacenter2",
-    "status": "open",
-    "state": "normal",
-    "usage_percent": 83
-  },
-  {
-    "type": "Disk",
+ {
+    "type": "server",
     "category": "DEBUG",
-    "timestamp": "2025-07-01T14:30:00Z",
-    "hostname": "server03",
-    "source": "Auth Service",
-    "sub_source": "TempProbe",
-    "origin": "datacenter3",
-    "status": "ack",
-    "state": "degraded",
-    "free_space_gb": 89.48
-  },
-  {
-    "type": "Disk",
-    "category": "DEBUG",
-    "timestamp": "2025-07-01T03:56:00Z",
-    "hostname": "server03",
-    "source": "MemoryMonitor",
-    "sub_source": "DiskMonitor",
-    "origin": "datacenter2",
-    "status": "open",
-    "state": "degraded",
-    "free_space_gb": 21.48
-  },
-  {
-    "type": "Log",
-    "category": "ERROR",
-    "timestamp": "2025-07-01T11:40:00Z",
+    "timestamp": "2025-07-01T23:34:00Z",
     "hostname": "server01",
-    "source": "System Monitor",
-    "sub_source": "CPUUnit",
-    "origin": "datacenter1",
-    "status": "open",
-    "message": "Disk full"
-  },
-  {
-    "type": "Log",
-    "category": "INFO",
-    "timestamp": "2025-07-01T11:59:00Z",
-    "hostname": "sensor01",
-    "source": "Auth Service",
-    "sub_source": "InterfaceEth0",
-    "origin": "datacenter2",
-    "status": "open",
-    "message": "Power supply failure"
-  },
-  {
-    "type": "Router",
-    "category": "ERROR",
-    "timestamp": "2025-07-01T15:22:00Z",
-    "hostname": "server01",
-    "source": "System Monitor",
-    "sub_source": "RAMModule",
-    "origin": "datacenter1",
-    "status": "closed",
-    "state": "online",
-    "packet_loss_percent": 3.59
-  },
-  {
-    "type": "Server",
-    "category": "DEBUG",
-    "timestamp": "2025-07-01T12:14:00Z",
-    "hostname": "auth01",
-    "source": "ThermalSensor",
-    "sub_source": "CPUUnit",
-    "origin": "datacenter2",
-    "status": "ack",
-    "state": "down"
-  },
-  {
-    "type": "Disk",
-    "category": "DEBUG",
-    "timestamp": "2025-07-01T23:45:00Z",
-    "hostname": "sensor01",
     "source": "Maintenance Scheduler",
-    "sub_source": "PSUUnit",
-    "origin": "datacenter3",
-    "status": "closed",
-    "state": "degraded",
-    "free_space_gb": 199.89
-  },
-  {
-    "type": "Memory",
-    "category": "DEBUG",
-    "timestamp": "2025-07-01T09:06:00Z",
-    "hostname": "router01",
-    "source": "NetworkMonitor",
-    "sub_source": "SchedulerCore",
+    "sub_source": "BackupService",
     "origin": "datacenter2",
-    "status": "open",
-    "state": "high_usage",
-    "used_mb": 27380
-  },
-  {
-    "type": "Log",
-    "category": "DEBUG",
-    "timestamp": "2025-07-01T02:06:00Z",
-    "hostname": "sensor01",
-    "source": "NetworkMonitor",
-    "sub_source": "LoginModule",
-    "origin": "datacenter1",
-    "status": "open",
-    "message": "Disk read error"
+    "severity": "critical",
+    "env": "dev",
+    "status": "open"
   }
 ]

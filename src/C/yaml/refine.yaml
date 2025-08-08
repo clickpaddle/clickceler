@@ -1,0 +1,12 @@
+refine_rules:
+  - name: decrease_event_severity_event_if_de_and_close
+    priority: 100
+    event_type:
+      - server(E)
+    conditions:
+      - eq(E, status, open)
+      - eq(E, severity, critical)
+      - eq(E, env, dev)
+    actions:
+      - set_field(E, status, closed)
+      - set_field(E, severity, warning)

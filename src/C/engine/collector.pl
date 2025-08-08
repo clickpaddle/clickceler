@@ -1,9 +1,9 @@
-:- module(collector, [thread_goal_collector/1, collect_events/1, ensure_id_and_store/1]).
+:- module(collector, [thread_goal_collector/1, collect_events/1, ensure_default_event/1,ensure_field/4]).
 :- use_module(library(http/json)).
 :- use_module(library(gensym)).
 :- use_module(library(thread)).
 :- use_module(library(lists)).
-:- use_module(kb_shared,[eventlog_mutex/1,log_event/1,print_all_events/0]).
+:- use_module(kb_shared,[eventlog_mutex/1,log_event/1,print_all_events/1]).
 :- dynamic kb_shared:event/2.
 :- multifile kb_shared:event/2.
 
@@ -32,39 +32,43 @@ thread_goal_collector(ClientID) :-
     format('[Collector ~w] Thread started~n', [ClientID]).
 
 
-%% Mutex pour la gestion des événements et log
 
-
-%% collect_events(+JsonString)
-% Parse la chaîne JSON, liste d’événements, ajoute un id si absent,
-% puis insert chaque événement en mémoire et log.
 collect_events(JsonString) :-
     catch(
-        atom_json_dict(JsonString, EventsList, [as(list)]),
+        atom_json_dict(JsonString, DictList, [as(list)]),
         E,
         ( format(user_error, '[collector collect_events] JSON parse error: ~w~n', [E]), fail)
     ),
-    is_list(EventsList), !,
-    maplist(ensure_id_and_store, EventsList).
+    is_list(DictList), !,
+    maplist(ensure_default_event, DictList).
 collect_events(_) :-
     format(user_error, '[collector collect_events] Error: Expected JSON list of events.~n'),
     fail.
 
-ensure_id_and_store(EventIn) :-
-    ( get_dict(id, EventIn, _Id) ->
-        EventWithId = EventIn
+ensure_default_event(DictIn) :-
+    ( get_dict(id, DictIn, _) ->
+        DictWithId = DictIn
     ; generate_unique_event_id(Id),
-      put_dict(id, EventIn, Id, EventWithId)
+      put_dict(id, DictIn, Id, DictWithId)
     ),
+    ensure_field(status, open, DictWithId, DictWithStatus),
+    ensure_field(counter, 0, DictWithStatus, DictWithCounter),
+    ( get_dict(type, DictWithCounter, TypeRaw) ->
+        atom_string(Type, TypeRaw),
+        del_dict(type, DictWithCounter, _, DictFinal)
+    ; Type = unknown,
+      DictFinal = DictWithCounter
+    ),
+    Event = event(Type, DictFinal),
+    assert_event(Event),
+    log_event(Event),
+    safe_thread_send_message(refine_queue, Event).
 
-    dict_to_event(EventWithId, EventTerm),
-    assert_event(EventTerm),
-    format('[collector] Received ~q~n', [EventTerm]),  % log en forme normalisée
-    log_event(EventTerm),
-    thread_send_message(refine, EventTerm).
-
-
-% Normalize event Dict to event(Type, Attrs) 
+ensure_field(Key, Default, DictIn, DictOut) :-
+    ( get_dict(Key, DictIn, _) ->
+        DictOut = DictIn
+    ; put_dict(Key, DictIn, Default, DictOut)
+    ).
 dict_to_event(Dict, event(Type, Attrs)) :-
     get_dict(type, Dict, Type),
     del_dict(type, Dict, _, Rest),
@@ -72,10 +76,19 @@ dict_to_event(Dict, event(Type, Attrs)) :-
     Attrs = Pairs.
 
 
-%% assert_event(+Type, +EventDict)
-%  Protected by Mutex
 assert_event(event(Type, Dict)) :-
     eventlog_mutex(Mutex),
     with_mutex(Mutex,
         assertz(kb_shared:event(Type, Dict))
     ).
+
+
+queue_exists(QueueName) :-
+    catch(message_queue_property(QueueName, _), _, fail).
+
+safe_thread_send_message(QueueName, Message) :-
+    ( queue_exists(QueueName) ->
+        thread_send_message(QueueName, Message)
+    ; format(user_error, '[ERROR] Message queue ~w does not exist. Message not sent.~n', [QueueName])
+    ).
+

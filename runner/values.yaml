@@ -1,0 +1,27 @@
+controllerServiceAccount:
+  name: gha-runner-controller
+  create: true
+
+githubConfigUrl: https://github.com/YOUR_ORG/YOUR_REPO
+
+githubConfigSecret:
+  name: controller-manager-secret
+
+runnerScaleSet:
+  name: trex-scale-set
+  labels: ["debian", "self-hosted"]
+
+template:
+  spec:
+    containers:
+      - name: runner
+        image: ghcr.io/actions/runner:latest  
+        command: ["/home/runner/run.sh"]
+        env:
+          - name: RUNNER_NAME_PREFIX
+            value: trex-
+        resources:
+          limits:
+            memory: 2Gi
+            cpu: 1000m
+
