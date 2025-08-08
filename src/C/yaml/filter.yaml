@@ -1,5 +1,5 @@
 filter_rules:
-  - name: filter_server_info_drop_event
+  - name: filter_no_pass_log_critical_dev_drop_event 
     priority: 100
     event_type:
       - cpu(E)
@@ -9,7 +9,7 @@ filter_rules:
     actions:
       - nopass 
 
-  - name: filter_server_info_accept_event
+  - name: filter_pass_log_major_prod_event 
     priority: 100
     event_type:
       - server(E)

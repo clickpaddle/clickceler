@@ -82,7 +82,7 @@ void *generic_rule_handler_thread(void *arg) {
   char predicate_name[64];
   snprintf(predicate_name, sizeof(predicate_name), "start_%s_loop", modname);
 
-  // Recherche du prédicat start_<modname>_loop/0 dans le module modname
+  // Look for Predicate start_<modname>_loop/0 n the module name modname
   predicate_t pred = PL_predicate(predicate_name, 0, modname);
 
   if (!pred) {
@@ -95,7 +95,7 @@ void *generic_rule_handler_thread(void *arg) {
     return NULL;
   }
 
-  // Appel du prédicat start_<modname>_loop/0
+  //  Call Predicate  start_<modname>_loop/0
   qid_t q = PL_open_query(mod, PL_Q_NORMAL, pred, 0);
   if (!PL_next_solution(q)) {
     fprintf(stderr,
@@ -109,7 +109,7 @@ void *generic_rule_handler_thread(void *arg) {
   }
   PL_close_query(q);
 
-  // Nettoyage
+  // Cleanup
   PL_unregister_atom(modname_atom);
   PL_thread_destroy_engine();
 

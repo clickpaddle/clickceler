@@ -54,7 +54,7 @@ int load_rules_for_thread(PL_engine_t prolog_engine, module_t out_module,
   fprintf(stderr, "[DEBUG] [Thread %lu] Rules loaded from %s\n",
           current_thread_id, filename);
 
-  // Prepare goal: with_output_to(string(S), thread_goal_<modname>(ThreadID))
+  // Prepare thread_goal_<modnam>: with_output_to(string(S), thread_goal_<modname>(ThreadID))
   char goal_name[128];
   snprintf(goal_name, sizeof(goal_name), "thread_goal_%s", modname_str);
 

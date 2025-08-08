@@ -62,23 +62,20 @@ filter_loop :-
 handle_event_filter(event(EventType, DictIn)) :-
     format('[Filter] Normalized DictIn: ~q~n', [DictIn]),
 
-    % Trouver toutes les règles qui correspondent à l'événement
-    findall(
-        filter_rule(RuleID, Priority, [Pattern], Conditions, Transformations),
-        filter_rule_match(EventType, RuleID, Priority, [Pattern], Conditions, Transformations, DictIn),
-        RuleList
-    ),
-    format('[Filter] Matched rules: ~q~n', [RuleList]),
+    % Find filter rule(s) matching event 
+    findall( filter_rule(RuleID, Priority, [Pattern], Conditions, Transformations),
+        filter_rule_match(EventType, RuleID, Priority, [Pattern], Conditions, Transformations, DictIn), RuleList),
+        format('[Filter] Matched rules: ~q~n', [RuleList]),
 
-    % Trier les règles par priorité décroissante (100 > 10)
+    % Sort filter rules by decreasing priority (100 > 10)
     sort(2, @>=, RuleList, SortedRules),
     format('[Filter] Sorted rules by priority: ~q~n', [SortedRules]),
 
     % Appliquer les règles de filtrage
     (   apply_filter_rules(SortedRules, event(EventType, DictIn))
-    ->  EventOut = event(EventType, DictIn),
-        log_event(EventOut),
-        safe_thread_send_message(throttle_queue, EventOut)
+    ->  ( EventOut = event(EventType, DictIn),
+          log_event(EventOut),
+          safe_thread_send_message(throttle_queue, EventOut))
     ;   format('[Filter] Event was rejected.~n', [])
     ).
 
@@ -96,7 +93,6 @@ filter_rule_match(EventType, RuleID, Priority, [Pattern], CondsDict, TransDict, 
     ;
         (   % Otherwise, if conditions fail but action is pass => delete event
             \+ match_all_conditions(CondsDict, E),
-            format('[Filter] Matched rule: ~q~n', [RuleID]) ,
             member(pass, TransDict),
             format('[Filter] Conditions failed but action is pass, deleting event~n', []),
             delete_event(event(EventType, DictIn)),
@@ -113,11 +109,11 @@ apply_filter_rules([filter_rule(_, _, [_], _, Actions) | _], event(Type, Dict)) 
     member(Action, Actions),
     (   Action = nopass
     ->  (delete_event(event(Type, Dict)),
-         format('[Filter] Action: ~q~n', [Action]),
-         !, fail)  % on stoppe après suppression
+         format('[Filter] Action: ~q ~q ~n', [Action, event(Type,Dict)]),
+         !, fail)  % Stop after deletion of event 
     ;   Action = pass
     ->  (assert_event(event(Type, Dict)),
-         format('[Filter] Action: ~q~n', [Action]),
+         format('[Filter] Action: ~q ~q ~n', [Action, event(Type, Dict)]),
          !)
     ;   true
     ).
