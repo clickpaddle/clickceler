@@ -1,0 +1,17 @@
+[
+  {
+    "type": "cpu",
+    "severity": "critical",
+    "env": "dev",
+    "host": "server01",
+    "message": "Disk usage warning on /var"
+  },
+  {
+    "type": "server",
+    "severity": "critical",
+    "env": "prod", 
+    "host": "server01",
+    "message": "Disk usage warning on /var"
+  }
+]
+

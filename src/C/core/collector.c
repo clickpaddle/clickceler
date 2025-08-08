@@ -375,7 +375,7 @@ static void *per_client_thread(void *arg) {
 }
 
 //------------------------------------------------------------------------------------------
-void *collector_handler_thread(void *arg) {
+void *collector_rule_handler_thread(void *arg) {
   intptr_t logical_id = (intptr_t)arg;
   fprintf(stderr,
           "[DEBUG] [Collector Handler %ld] Entering collector_handler_thread\n",

@@ -1,0 +1,11 @@
+[
+{
+  "type": "server",
+  "status": "open",
+  "severity": "critical",
+  "env": "prod",
+  "id": 17544300515140006,
+  "host": "server01",
+  "message": "Disk usage critical on /var"
+}
+]

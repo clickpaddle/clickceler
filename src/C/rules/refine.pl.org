@@ -1,0 +1,17 @@
+% Generated refine rules from YAML
+refine_rule( 
+     server_backup_relation, 
+      100, 
+      [ 
+        server(E) 
+      ], 
+      [ 
+        eq(E, status, open), 
+        eq(E, severity, critical), 
+        eq(E, env, dev) 
+      ], 
+      [ 
+        set_field(E, status, closed), 
+        set_field(E, severity, warning) 
+      ]
+).

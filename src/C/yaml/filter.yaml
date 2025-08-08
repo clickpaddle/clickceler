@@ -1,0 +1,20 @@
+filter_rules:
+  - name: filter_server_info_drop_event
+    priority: 100
+    event_type:
+      - cpu(E)
+    conditions:
+      - within(E, severity, [info, ok])
+      - eq(E, env, dev)
+    actions:
+      - nopass 
+
+  - name: filter_server_info_accept_event
+    priority: 100
+    event_type:
+      - server(E)
+    conditions:
+      - within(E, severity, [warning, major, critical, fatal])
+      - eq(E, env, prod)
+    actions:
+      - pass 
