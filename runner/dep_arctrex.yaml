@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arctrex-runner
+  namespace: arc-runners
+  labels:
+    app: arctrex-runner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: arctrex-runner
+  template:
+    metadata:
+      labels:
+        app: arctrex-runner
+    spec:
+      containers:
+        - name: runner
+          image: 192.168.0.236:5000/arctrex:1.3
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: github-token
+                  key: token
+            - name: RUNNER_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: RUNNER_WORKDIR
+              value: /home/runner/actions-runner
+            - name: GITHUB_ORG
+              value: clickpaddle
+          volumeMounts:
+            - name: workdir
+              mountPath: /home/runner/_work/home/runner/actions-runner
+      volumes:
+        - name: workdir
+          emptyDir: {}
+      restartPolicy: Always
+

@@ -5,77 +5,113 @@
 :- use_module(library(thread)).     % For thread management and message passing
 :- use_module(library(time)).      % For time management and log formatting
 :- use_module(library(error)).     % For error handling (e.g., must_be/2)
-:- use_module(kb_shared).          % Assuming kb_shared module exists and is correctly defined
+:- use_module('../types/types.pl',[subtype/2, valid_status/1, valid_severity/1]).
+:- use_module(kb_shared,[eventlog_mutex/1, log_event/1, is_subtype/2, print_all_events/1]).
+:- use_module(utils).
 :- dynamic kb_shared:event/2.
 :- multifile kb_shared:event/2.
+:- dynamic refine_rule/5.
+%:- initialization(init_queue).
 
 init_queue :-
-      message_queue_create(refine).
+    ( catch(message_queue_property(refine_queue, _), _, fail) ->
+        true
+    ; message_queue_create(refine_queue),
+      format('[Refine] Created message queue refine~n')
+    ).
 
 thread_goal_refine(ClientID) :-
-    format('[Refine ~w] Thread started~n', [ClientID]).
+    format('[Refine ~w] Thread started~n', [ClientID]),
+    init_queue, 
+    load_refine_rules.
 
-% File to store refined events
-log_file('../logs/refined_events.log').
+% Load Dynamic rules
 
-% This predicate is not used by start_refine_loop as currently defined.
-% It can be removed or its purpose re-evaluated if needed for thread creation arguments.
-% thread_goal_refine(ClientID) :-
-%     format('[refine ~w] Thread started~n', [ClientID]).
+
+load_refine_rules :-
+    % relative Path to dynamic refine rules 
+    RuleFile = '../rules/refine.pl',
+    exists_file(RuleFile),           
+    !,
+    load_files(RuleFile, [if(changed)]),
+    format('[Refine] Rules loaded from ~w~n', [RuleFile]).
+
+load_refine_rules :-
+    format('[Refine] Warning: Rules file not found.~n', []).
 
 % Main loop of the refine thread.
 % It continuously fetches messages from its message queue and processes them.
+
 start_refine_loop :-
-    init_queue, 
     refine_loop.
 
-refine_loop :-
     % Wait for a message.
-    thread_get_message(refine,EventTerm),
-    handle_event(EventTerm),
+refine_loop :-
+    thread_get_message(refine_queue, EventTerm),
+    (   catch(handle_event(EventTerm), E,
+              (format('[Refine] Error: ~w~n', [E]), fail))
+    ->  true
+    ;   format('[Refine] Warning: EventTerm not handled: ~w~n', [EventTerm])
+    ),
+    format('[Refine] Received: ~q~n', [EventTerm]),
     refine_loop.
+
 
 % Handle incoming messages
-% EventData is the already-parsed Prolog term (e.g., a dict), not a JSON string.
-handle_event(EventTerm) :-
-    format("[refine] Received  ~q~n", [EventTerm]).
+% handle_event(+EventTerm) event is normalized
+% Refine Normalized event of the form event(Type, Dict)
+handle_event(event(EventType, DictIn)) :-
+    format('[Refine] Normalized DictIn: ~q~n', [DictIn]),
+    findall( refine_rule(RuleID, Priority, [Pattern],Conditions, Transformations),
+    refine_rule_match(EventType, RuleID, Priority, [Pattern], Conditions, Transformations, DictIn), RuleList),
+    format('[Refine] Matched rules: ~q~n', [RuleList]),
+    % Sort by decreasing PRIORITY 100 > PRIORITY 10 
+    sort(2, @>=, RuleList, SortedRules),
+    format('[Refine] Sorted rules by priority: ~q~n', [SortedRules]),
+    apply_matching_rules(SortedRules, DictIn, DictOut),
+    format('[Refine] After apply_matching_rules: ~q~n', [DictOut]),
+    EventOut = event(EventType, DictOut),
+    assert_event(EventOut),
+    format('[Refine] Final event to assert: ~q~n', [EventOut]),
+    log_event(EventOut),
+    safe_thread_send_message(filter_queue, EventOut).
 
-handle_message(stop) :- % This is a custom stop message you can send
-    format("[refine] Stopping refine thread~n"),
-    !. % stop loop by not calling loop again (handled by refine_loop now)
 
-handle_message(UnexpectedMsg) :-
-    % Log unexpected messages for debugging
-    format(user_error, "[refine WARNING] Received unexpected message: ~q~n", [UnexpectedMsg]).
+% ===== REFINE RULES =====
 
-% Refine logic: optionally transform EventData, then assert to kb_shared and log event
-refine_logic(Id, EventData) :-
-    % Example: You might transform EventData here if needed
-    % TransformedEventData = EventData, % Or apply some transformation
+refine_rule_match(EventType, RuleID,  Priority, [Pattern],CondsDict, TransDict, DictIn) :-
+    refine_rule(RuleID, Priority,[Pattern], CondsDict, TransDict),
+    Pattern =.. [RuleEventType, E],
+    E = DictIn,
+    is_subtype(EventType, RuleEventType),
+    format('[Refine] = ~w is subtype of ~w~n', [EventType, RuleEventType]),  
+    match_all_conditions(CondsDict, E).
 
-    format("[refine INFO] Processing event ID=~w~n", [Id]),
+%% === APPLY RULE ENGINE ===
 
-    % Attempt to assert the event to kb_shared
-    (   catch(kb_shared:assert_json_event(Id, EventData), Err, % Pass EventData
-              (format(user_error, "[refine ERROR] Failed to assert event ~w to kb_shared: ~w~n", [Id, Err]), fail))
-    ->  format("[refine INFO] Successfully asserted event ~w to kb_shared~n", [Id])
-    ;   format(user_error, "[refine ERROR] Assertion failed for event ~w (catch block did not fail)~n", [Id])
-    ),
+apply_matching_rules([], Dict, Dict).
+apply_matching_rules([refine_rule( RuleID, _Priority, [_Pattern], _Conds, Transforms) | Rest], DictIn, DictOut) :-
+    format('[Refine] Applying rule ~w~n', [RuleID]),
+    format('[Refine Transforms: ~w ~n',[Transforms]),
+    apply_transformations(Transforms, DictIn, DictNext),
+    apply_matching_rules(Rest, DictNext, DictOut).
 
-    % Log the refined event
-    log_refined_event(Id, EventData).
 
-% Appends the refined event to the log file.
-% Uses setup_call_cleanup/3 to ensure the file stream is always closed, even on errors.
-log_refined_event(Id, EventData) :-
-    log_file(File),
-    setup_call_cleanup(
-        open(File, append, Stream, [encoding(utf8)]), % Open the file in append mode, UTF-8 encoding
-        (   get_time(TS), % Get the current timestamp
-            format_time(atom(DateTime), '%Y-%m-%d %H:%M:%S', TS), % Format the timestamp
-            % Use ~q for a "quoted" Prolog representation of complex terms (like dictionaries)
-            format(Stream, "[~w] Refined Event ~w: ~q~n", [DateTime, Id, EventData])
-        ),
-        close(Stream) % Close the file stream
+assert_event(event(Type, Dict)) :-
+    eventlog_mutex(Mutex),
+    with_mutex(Mutex,
+      (
+        retractall(kb_shared:event(Type, Dict)),
+        assertz(kb_shared:event(Type, Dict))
+      )
+    ).
+
+queue_exists(QueueName) :-
+    catch(message_queue_property(QueueName, _), _, fail).
+
+safe_thread_send_message(QueueName, Message) :-
+    ( queue_exists(QueueName) ->
+        thread_send_message(QueueName, Message)
+    ; format(user_error, '[ERROR] Message queue ~w does not exist. Message not sent.~n', [QueueName])
     ).
 

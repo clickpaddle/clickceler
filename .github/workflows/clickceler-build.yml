@@ -24,7 +24,27 @@ jobs:
       - name: Install build essentials
         run: |
           sudo apt-get update && \
-          sudo apt-get install -y build-essential ninja-build cmake zlib1g-dev libedit-dev
+          sudo apt-get install -y build-essential ninja-build cmake zlib1g-dev libedit-dev curl \
+          unzip \
+          jq \
+          ca-certificates \
+          libicu67 \
+          libkrb5-3 \
+          libssl1.1 \
+          libcurl4 \
+          libunwind8 \
+          liblttng-ust0 \
+          libedit-dev \
+          libpcre3-dev \
+          libyaml-dev \
+          default-jdk \
+          python3-dev \
+          libssl-dev \
+          openssl \
+          linux-libc-dev \
+          texinfo \
+          && rm -rf /var/lib/apt/lists/*
+
           
       - name: Build swipl-devel and install it
         working-directory:  ..
