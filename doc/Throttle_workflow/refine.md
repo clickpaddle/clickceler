@@ -1,7 +1,6 @@
 ```mermaid
 flowchart TD
-    A["handle_event(event(EventType, DictIn))"] --> B["log '[Refine] Normalized DictIn'"]
-    B --> C["findall refine_rule_match(...) => RuleList"]
+    A["handle_event(event(EventType, DictIn))"] --> C["findall refine_rule_match(...) => RuleList"]
     C --> E["sort RuleList by Priority descending => SortedRules"]
     E --> G["apply_matching_rules(SortedRules, DictIn, DictOut)"]
     G --> I["create EventOut = event(EventType, DictOut)"]
