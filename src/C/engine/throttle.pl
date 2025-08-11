@@ -124,10 +124,6 @@ apply_throttle_rules([throttle_rule(RuleID, Priority, [Pattern], Conditions, Par
             clear_buffer
         ; SendMethod == send_first
         ->
-<<<<<<< HEAD
-=======
-            get_first_buffered_event(event(FirstEventType, FirstDict)),
->>>>>>> c77c0523e5d5892581d03cfc9cc89571372a4694
             clear_buffer
         )
     ;   
