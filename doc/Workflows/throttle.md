@@ -27,9 +27,7 @@ flowchart TD
     L --> Z
 
     %% send_first branch
-    I -->|No| M["get_first_buffered_event(FirstEvent)"]
-    M --> N["start_delay_timer(FirstEvent, Delay)"]
-    N --> O["clear_buffer()"]
+    I -->|No| O["clear_buffer()"]
     O --> Z
 
     %% Continue buffering
