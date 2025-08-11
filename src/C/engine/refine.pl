@@ -71,7 +71,7 @@ handle_event(event(EventType, DictIn)) :-
     apply_matching_rules(SortedRules, DictIn, DictOut),
     format('[Refine] After apply_matching_rules: ~q~n', [DictOut]),
     EventOut = event(EventType, DictOut),
-    assert_event(EventOut),
+    %assert_event(EventOut),
     format('[Refine] Final event to assert: ~q~n', [EventOut]),
     log_event(EventOut),
     safe_thread_send_message(filter_queue, EventOut).

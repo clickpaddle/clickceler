@@ -54,6 +54,11 @@ match_condition(notin(_E,Field, List), Dict) :-
     get_dict(Field, Dict, V),
     \+ memberchk_conv(V, List).
 
+match_condition(contains(_E, Field, SubStr), Dict) :-
+    get_dict(Field, Dict, V),
+    string(V),
+    sub_string(V, _, _, _, SubStr).
+
 
 %% ============================
 %% === TRANSFORMATIONS CORE ===

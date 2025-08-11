@@ -71,7 +71,7 @@ handle_event_filter(event(EventType, DictIn)) :-
     sort(2, @>=, RuleList, SortedRules),
     format('[Filter] Sorted rules by priority: ~q~n', [SortedRules]),
 
-    % Appliquer les règles de filtrage
+    % Apply filter_rule 
     (   apply_filter_rules(SortedRules, event(EventType, DictIn))
     ->  ( EventOut = event(EventType, DictIn),
           log_event(EventOut),

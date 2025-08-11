@@ -46,12 +46,14 @@ collect_events(_) :-
     fail.
 
 ensure_default_event(DictIn) :-
-    ( get_dict(id, DictIn, _) ->
-        DictWithId = DictIn
-    ; generate_unique_event_id(Id),
-      put_dict(id, DictIn, Id, DictWithId)
-    ),
-    ensure_field(status, open, DictWithId, DictWithStatus),
+%    ( get_dict(id, DictIn, _) ->
+%        DictWithId = DictIn
+%    ; generate_unique_event_id(Id),
+      put_dict(id, DictIn, Id, DictWithId),
+%    ),
+    get_time(TimeStamp),
+    ensure_field(timestamp,TimeStamp,DictWithId, DictWithTimeStamp),
+    ensure_field(status, open, DictWithTimeStamp, DictWithStatus),
     ensure_field(counter, 0, DictWithStatus, DictWithCounter),
     ( get_dict(type, DictWithCounter, TypeRaw) ->
         atom_string(Type, TypeRaw),
@@ -60,7 +62,7 @@ ensure_default_event(DictIn) :-
       DictFinal = DictWithCounter
     ),
     Event = event(Type, DictFinal),
-    assert_event(Event),
+    %assert_event(Event),
     log_event(Event),
     safe_thread_send_message(refine_queue, Event).
 

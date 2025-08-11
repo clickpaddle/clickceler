@@ -75,7 +75,6 @@ assert_event(event(Type, Dict)) :-
         assertz(kb_shared:event(Type, Dict))
     ).
 
-
 %% log_event(+EventTerm) EventTerm is normalized
 log_event(EventTerm) :-
     eventlog_mutex(Mutex),
@@ -86,7 +85,6 @@ log_event(EventTerm) :-
             close(Stream)
         )
     ).
-
 
 is_type(Type, Type).
 is_type(SubType, SuperType) :-
