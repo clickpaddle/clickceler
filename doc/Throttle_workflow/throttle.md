@@ -1,4 +1,5 @@
-lowchart TD
+```mermaid
+flowchart TD
     Start["Start: handle_event_throttle(event(EventType, DictIn))"] --> FindRules{"throttle_rule_match(EventType, RuleID, Priority, Pattern, CondsDict, Params, TransDict, DictIn) ?"}
     
     FindRules -- No --> SendDirect["No matching rule<br>safe_thread_send_message(event) direct"]
@@ -36,3 +37,4 @@ lowchart TD
     SendEvent --> End["End"]
     WaitMore --> End
     SendDirect --> End
+```
