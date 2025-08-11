@@ -1,6 +1,12 @@
 ```mermaid
 flowchart TD
-    A["handle_throttle_event(Event)"] --> B["Extract Rule parameters: Limit, Window, Delay, SendMethod"]
+    A["handle_throttle_event(Event)"] --> AA{"Find throttle rules mathching"}
+    AA -- |Yes| --> B["Extract Rule parameters: Limit, Window, Delay, SendMethod"]
+    AA -- |No| --> Y["safe_thread_send_message"]
+
+    Y --> Z
+
+
     B --> C["buffer_event(Event)"]
     C --> D["get_buffer_info(BufferSize, OldestTime, Now)"]
     D --> E["Elapsed = Now - OldestTime"]
@@ -29,5 +35,6 @@ flowchart TD
     %% Continue buffering
     H -->|No| P["Continue buffering events"]
     P --> Z
+
 
 ```
