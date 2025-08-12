@@ -16,11 +16,11 @@ init_queue :-
     ( catch(message_queue_property(filter_queue, _), _, fail) ->
         true
     ; message_queue_create(filter_queue),
-      log_trace(info,'[Filter] Created message queue filter~n',[])
+      log_trace(info,'[Filter] Created message queue filter',[])
     ).
 
 thread_goal_filter(ClientID) :-
-    log_trace(info,'[Filter ~w] Thread started~n', [ClientID]).
+    log_trace(info,'[Filter ~w] Thread started', [ClientID]).
 
 % Load Dynamic rules
 
@@ -31,10 +31,10 @@ load_filter_rules :-
     exists_file(RuleFile),           
     !,
     load_files(RuleFile, [if(changed)]),
-    log_trace(info,'[Filter] Rules loaded from ~w~n', [RuleFile]).
+    log_trace(info,'[Filter] Rules loaded from ~w', [RuleFile]).
 
 load_filter_rules :-
-    log_trace(warning,'[Filter] Warning: Rules file not found.~n', []).
+    log_trace(warning,'[Filter] Warning: Rules file not found.', []).
 
 % Main loop of the filter thread.
 % It continuously fetches messages from its message queue and processes them.
@@ -48,11 +48,11 @@ start_filter_loop :-
 filter_loop :-
     thread_get_message(filter_queue, EventTerm),
     (   catch(handle_event_filter(EventTerm), E,
-              (log_trace(error,'[Filter] Error: ~w~n', [E]), fail))
+              (log_trace(error,'[Filter] Error: ~w', [E]), fail))
     ->  true
-    ;   log_trace(warning,'[Filter] EventTerm not handled: ~w~n', [EventTerm])
+    ;   log_trace(warning,'[Filter] EventTerm not handled: ~w', [EventTerm])
     ),
-    log_trace(info,'[Filter] Received: ~q~n', [EventTerm]),
+    log_trace(info,'[Filter] Received: ~q', [EventTerm]),
     filter_loop.
 
 
@@ -60,23 +60,23 @@ filter_loop :-
 % handle_event(+EventTerm) event is normalized
 % Filter Normalized event of the form event(Type, Dict)
 handle_event_filter(event(EventType, DictIn)) :-
-    log_trace(info,'[Filter] Normalized DictIn: ~q~n', [DictIn]),
+    log_trace(info,'[Filter] Normalized DictIn: ~q', [DictIn]),
 
     % Find filter rule(s) matching event 
     findall( filter_rule(RuleID, Priority, [Pattern], Conditions, Transformations),
         filter_rule_match(EventType, RuleID, Priority, [Pattern], Conditions, Transformations, DictIn), RuleList),
-        log_trace(info,'[Filter] Matched rules: ~q~n', [RuleList]),
+        log_trace(info,'[Filter] Matched rules: ~q', [RuleList]),
 
     % Sort filter rules by decreasing priority (100 > 10)
     sort(2, @>=, RuleList, SortedRules),
-    log_trace(info,'[Filter] Sorted rules by priority: ~q~n', [SortedRules]),
+    log_trace(info,'[Filter] Sorted rules by priority: ~q', [SortedRules]),
 
     % Apply filter_rule 
     (   apply_filter_rules(SortedRules, event(EventType, DictIn))
     ->  ( EventOut = event(EventType, DictIn),
           log_event(EventOut),
           safe_thread_send_message(throttle_queue, EventOut))
-    ;   log_trace(info,'[Filter] Event was rejected.~n', [])
+    ;   log_trace(info,'[Filter] Event was rejected.', [])
     ).
 
 % filter_rule_match(+EventType, -RuleID, , -Priority, -[Pattern], -Conditions, -Transformations, +DictIn)
@@ -85,16 +85,16 @@ filter_rule_match(EventType, RuleID, Priority, [Pattern], CondsDict, TransDict, 
     Pattern =.. [RuleEventType, E],
     E = DictIn,
     is_subtype(EventType, RuleEventType),
-    log_trace(info,'[Filter] = ~w is subtype of ~w~n', [EventType, RuleEventType]),
+    log_trace(info,'[Filter] = ~w is subtype of ~w', [EventType, RuleEventType]),
     (
         ( match_all_conditions(CondsDict, E),  % Conditions met: normal rule match
-          log_trace(info,'[Filter] Matched rule: ~q~n', [RuleID])  
+          log_trace(info,'[Filter] Matched rule: ~q', [RuleID])  
         )
     ;
         (   % Otherwise, if conditions fail but action is pass => delete event
             \+ match_all_conditions(CondsDict, E),
             member(pass, TransDict),
-            log_trace(info,'[Filter] Conditions failed but action is pass, deleting event~n', []),
+            log_trace(info,'[Filter] Conditions failed but action is pass, deleting event', []),
             delete_event(event(EventType, DictIn)),
             fail
         )
@@ -109,11 +109,11 @@ apply_filter_rules([filter_rule(_, _, [_], _, Actions) | _], event(Type, Dict)) 
     member(Action, Actions),
     (   Action = nopass
     ->  (delete_event(event(Type, Dict)),
-         log_trace(info,'[Filter] Action: ~q ~q ~n', [Action, event(Type,Dict)]),
+         log_trace(info,'[Filter] Action: ~q ~q ', [Action, event(Type,Dict)]),
          !, fail)  % Stop after deletion of event 
     ;   Action = pass
     ->  (assert_event(event(Type, Dict)),
-         log_trace(info,'[Filter] Action: ~q ~q ~n', [Action, event(Type, Dict)]),
+         log_trace(info,'[Filter] Action: ~q ~q ', [Action, event(Type, Dict)]),
          !)
     ;   true
     ).
@@ -125,7 +125,7 @@ delete_event(event(Type, Dict)) :-
     eventlog_mutex(Mutex),
     with_mutex(Mutex,
       (
-        log_trace(info,'[Filter] ~w Rejected. Stop processing ~n', [event(Type, Dict)]),
+        log_trace(info,'[Filter] ~w Rejected. Stop processing ', [event(Type, Dict)]),
         retractall(kb_shared:event(Type, Dict))
       )
     ).
@@ -146,6 +146,6 @@ queue_exists(QueueName) :-
 safe_thread_send_message(QueueName, Message) :-
     ( queue_exists(QueueName) ->
         thread_send_message(QueueName, Message)
-    ; format(user_error, '[ERROR] Message queue ~w does not exist. Message not sent.~n', [QueueName])
+    ; format(user_error, '[ERROR] Message queue ~w does not exist. Message not sent.', [QueueName])
     ).
 

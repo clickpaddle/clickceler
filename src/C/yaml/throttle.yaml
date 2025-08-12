@@ -1,18 +1,16 @@
 throttle_rules:
-  - name: throttle_event_log_where_severity_equals_info_and_env_eq_dev
+  - name: throttle_network_event
     priority: 100
     event_type:
-      - log(E)
+      - snmptrap(E)
     conditions:
       - within(E, severity, [info])
       - eq(E, env, dev)
       - contains(E, msg, "Hello World!")
     settings:
-      - limit: 10            # Max events allowed
-      - window: 60s          # Time window (seconds)
-      - queue_size: 100      # Max queue size if buffering
-      - on_exceed: reject    # What to do when limit exceeded
-      - delay: 30s           # Optional delay before next event processing
+      - limit: 2            # Max events allowed
+      - window: 30s          # Time window (seconds)
+      - delay: 15s           # Optional delay before next event processing
     action:
       - send_first           # Or send_last
 

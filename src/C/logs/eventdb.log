@@ -1,0 +1,11 @@
+event(snmptrap,_7830{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808}).
+event(snmptrap,_7924{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565}).
+event(snmptrap,_8018{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966}).
+event(snmptrap,_10094{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808}).
+event(snmptrap,_10676{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565}).
+event(snmptrap,_130{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808}).
+event(snmptrap,_11258{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966}).
+event(snmptrap,_682{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565}).
+event(snmptrap,_1234{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966}).
+event(snmptrap,_22{counter:2,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565}).
+event(snmptrap,_22{counter:2,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565}).

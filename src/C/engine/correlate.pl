@@ -16,11 +16,11 @@ init_queue :-
     ( catch(message_queue_property(correlate_queue, _), _, fail) ->
         true
     ; message_queue_create(correlate_queue),
-      log_trace(info,'[Correlate] Created message queue correlate~n',[])
+      log_trace(info,'[Correlate] Created message queue correlate',[])
     ).
 
 thread_goal_correlate(ClientID) :-
-    log_trace(info,'[Correlate ~w] Thread started~n', [ClientID]).
+    log_trace(info,'[Correlate ~w] Thread started', [ClientID]).
 
 % Load Dynamic rules
 
@@ -31,10 +31,10 @@ load_correlate_rules :-
     exists_file(RuleFile),           
     !,
     load_files(RuleFile, [if(changed)]),
-    log_trace(info,'[Correlate] Rules loaded from ~w~n', [RuleFile]).
+    log_trace(info,'[Correlate] Rules loaded from ~w', [RuleFile]).
 
 load_correlate_rules :-
-    log_trace(warning,'[Correlate] Warning: Rules file not found.~n', []).
+    log_trace(warning,'[Correlate] Warning: Rules file not found.', []).
 
 % Main loop of the correlate thread.
 % It continuously fetches messages from its message queue and processes them.
@@ -48,11 +48,11 @@ start_correlate_loop :-
 correlate_loop :-
     thread_get_message(correlate_queue, EventTerm),
     (   catch(handle_event(EventTerm), E,
-              (log_trace(info,'[Correlate] Error: ~w~n', [E],[]), fail))
+              (log_trace(info,'[Correlate] Error: ~w', [E],[]), fail))
     ->  true
-    ;   log_trace(info,'[Correlate] Warning: EventTerm not handled: ~w~n', [EventTerm])
+    ;   log_trace(info,'[Correlate] Warning: EventTerm not handled: ~w', [EventTerm])
     ),
-    log_trace(info,'[Correlate] Received: ~q~n', [EventTerm]),
+    log_trace(info,'[Correlate] Received: ~q', [EventTerm]),
     correlate_loop.
 
 
@@ -60,20 +60,20 @@ correlate_loop :-
 % handle_event(+EventTerm) event is normalized
 % Correlate Normalized event of the form event(Type, Dict)
 handle_event(event(EventType, DictIn)) :-
-    log_trace(info,'[Correlate] Normalized DictIn: ~q~n', [DictIn]),
+    log_trace(info,'[Correlate] Normalized DictIn: ~q', [DictIn]),
     findall( rule(Priority, RuleID, Conditions, Transformations),
     correlate_rule_match(EventType, Priority, RuleID, Conditions, Transformations, DictIn),
     RuleList
     ),
-    log_trace(info,'[Correlate] Matched rules: ~q~n', [RuleList]),
+    log_trace(info,'[Correlate] Matched rules: ~q', [RuleList]),
     % Sort by decreasing priority PRIORITY 100 > PRIORITY 10 
     sort(1, @>=, RuleList, SortedRules),
-    log_trace(info,'[Correlate] Sorted rules by priority: ~q~n', [SortedRules]),
+    log_trace(info,'[Correlate] Sorted rules by priority: ~q', [SortedRules]),
     apply_matching_rules(SortedRules, DictIn, DictOut),
-    log_trace(info,'[Correlate] After apply_matching_rules: ~q~n', [DictOut]),
+    log_trace(info,'[Correlate] After apply_matching_rules: ~q', [DictOut]),
     EventOut = event(EventType, DictOut),
     assert_event(EventOut),
-    log_trace(info,'[Correlate] Final event to assert: ~q~n', [EventOut]),
+    log_trace(info,'[Correlate] Final event to assert: ~q', [EventOut]),
     log_event(EventOut),
     safe_thread_send_message(execute_queue, EventOut).
 
@@ -98,6 +98,6 @@ queue_exists(QueueName) :-
 safe_thread_send_message(QueueName, Message) :-
     ( queue_exists(QueueName) ->
         thread_send_message(QueueName, Message)
-    ; format(user_error, '[ERROR] Message queue ~w does not exist. Message not sent.~n', [QueueName])
+    ; format(user_error, '[ERROR] Message queue ~w does not exist. Message not sent.', [QueueName])
     ).
 

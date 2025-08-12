@@ -9,12 +9,12 @@
 :- mutex_create(event_id_mutex).
 
 thread_goal_kb_shared(ClientID) :-
-    log_trace(info,'[Kb_shared ~w  ] Thread started~n', [ClientID]).
+    log_trace(info,'[Kb_shared ~w  ] Thread started', [ClientID]).
 
 % Principal Loop
 start_kb_shared_loop :-
     thread_self(Main),
-    format("[Kb_shared] Starting kb_shared loop~n", []),
+    format("[Kb_shared] Starting kb_shared loop", []),
     loop.
 
 %% Mutex pour la gestion des événements et log
@@ -32,9 +32,9 @@ handle_message(json_event(Id, Json)) :-
     catch(
         assertz(event(Id, Json)),
         Err,
-        (format("[kb_shared ERROR] Failed to assert event ~w: ~w~n", [Id, Err]), fail)
+        (format("[kb_shared ERROR] Failed to assert event ~w: ~w", [Id, Err]), fail)
     ),
-    format("[Main] Event asserted: ~w => ~w~n", [Id, Json]).
+    format("[Main] Event asserted: ~w => ~w", [Id, Json]).
 
 
 % Public interface to assert event safely
@@ -42,7 +42,7 @@ assert_json_event(Id, Json) :-
     catch(
         assertz(event(Id, Json)),
         Err,
-        (format("[kb_shared ERROR] Failed to assert event ~w: ~w~n", [Id, Err]), fail)
+        (format("[kb_shared ERROR] Failed to assert event ~w: ~w", [Id, Err]), fail)
     ).
 
 print_all_events(ResultString) :-
@@ -58,7 +58,7 @@ event_to_string(event(Type, Attrs), EventString) :-
     with_output_to(string(EventString), (
         format("event(~q, [", [AtomType]),
         print_attrs(Attrs),
-        format("]).~n")
+        format("]).")
     )).
 
 print_attrs([]).
@@ -117,7 +117,7 @@ load_type :-
     absolute_file_name('../types.pl', Path, [access(read), file_errors(fail)]),
     (   exists_file(Path)
     ->  consult(Path)
-    ;   format(user_error, 'Warning: engine.pl not found at ~w~n', [Path])
+    ;   format(user_error, 'Warning: engine.pl not found at ~w', [Path])
     ),
     % (Re)generate hierarchy of event types. 
     generate_type_predicates.
