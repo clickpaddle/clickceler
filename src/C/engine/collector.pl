@@ -4,6 +4,8 @@
 :- use_module(library(thread)).
 :- use_module(library(lists)).
 :- use_module(kb_shared,[eventlog_mutex/1,log_event/1,print_all_events/1]).
+:- use_module(utils).
+
 :- dynamic kb_shared:event/2.
 :- multifile kb_shared:event/2.
 
@@ -37,20 +39,20 @@ collect_events(JsonString) :-
     catch(
         atom_json_dict(JsonString, DictList, [as(list)]),
         E,
-        ( format(user_error, '[collector collect_events] JSON parse error: ~w~n', [E]), fail)
+        ( trace(info, '[collector collect_events] JSON parse error: ~w~n', [E]), fail)
     ),
     is_list(DictList), !,
     maplist(ensure_default_event, DictList).
 collect_events(_) :-
-    format(user_error, '[collector collect_events] Error: Expected JSON list of events.~n'),
+    trace(info, '[collector collect_events] Error: Expected JSON list of events.~n'),
     fail.
 
 ensure_default_event(DictIn) :-
-%    ( get_dict(id, DictIn, _) ->
-%        DictWithId = DictIn
-%    ; generate_unique_event_id(Id),
-      put_dict(id, DictIn, Id, DictWithId),
-%    ),
+    ( get_dict(id, DictIn, _) ->
+        DictWithId = DictIn
+    ; generate_unique_event_id(Id),
+      put_dict(id, DictIn, Id, DictWithId) 
+    ),
     get_time(TimeStamp),
     ensure_field(timestamp,TimeStamp,DictWithId, DictWithTimeStamp),
     ensure_field(status, open, DictWithTimeStamp, DictWithStatus),
@@ -91,6 +93,6 @@ queue_exists(QueueName) :-
 safe_thread_send_message(QueueName, Message) :-
     ( queue_exists(QueueName) ->
         thread_send_message(QueueName, Message)
-    ; format(user_error, '[ERROR] Message queue ~w does not exist. Message not sent.~n', [QueueName])
+    ; trace(info, '[ERROR] Message queue ~w does not exist. Message not sent.~n', [QueueName])
     ).
 

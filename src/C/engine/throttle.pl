@@ -11,9 +11,9 @@
 
 :- dynamic kb_shared:event/2.
 :- multifile kb_shared:event/2.
-:- dynamic buffered_event/2
-:- dynamic delay_timer_active/1
-:- dynamic throttle_rule/5.
+:- dynamic buffered_event/2.
+:- dynamic delay_timer_active/1.
+:- dynamic throttle_rule/6.
 
 %:- initialization(init_queue).
 
@@ -70,8 +70,8 @@ handle_event_throttle(event(EventType, DictIn)) :-
 
     % Find filter rule(s) matching event 
     findall(
-        throttle_rule(RuleID, Priority, [Pattern], Conditions, Params, Transformations),
-        throttle_rule_match(EventType, RuleID, Priority, [Pattern], Conditions, Params, Transformations, DictIn), RuleList),
+        throttle_rule(RuleID, Priority, [Pattern], Conditions, ParamList, Transformations),
+        throttle_rule_match(EventType, RuleID, Priority, [Pattern], Conditions, ParamList, Transformations, DictIn), RuleList),
         format('[RuleList] Matched rules: ~q~n', [RuleList]),
 
     % Sort filter rules by decreasing priority (100 > 10)
@@ -81,12 +81,14 @@ handle_event_throttle(event(EventType, DictIn)) :-
     % Apply throttle rules
     apply_throttle_rules(SortedRules, event(EventType, DictIn)).
 
-apply_throttle_rules([], event(EventType, DictIn)) :-
+apply_throttle_rules([], _Event) :-
     % No rules left to apply, send event directly
-    format('[ApplyThrottle] No more throttle rules, sending event directly~n').
+    format('[Throttle] No more throttle rules, sending event directly~n').
 
-apply_throttle_rules([throttle_rule(RuleID, Priority, [Pattern], Conditions, Params, Transformations)], event(EventType, DictIn)) :-
+apply_throttle_rules([throttle_rule(RuleID, _Priority, _[Pattern], _Conditions, ParamList, Transformations)], event(EventType, DictIn)) :-
     % Extract params
+    ParamList = [Params],
+    format('[Throttle] Parsing settings: ~q ~n',[Params]), 
     get_dict(limit, Params, Limit),
     get_dict(window, Params, Window),
     ( get_dict(delay, Params, Delay) -> true ; Delay = 0 ),
@@ -94,7 +96,7 @@ apply_throttle_rules([throttle_rule(RuleID, Priority, [Pattern], Conditions, Par
     % Extract transformation to apply (send_first or send_last)
     ( member(send_first, Transformations) -> SendMethod = send_first
     ; member(send_last, Transformations) -> SendMethod = send_last
-    ; SendMethod = send_first % Default to send_first if unspecifie
+    ; SendMethod = send_first % Default to send_first if unspecified
     ),
 
     format('[Throttle] Apply Rule ~w with Limit=~w, Window=~w, Delay=~w, SendMethod=~w~n',
@@ -113,14 +115,14 @@ apply_throttle_rules([throttle_rule(RuleID, Priority, [Pattern], Conditions, Par
       SendMethod == send_first
     ->
         % First event + send_first: send after Delay, do NOT clear buffer
-        send_first(Delay, event(EventType, DictIn))
+        send_first(Delay, event(EventType, DictIn), Limit)
     ; (BufferSize >= Limit ; Elapsed >= Window)
     ->
         % Buffer full or window expired
         ( SendMethod == send_last
         ->
             get_last_buffered_event(event(LastEventType, LastDict)),
-            send_last(Delay, event(LastEventType, LastDict)),
+            send_last(Delay, event(LastEventType, LastDict), Limit),
             clear_buffer
         ; SendMethod == send_first
         ->
@@ -151,8 +153,8 @@ clear_buffer :-
     retractall(buffered_event(_)),
     format('[Throttle] Buffer cleared~n').
 
-throttle_rule_match(EventType, RuleID, Priority, [Pattern], CondsDict, Params, TransDict, DictIn) :-
-    throttle_rule(RuleID, Priority, [Pattern], CondsDict, Params, TransDict),
+throttle_rule_match(EventType, RuleID, Priority, [Pattern], CondsDict, ParamList, TransDict, DictIn) :-
+    throttle_rule(RuleID, Priority, [Pattern], CondsDict, ParamList, TransDict),
     % Extract Event Type from throttle_rule 
     Pattern =.. [RuleEventType, E],
     E = DictIn,
@@ -170,14 +172,20 @@ throttle_rule_match(EventType, RuleID, Priority, [Pattern], CondsDict, Params, T
     ).
 
 
-send_first(Delay, Event) :-
+send_first(Delay, event(Type, Dict), Limit) :-
+    put_dict(counter,Dict,Limit,DictOut),
+    Event = event(Type, DictOut),
+    format('[Throttle] Delaying ~w send_first; ~w ~n',[Delay,Event]),
     thread_create(
         delayed_safe_send(Delay, Event),
         _ThreadId,
         [detached(true)]
     ).
 
-send_last(Delay, Event) :-
+send_last(Delay, event(Type, Dict), Limit) :-
+    put_dict(counter,Dict,Limit,DictOut),
+    Event = event(Type, DictOut),
+    format('[Throttle] Delaying ~w send_last; ~w ~n',[Delay,Event]),
     thread_create(
         delayed_safe_send(Delay, Event),
         _ThreadId,
@@ -185,9 +193,11 @@ send_last(Delay, Event) :-
     ).
 
 delayed_safe_send(Delay, Event) :-
-    sleep(Delay),
+    duration_to_seconds(Delay,Seconds), 
+    sleep(Seconds),
     assert_event(Event),
     log_event(Event),
+    format('[Throttle] Delayed ~w  throttling event; ~w',[Seconds,Event]),
     safe_thread_send_message(abstract_queue,Event).
 
 % Queue existence and safe send predicate

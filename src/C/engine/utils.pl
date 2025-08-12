@@ -8,9 +8,50 @@
     greater_equal/2,
     less_than/2,
     less_equal/2,
-    memberchk_conv/2
-]).
+    memberchk_conv/2,
+    duration_to_seconds/2,
+    unit_to_seconds/2,
+    trace/3,
+    set_log_level/1,
+    log_level /1
+    ]).
+    
 
+:- use_module(library(date)).
+:- dynamic log_level/1.
+
+log_level(info).
+
+% predicate pour changer le niveau global
+set_log_level(Level) :-
+    retractall(log_level(_)),
+    assertz(log_level(Level)).
+
+log_level_priority(debug, 1).
+log_level_priority(info, 2).
+log_level_priority(warning, 3).
+log_level_priority(error, 4).
+
+trace(Level, Format, Args) :-
+    log_level(Current),
+    log_level_priority(Level, P1),
+    log_level_priority(Current, P2),
+    P1 >= P2,  
+    get_time(T),
+    Seconds is floor(T),
+    Microsecs is round((T - Seconds) * 1000000),
+    format_time(atom(Date), '%Y-%m-%dT%H:%M:%S', Seconds),
+    format(atom(Timestamp), '~w.~06d', [Date, Microsecs]),
+    format(atom(Msg), Format, Args),
+    format('[~w] [~w] ~w~n', [Timestamp, Level, Msg]).
+
+trace(Level, _, _) :-
+    log_level(Current),
+    log_level_priority(Level, P1),
+    log_level_priority(Current, P2),
+    P1 < P2,
+    !,
+    fail.
 %% ========================
 %% === MATCH CONDITIONS ===
 %% ========================
@@ -188,3 +229,17 @@ memberchk_conv(Value, List) :-
     to_string(Value, S),
     memberchk_string(S, List).
 
+duration_to_seconds(DurationAtom, Seconds) :-
+    atom_chars(DurationAtom, Chars),
+    append(NumberChars, [UnitChar], Chars),
+    number_chars(Number, NumberChars),
+    unit_to_seconds(UnitChar, UnitSeconds),
+    Seconds is Number * UnitSeconds.
+
+unit_to_seconds('s', 1).
+unit_to_seconds('m', 60).
+unit_to_seconds('h', 3600).
+unit_to_seconds('d', 86400).
+unit_to_seconds('w', 604800).
+unit_to_seconds('M', 2592000).
+unit_to_seconds('Y', 31536000).

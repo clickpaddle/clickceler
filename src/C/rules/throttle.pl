@@ -1,11 +1,11 @@
 % Auto-generated throttle rules
 
 throttle_rule(
-    throttle_event_log_where_severity_equals_info_and_env_eq_dev,
+    throttle_network_event,
     100,
-    [log(E)],
+    [snmptrap(E)],
     [within(E, severity, [info]), eq(E, env, dev), contains(E, message, "Hello World!")],
-    [{'limit': 2}, {'window': '30s'}, {'queue_size': 100}, {'on_exceed': 'reject'}, {'delay': '0s'}],
+    [settings{'limit': 2, 'window': '30s', 'queue_size': 100, 'on_exceed': 'reject', 'delay': '30s'}],
     ['send_first']
 ).
 

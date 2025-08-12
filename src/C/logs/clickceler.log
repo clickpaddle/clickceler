@@ -1,0 +1,94 @@
+[DEBUG] [Main Thread] Kb_shared handler thread created.
+[kb_shared thread engine] [DEBUG] Thread 1 started.
+[DEBUG] [Main Thread] Refine handler thread created.
+[refine thread engine] [DEBUG] Thread 3 started.
+[DEBUG] [Main Thread] Filter handler thread created.
+[DEBUG] [Main Thread] Throttle handler thread created.
+[filter thread engine] [DEBUG] Thread 4 started.
+[throttle thread engine] [DEBUG] Thread 5 started.
+[DEBUG] [Main Thread] Abstract handler thread created.
+[abstract thread engine] [DEBUG] Thread 6 started.
+[DEBUG] [Main Thread] Update handler thread created.
+[update thread engine] [DEBUG] Thread 7 started.
+[DEBUG] [Main Thread] Correlate handler thread created.
+[DEBUG] [Main Thread] Execute handler thread created.
+[correlate thread engine] [DEBUG] Thread 8 started.
+[execute thread engine] [DEBUG] Thread 9 started.
+[DEBUG] [Main Thread] Timer handler thread created.
+[DEBUG] [Main Thread] Propagate handler thread created.
+[timer thread engine] [DEBUG] Thread 10 started.
+[propagate thread engine] [DEBUG] Thread 11 started.
+[DEBUG] [Main Thread] Trigger handler thread created.
+[trigger thread engine] [DEBUG] Thread 12 started.
+[DEBUG] [Main Thread] Collector handler thread created.
+[DEBUG] [Collector Handler 2] Entering collector_handler_thread
+[DEBUG] [Collector Handler 2] Socket created.
+[DEBUG] [Collector Handler 2] Socket bound to port 65432.
+[INFO] [Collector Handler 2] Server started and listening on port 65432
+[DEBUG] [Collector Handler 2] Waiting for new connections...
+[DEBUG] [Thread 140199508047552] Rules loaded from ../engine/kb_shared.pl
+[INFO] [Thread 140199508047552] Captured output: [kb_shared 140199508047552] Thread started
+
+[kb_shared thread engine] [INFO] Module 'kb_shared' successfully loaded.
+[Main <thread>(2,0x7f82b80062c0)] Starting kb_shared loop
+[DEBUG] [Thread 140199384303296] Rules loaded from ../engine/execute.pl
+[DEBUG] [Thread 140199141045952] Rules loaded from ../engine/trigger.pl
+[DEBUG] [Thread 140199401088704] Rules loaded from ../engine/update.pl
+[DEBUG] [Thread 140199409481408] Rules loaded from ../engine/abstract.pl
+[INFO] [Thread 140199141045952] Captured output: [Trigger 140199141045952] Thread started
+
+[trigger thread engine] [INFO] Module 'trigger' successfully loaded.
+[DEBUG] [Thread 140199392696000] Rules loaded from ../engine/correlate.pl
+[Trigger] Warning: Rules file not found.
+[INFO] [Thread 140199384303296] Captured output: [Execute 140199384303296] Thread started
+
+[execute thread engine] [INFO] Module 'execute' successfully loaded.
+[INFO] [Thread 140199401088704] Captured output: [Update 140199401088704] Thread started
+
+[Trigger] Created message queue trigger
+[update thread engine] [INFO] Module 'update' successfully loaded.
+[Execute] Warning: Rules file not found.
+[INFO] [Thread 140199392696000] Captured output: [Correlate 140199392696000] Thread started
+
+[correlate thread engine] [INFO] Module 'correlate' successfully loaded.
+[Update] Warning: Rules file not found.
+[INFO] [Thread 140199409481408] Captured output: [Abstract 140199409481408] Thread started
+
+[Execute] Created message queue execute
+[abstract thread engine] [INFO] Module 'abstract' successfully loaded.
+[Correlate] Warning: Rules file not found.
+[Update] Created message queue update
+[Abstract] Warning: Rules file not found.
+[DEBUG] [Thread 140199375910592] Rules loaded from ../engine/timer.pl
+[Correlate] Created message queue correlate
+[Abstract] Created message queue abstract
+[INFO] [Thread 140199375910592] Captured output: [Timer 140199375910592] Thread started
+
+[timer thread engine] [INFO] Module 'timer' successfully loaded.
+[DEBUG] [Thread 140199367517888] Rules loaded from ../engine/propagate.pl
+[Timer] Warning: Rules file not found.
+[Timer] Created message queue timer
+[INFO] [Thread 140199367517888] Captured output: [Propagate 140199367517888] Thread started
+
+[propagate thread engine] [INFO] Module 'propagate' successfully loaded.
+[Propagate] Warning: Rules file not found.
+[Propagate] Created message queue propagate
+[DEBUG] [Thread 140199499654848] Rules loaded from ../engine/refine.pl
+[DEBUG] [Thread 140199357044416] Rules loaded from ../engine/filter.pl
+[INFO] [Thread 140199357044416] Captured output: [Filter 140199357044416] Thread started
+
+[filter thread engine] [INFO] Module 'filter' successfully loaded.
+ERROR: [Thread 7] /opt/automation/clickceler/src/C/engine/throttle.pl:88:56: Syntax error: Operator expected
+[INFO] [Thread 140199499654848] Captured output: [Refine 140199499654848] Thread started
+[Refine] Created message queue refine
+[Refine] Rules loaded from ../rules/refine.pl
+
+[refine thread engine] [INFO] Module 'refine' successfully loaded.
+[Filter] Rules loaded from ../rules/filter.pl
+[Filter] Created message queue filter
+[DEBUG] [Thread 140199491262144] Rules loaded from ../engine/throttle.pl
+[INFO] [Thread 140199491262144] Captured output: [Throttle 140199491262144] Thread started
+
+[throttle thread engine] [INFO] Module 'throttle' successfully loaded.
+[Throttle] Rules loaded from ../rules/throttle.pl
+[Throttle] Created message queue throttle

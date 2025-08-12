@@ -1,6 +1,8 @@
 :- module(kb_shared, [thread_goal_kb_shared/1,start_kb_shared_loop/0,assert_json_event/2, event/2, print_all_events/1, eventlog_mutex/1, log_event/1, is_subtype/2]).
 :- use_module(library(http/json)).
 :- use_module('../types/types.pl',[subtype/2, valid_severity/1, valid_status/1]).
+:- use_module(utils).
+
 :- dynamic event/2.
 :- multifile event/2.
 :- dynamic eventlog_mutex/1.

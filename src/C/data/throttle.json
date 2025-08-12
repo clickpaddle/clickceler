@@ -1,16 +1,23 @@
 [
   {
-    "type": "log",
+    "type": "snmptrap",
     "status": "open",
     "severity": "info",
     "env": "dev",
     "message": "Hello World!"
   },
   {
-    "type": "log",
+    "type": "snmptrap",
     "status": "open",
     "severity": "info",
     "env": "dev",
     "message": "Hello World!"
   },
+  {
+    "type": "snmptrap",
+    "status": "open",
+    "severity": "info",
+    "env": "dev",
+    "message": "Hello World!"
+  }
 ]
