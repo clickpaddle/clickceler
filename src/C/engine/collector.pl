@@ -31,7 +31,7 @@ generate_unique_event_id(Id) :-
 
 
 thread_goal_collector(ClientID) :-
-    format('[Collector ~w] Thread started~n', [ClientID]).
+    log_trace(info,'[Collector ~w] Thread started~n', [ClientID]).
 
 
 
@@ -39,12 +39,13 @@ collect_events(JsonString) :-
     catch(
         atom_json_dict(JsonString, DictList, [as(list)]),
         E,
-        ( trace(info, '[collector collect_events] JSON parse error: ~w~n', [E]), fail)
+        ( log_trace(error, '[collector collect_events] JSON parse error: ~w~n', [E],[]), fail)
     ),
     is_list(DictList), !,
     maplist(ensure_default_event, DictList).
+
 collect_events(_) :-
-    trace(info, '[collector collect_events] Error: Expected JSON list of events.~n'),
+    log_trace(warning, '[collector collect_events] Expected JSON list of events.~n',[]),
     fail.
 
 ensure_default_event(DictIn) :-
@@ -93,6 +94,6 @@ queue_exists(QueueName) :-
 safe_thread_send_message(QueueName, Message) :-
     ( queue_exists(QueueName) ->
         thread_send_message(QueueName, Message)
-    ; trace(info, '[ERROR] Message queue ~w does not exist. Message not sent.~n', [QueueName])
+    ; log_trace(error, '[Collector] Message queue ~w does not exist. Message not sent.~n', [QueueName])
     ).
 

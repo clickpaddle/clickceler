@@ -16,11 +16,11 @@ init_queue :-
     ( catch(message_queue_property(update_queue, _), _, fail) ->
         true
     ; message_queue_create(update_queue),
-      format('[Update] Created message queue update~n')
+      log_trace(info,'[Update] Created message queue update~n',[])
     ).
 
 thread_goal_update(ClientID) :-
-    format('[Update ~w] Thread started~n', [ClientID]).
+    log_trace(info,'[Update ~w] Thread started~n', [ClientID]).
 
 % Load Dynamic rules
 
@@ -31,10 +31,10 @@ load_update_rules :-
     exists_file(RuleFile),           
     !,
     load_files(RuleFile, [if(changed)]),
-    format('[Update] Rules loaded from ~w~n', [RuleFile]).
+    log_trace(info,'[Update] Rules loaded from ~w~n', [RuleFile]).
 
 load_update_rules :-
-    format('[Update] Warning: Rules file not found.~n', []).
+    log_trace(info,'[Update] Warning: Rules file not found.~n', []).
 
 % Main loop of the update thread.
 % It continuously fetches messages from its message queue and processes them.
@@ -48,11 +48,11 @@ start_update_loop :-
 update_loop :-
     thread_get_message(update_queue, EventTerm),
     (   catch(handle_event(EventTerm), E,
-              (format('[Update] Error: ~w~n', [E]), fail))
+              (log_trace(info,'[Update] Error: ~w~n', [E]), fail))
     ->  true
-    ;   format('[Update] Warning: EventTerm not handled: ~w~n', [EventTerm])
+    ;   log_trace(info,'[Update] Warning: EventTerm not handled: ~w~n', [EventTerm])
     ),
-    format('[Update] Received: ~q~n', [EventTerm]),
+    log_trace(info,'[Update] Received: ~q~n', [EventTerm]),
     update_loop.
 
 
@@ -60,20 +60,20 @@ update_loop :-
 % handle_event(+EventTerm) event is normalized
 % Update Normalized event of the form event(Type, Dict)
 handle_event(event(EventType, DictIn)) :-
-    format('[Update] Normalized DictIn: ~q~n', [DictIn]),
+    log_trace(info,'[Update] Normalized DictIn: ~q~n', [DictIn]),
     findall( rule(Priority, RuleID, Conditions, Transformations),
     update_rule_match(EventType, Priority, RuleID, Conditions, Transformations, DictIn),
     RuleList
     ),
-    format('[Update] Matched rules: ~q~n', [RuleList]),
+    log_trace(info,'[Update] Matched rules: ~q~n', [RuleList]),
     % Sort by decreasing priority PRIORITY 100 > PRIORITY 10 
     sort(1, @>=, RuleList, SortedRules),
-    format('[Update] Sorted rules by priority: ~q~n', [SortedRules]),
+    log_trace(info,'[Update] Sorted rules by priority: ~q~n', [SortedRules]),
     apply_matching_rules(SortedRules, DictIn, DictOut),
-    format('[Update] After apply_matching_rules: ~q~n', [DictOut]),
+    log_trace(info,'[Update] After apply_matching_rules: ~q~n', [DictOut]),
     EventOut = event(EventType, DictOut),
     assert_event(EventOut),
-    format('[Update] Final event to assert: ~q~n', [EventOut]),
+    log_trace(info,'[Update] Final event to assert: ~q~n', [EventOut]),
     log_event(EventOut),
     safe_thread_send_message(correlate_queue, EventOut).
 

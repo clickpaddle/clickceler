@@ -17,11 +17,11 @@ init_queue :-
     ( catch(message_queue_property(refine_queue, _), _, fail) ->
         true
     ; message_queue_create(refine_queue),
-      format('[Refine] Created message queue refine~n')
+      log_trace(info,'[Refine] Created message queue refine~n',[])
     ).
 
 thread_goal_refine(ClientID) :-
-    format('[Refine ~w] Thread started~n', [ClientID]),
+    log_trace(info,'[Refine ~w] Thread started~n', [ClientID]),
     init_queue, 
     load_refine_rules.
 
@@ -34,10 +34,10 @@ load_refine_rules :-
     exists_file(RuleFile),           
     !,
     load_files(RuleFile, [if(changed)]),
-    format('[Refine] Rules loaded from ~w~n', [RuleFile]).
+    log_trace(info,'[Refine] Rules loaded from ~w~n', [RuleFile]).
 
 load_refine_rules :-
-    format('[Refine] Warning: Rules file not found.~n', []).
+    log_trace(warning,'[Refine] Rules file not found.~n', []).
 
 % Main loop of the refine thread.
 % It continuously fetches messages from its message queue and processes them.
@@ -49,11 +49,11 @@ start_refine_loop :-
 refine_loop :-
     thread_get_message(refine_queue, EventTerm),
     (   catch(handle_event(EventTerm), E,
-              (format('[Refine] Error: ~w~n', [E]), fail))
+              (log_trace(error,'[Refine] Error: ~w~n', [E]), fail))
     ->  true
-    ;   format('[Refine] Warning: EventTerm not handled: ~w~n', [EventTerm])
+    ;   log_trace(warning,'[Refine]EventTerm not handled: ~w~n', [EventTerm])
     ),
-    format('[Refine] Received: ~q~n', [EventTerm]),
+    log_trace(info,'[Refine] Received: ~q~n', [EventTerm]),
     refine_loop.
 
 
@@ -61,18 +61,18 @@ refine_loop :-
 % handle_event(+EventTerm) event is normalized
 % Refine Normalized event of the form event(Type, Dict)
 handle_event(event(EventType, DictIn)) :-
-    format('[Refine] Normalized DictIn: ~q~n', [DictIn]),
+    log_trace(info,'[Refine] Normalized DictIn: ~q~n', [DictIn]),
     findall( refine_rule(RuleID, Priority, [Pattern],Conditions, Transformations),
     refine_rule_match(EventType, RuleID, Priority, [Pattern], Conditions, Transformations, DictIn), RuleList),
-    format('[Refine] Matched rules: ~q~n', [RuleList]),
+    log_trace(info,'[Refine] Matched rules: ~q~n', [RuleList]),
     % Sort by decreasing PRIORITY 100 > PRIORITY 10 
     sort(2, @>=, RuleList, SortedRules),
-    format('[Refine] Sorted rules by priority: ~q~n', [SortedRules]),
+    log_trace(info,'[Refine] Sorted rules by priority: ~q~n', [SortedRules]),
     apply_matching_rules(SortedRules, DictIn, DictOut),
-    format('[Refine] After apply_matching_rules: ~q~n', [DictOut]),
+    log_trace(info,'[Refine] After apply_matching_rules: ~q~n', [DictOut]),
     EventOut = event(EventType, DictOut),
     %assert_event(EventOut),
-    format('[Refine] Final event to assert: ~q~n', [EventOut]),
+    log_trace(info,'[Refine] Final event to assert: ~q~n', [EventOut]),
     log_event(EventOut),
     safe_thread_send_message(filter_queue, EventOut).
 
@@ -84,15 +84,15 @@ refine_rule_match(EventType, RuleID,  Priority, [Pattern],CondsDict, TransDict, 
     Pattern =.. [RuleEventType, E],
     E = DictIn,
     is_subtype(EventType, RuleEventType),
-    format('[Refine] = ~w is subtype of ~w~n', [EventType, RuleEventType]),  
+    log_trace(info,'[Refine] = ~w is subtype of ~w~n', [EventType, RuleEventType]),  
     match_all_conditions(CondsDict, E).
 
 %% === APPLY RULE ENGINE ===
 
 apply_matching_rules([], Dict, Dict).
 apply_matching_rules([refine_rule( RuleID, _Priority, [_Pattern], _Conds, Transforms) | Rest], DictIn, DictOut) :-
-    format('[Refine] Applying rule ~w~n', [RuleID]),
-    format('[Refine Transforms: ~w ~n',[Transforms]),
+    log_trace(info,'[Refine] Applying rule ~w~n', [RuleID]),
+    log_trace(info,'[Refine Transforms: ~w ~n',[Transforms]),
     apply_transformations(Transforms, DictIn, DictNext),
     apply_matching_rules(Rest, DictNext, DictOut).
 

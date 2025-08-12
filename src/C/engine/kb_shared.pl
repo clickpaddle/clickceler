@@ -9,12 +9,12 @@
 :- mutex_create(event_id_mutex).
 
 thread_goal_kb_shared(ClientID) :-
-    format('[kb_shared ~w] Thread started~n', [ClientID]).
+    log_trace(info,'[Kb_shared ~w  ] Thread started~n', [ClientID]).
 
 % Principal Loop
 start_kb_shared_loop :-
     thread_self(Main),
-    format("[Main ~w] Starting kb_shared loop~n", [Main]),
+    format("[Kb_shared] Starting kb_shared loop~n", []),
     loop.
 
 %% Mutex pour la gestion des événements et log

@@ -11,47 +11,67 @@
     memberchk_conv/2,
     duration_to_seconds/2,
     unit_to_seconds/2,
-    trace/3,
+    log_trace/3,
     set_log_level/1,
-    log_level /1
+    get_log_level/1
     ]).
     
 
 :- use_module(library(date)).
-:- dynamic log_level/1.
+:- use_module(library(time)).
 
-log_level(info).
+:- dynamic current_log_level/1.
 
-% predicate pour changer le niveau global
+current_log_level(info).
+
+% Log level numeric values for comparison
+log_level_value(debug, 10).
+log_level_value(info, 20).
+log_level_value(warning, 30).
+log_level_value(error, 40).
+
+%% set_log_level(+Level)
+%  Sets the minimal log level to output messages
 set_log_level(Level) :-
-    retractall(log_level(_)),
-    assertz(log_level(Level)).
+    retractall(current_log_level(_)),
+    assert(current_log_level(Level)).
 
-log_level_priority(debug, 1).
-log_level_priority(info, 2).
-log_level_priority(warning, 3).
-log_level_priority(error, 4).
+%% get_log_level(-Level)
+%  Gets the current minimal log level
+get_log_level(Level) :-
+    current_log_level(Level).
 
-trace(Level, Format, Args) :-
-    log_level(Current),
-    log_level_priority(Level, P1),
-    log_level_priority(Current, P2),
-    P1 >= P2,  
-    get_time(T),
-    Seconds is floor(T),
-    Microsecs is round((T - Seconds) * 1000000),
-    format_time(atom(Date), '%Y-%m-%dT%H:%M:%S', Seconds),
-    format(atom(Timestamp), '~w.~06d', [Date, Microsecs]),
-    format(atom(Msg), Format, Args),
-    format('[~w] [~w] ~w~n', [Timestamp, Level, Msg]).
+%% log_trace(+Level, +Format, +Args)
+%  Logs a message if Level is >= current_log_level
+log_trace(Level, Format, Args) :-
+    current_log_level(CurrentLevel),
+    log_level_value(Level, LevelVal),
+    log_level_value(CurrentLevel, CurrentLevelVal),
+    LevelVal >= CurrentLevelVal,
+    get_time(TS),
+    format_time(string(TimeStamp), '%Y-%m-%dT%H:%M:%S', TS),
+    format('[~w] [~w] ', [TimeStamp, Level]),
+    format(Format, Args),
+    nl.
 
-trace(Level, _, _) :-
-    log_level(Current),
-    log_level_priority(Level, P1),
-    log_level_priority(Current, P2),
-    P1 < P2,
-    !,
-    fail.
+% Fail silently if below threshold
+log_trace(Level, _Format, _Args) :-
+    current_log_level(CurrentLevel),
+    log_level_value(Level, LevelVal),
+    log_level_value(CurrentLevel, CurrentLevelVal),
+    LevelVal < CurrentLevelVal,
+    !, fail.
+
+
+%log_trace(Level, FormatString, Args) :-
+%    get_time(TimeFloat),
+%    Seconds is floor(TimeFloat),
+%    Microsecs is round((TimeFloat - Seconds) * 1_000_000),
+%    format_time(atom(DatePart), '%Y-%m-%dT%H:%M:%S', Seconds),
+%    format(atom(Timestamp), '~w.~06d', [DatePart, Microsecs]),
+%    format(atom(Message), FormatString, Args),
+%    format('[~w] [~w] ~w~n', [Timestamp, Level, Message]).
+
 %% ========================
 %% === MATCH CONDITIONS ===
 %% ========================

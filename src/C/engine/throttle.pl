@@ -21,11 +21,11 @@ init_queue :-
     ( catch(message_queue_property(throttle_queue, _), _, fail) ->
         true
     ; message_queue_create(throttle_queue),
-      format('[Throttle] Created message queue throttle~n')
+      log_trace(info,'[Throttle] Created message queue throttle~n',[])
     ).
 
 thread_goal_throttle(ClientID) :-
-    format('[Throttle ~w] Thread started~n', [ClientID]).
+    log_trace(info,'[Throttle ~w] Thread started~n', [ClientID]).
 
 % Load Dynamic rules
 
@@ -36,10 +36,10 @@ load_throttle_rules :-
     exists_file(RuleFile),           
     !,
     load_files(RuleFile, [if(changed)]),
-    format('[Throttle] Rules loaded from ~w~n', [RuleFile]).
+    log_trace(info,'[Throttle] Rules loaded from ~w~n', [RuleFile]).
 
 load_throttle_rules :-
-    format('[Throttle] Warning: Rules file not found.~n', []).
+    log_trace(warning,'[Throttle]Rules file not found.~n', []).
 
 % Main loop of the throttle thread.
 % It continuously fetches messages from its message queue and processes them.
@@ -53,11 +53,11 @@ start_throttle_loop :-
 throttle_loop :-
     thread_get_message(throttle_queue, EventTerm),
     (   catch(handle_event_throttle(EventTerm), E,
-              (format('[Throttle] Error: ~w~n', [E]), fail))
+              (log_trace(error,'[Throttle] Error: ~w~n', [E]), fail))
     ->  true
-    ;   format('[Throttle] Warning: EventTerm not handled: ~w~n', [EventTerm])
+    ;   log_trace(warning,'[Throttle] EventTerm not handled: ~w~n', [EventTerm])
     ),
-    format('[Throttle] Received: ~q~n', [EventTerm]),
+    log_trace(info,'[Throttle] Received: ~q~n', [EventTerm]),
     throttle_loop.
 
 
@@ -66,29 +66,33 @@ throttle_loop :-
 % Throttle Normalized event of the form event(Type, Dict)
 % handle_event_throttle(+Event)
 handle_event_throttle(event(EventType, DictIn)) :-
-    format('[Throttle] Normalized DictIn: ~q~n', [DictIn]),
+    log_trace(info,'[Throttle] Normalized DictIn: ~q~n', [DictIn]),
 
     % Find filter rule(s) matching event 
     findall(
         throttle_rule(RuleID, Priority, [Pattern], Conditions, ParamList, Transformations),
-        throttle_rule_match(EventType, RuleID, Priority, [Pattern], Conditions, ParamList, Transformations, DictIn), RuleList),
-        format('[RuleList] Matched rules: ~q~n', [RuleList]),
+        throttle_rule_match(EventType, RuleID, Priority, [Pattern], Conditions, ParamList, Transformations, DictIn), 
+        RuleList
+    ),
+    log_trace(info,'[Throttle] Matched rules: ~q~n', [RuleList]),
 
     % Sort filter rules by decreasing priority (100 > 10)
     sort(2, @>=, RuleList, SortedRules),
-    format('[Throttle] Sorted rules by priority: ~q~n', [SortedRules]),
+    log_trace(info,'[Throttle] Sorted rules by priority: ~q~n', [SortedRules]),
 
     % Apply throttle rules
     apply_throttle_rules(SortedRules, event(EventType, DictIn)).
+
 
 apply_throttle_rules([], _Event) :-
     % No rules left to apply, send event directly
     format('[Throttle] No more throttle rules, sending event directly~n').
 
-apply_throttle_rules([throttle_rule(RuleID, _Priority, _[Pattern], _Conditions, ParamList, Transformations)], event(EventType, DictIn)) :-
+apply_throttle_rules([throttle_rule(RuleID, _Priority, [Pattern], _Conditions, ParamList, Transformations)| Rest], event(EventType, DictIn)) :-
     % Extract params
+    log_trace(info,'[Throttle] Parsing settings: ~q ~n',[ParamList]), 
     ParamList = [Params],
-    format('[Throttle] Parsing settings: ~q ~n',[Params]), 
+    log_trace(info,'[Throttle] Parsing settings: ~q ~n',[Params]), 
     get_dict(limit, Params, Limit),
     get_dict(window, Params, Window),
     ( get_dict(delay, Params, Delay) -> true ; Delay = 0 ),
@@ -99,13 +103,12 @@ apply_throttle_rules([throttle_rule(RuleID, _Priority, _[Pattern], _Conditions, 
     ; SendMethod = send_first % Default to send_first if unspecified
     ),
 
-    format('[Throttle] Apply Rule ~w with Limit=~w, Window=~w, Delay=~w, SendMethod=~w~n',
-           [RuleID, Limit, Window, Delay, SendMethod]),
+    log_trace(info,'[Throttle] Apply Rule ~w with Limit=~w, Window=~w, Delay=~w, SendMethod=~w~n', [RuleID, Limit, Window, Delay, SendMethod]),
 
     % Buffer the event
     assertz(buffered_event(event(EventType, DictIn))),
 
-   % Get buffer size and oldest event time
+   %t Get buffer size and oldest event time
     buffer_size(BufferSize),
     ( buffer_oldest_event_time(OldestTime) -> true ; OldestTime = 0 ),
     current_time(CurrentTime),
@@ -133,8 +136,9 @@ apply_throttle_rules([throttle_rule(RuleID, _Priority, _[Pattern], _Conditions, 
         true
     ),
     % Apply next rules (if any)
-    apply_throttle_rules(Rest, Event).
- 
+    apply_throttle_rules(Rest, event(EventType, DictIn)).
+
+
 % Buffer helpers
 get_last_buffered_event(event(EventOut, DictOut)) :-
     findall(event(EvtType, Dict), buffered_event(event(EvtType, Dict)), Events),
@@ -151,7 +155,7 @@ buffer_oldest_event_time(OldestTime) :-
 
 clear_buffer :-
     retractall(buffered_event(_)),
-    format('[Throttle] Buffer cleared~n').
+    log_trace(info,'[Throttle] Buffer cleared~n',[]).
 
 throttle_rule_match(EventType, RuleID, Priority, [Pattern], CondsDict, ParamList, TransDict, DictIn) :-
     throttle_rule(RuleID, Priority, [Pattern], CondsDict, ParamList, TransDict),
@@ -160,10 +164,10 @@ throttle_rule_match(EventType, RuleID, Priority, [Pattern], CondsDict, ParamList
     E = DictIn,
     % Verify que EventType s a sub-type of  RuleEventType
     is_subtype(EventType, RuleEventType),
-    format('[Throttle] ~w is subtype of ~w~n', [EventType, RuleEventType]),
+    log_trace(info,'[Throttle] ~w is subtype of ~w~n', [EventType, RuleEventType]),
     ( match_all_conditions(CondsDict, E) -> 
             % Conditions respected : rule is ok 
-            format('[throttle] Matched rule: ~q~n', [RuleID])
+            log_trace(info,'[throttle] Matched rule: ~q~n', [RuleID])
     ; 
         assert_event(event(EventType, DictIn)), 
          log_event(event(EventType, DictIn)),
@@ -175,7 +179,7 @@ throttle_rule_match(EventType, RuleID, Priority, [Pattern], CondsDict, ParamList
 send_first(Delay, event(Type, Dict), Limit) :-
     put_dict(counter,Dict,Limit,DictOut),
     Event = event(Type, DictOut),
-    format('[Throttle] Delaying ~w send_first; ~w ~n',[Delay,Event]),
+    log_trace(info,'[Throttle] Delaying ~w send_first; ~w ~n',[Delay,Event]),
     thread_create(
         delayed_safe_send(Delay, Event),
         _ThreadId,
@@ -185,7 +189,7 @@ send_first(Delay, event(Type, Dict), Limit) :-
 send_last(Delay, event(Type, Dict), Limit) :-
     put_dict(counter,Dict,Limit,DictOut),
     Event = event(Type, DictOut),
-    format('[Throttle] Delaying ~w send_last; ~w ~n',[Delay,Event]),
+    log_trace(info,'[Throttle] Delaying ~w send_last; ~w ~n',[Delay,Event]),
     thread_create(
         delayed_safe_send(Delay, Event),
         _ThreadId,
@@ -197,7 +201,7 @@ delayed_safe_send(Delay, Event) :-
     sleep(Seconds),
     assert_event(Event),
     log_event(Event),
-    format('[Throttle] Delayed ~w  throttling event; ~w',[Seconds,Event]),
+    log_trace(info,'[Throttle] Delayed ~w  throttling event; ~w',[Seconds,Event]),
     safe_thread_send_message(abstract_queue,Event).
 
 % Queue existence and safe send predicate
