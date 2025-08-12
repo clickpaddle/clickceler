@@ -1,0 +1,16 @@
+throttle_rules:
+  - name: throttle_network_event
+    priority: 100
+    event_type:
+      - snmptrap(E)
+    conditions:
+      - within(E, severity, [info])
+      - eq(E, env, dev)
+      - contains(E, msg, "Hello World!")
+    settings:
+      - limit: 2            # Max events allowed
+      - window: 30s          # Time window (seconds)
+      - delay: 15s           # Optional delay before next event processing
+    action:
+      - send_first           # Or send_last
+

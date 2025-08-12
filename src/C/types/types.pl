@@ -9,6 +9,7 @@ subtype(webserver, server).
 subtype(router, network).
 subtype(switch, network).
 subtype(firewall, network).
+subtype(snmptrap,network).
 
 valid_severity(info).
 valid_severity(ok).
@@ -35,5 +36,5 @@ severity_gte(S1, S2) :-
     severity_level(S2, L2),
     L1 >= L2.
 
-:- dynamic server/1, cpu/1, disk/1, memory/1, webserver/1, router/1, switch/1, network/1, firewall/1, log/1.
+:- dynamic server/1, cpu/1, disk/1, memory/1, webserver/1, router/1, switch/1, network/1, firewall/1, log/1, snmptrap/1.
 

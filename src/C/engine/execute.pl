@@ -16,11 +16,11 @@ init_queue :-
     ( catch(message_queue_property(execute_queue, _), _, fail) ->
         true
     ; message_queue_create(execute_queue),
-      format('[Execute] Created message queue execute~n')
+      log_trace(info,'[Execute] Created message queue execute',[])
     ).
 
 thread_goal_execute(ClientID) :-
-    format('[Execute ~w] Thread started~n', [ClientID]).
+    log_trace(info,'[Execute ~w] Thread started', [ClientID]).
 
 % Load Dynamic rules
 
@@ -31,10 +31,10 @@ load_execute_rules :-
     exists_file(RuleFile),           
     !,
     load_files(RuleFile, [if(changed)]),
-    format('[Execute] Rules loaded from ~w~n', [RuleFile]).
+    log_trace(info,'[Execute] Rules loaded from ~w', [RuleFile]).
 
 load_execute_rules :-
-    format('[Execute] Warning: Rules file not found.~n', []).
+    log_trace(info,'[Execute] Warning: Rules file not found.', []).
 
 % Main loop of the execute thread.
 % It continuously fetches messages from its message queue and processes them.
@@ -48,11 +48,11 @@ start_execute_loop :-
 execute_loop :-
     thread_get_message(execute_queue, EventTerm),
     (   catch(handle_event(EventTerm), E,
-              (format('[Execute] Error: ~w~n', [E]), fail))
+              (log_trace(info,'[Execute] Error: ~w', [E],[]), fail))
     ->  true
-    ;   format('[Execute] Warning: EventTerm not handled: ~w~n', [EventTerm])
+    ;   log_trace(info,'[Execute] Warning: EventTerm not handled: ~w', [EventTerm])
     ),
-    format('[Execute] Received: ~q~n', [EventTerm]),
+    log_trace(info,'[Execute] Received: ~q', [EventTerm]),
     execute_loop.
 
 
@@ -60,20 +60,20 @@ execute_loop :-
 % handle_event(+EventTerm) event is normalized
 % Execute Normalized event of the form event(Type, Dict)
 handle_event(event(EventType, DictIn)) :-
-    format('[Execute] Normalized DictIn: ~q~n', [DictIn]),
+    log_trace(info,'[Execute] Normalized DictIn: ~q', [DictIn]),
     findall( rule(Priority, RuleID, Conditions, Transformations),
     execute_rule_match(EventType, Priority, RuleID, Conditions, Transformations, DictIn),
     RuleList
     ),
-    format('[Execute] Matched rules: ~q~n', [RuleList]),
+    log_trace(info,'[Execute] Matched rules: ~q', [RuleList]),
     % Sort by decreasing priority PRIORITY 100 > PRIORITY 10 
     sort(1, @>=, RuleList, SortedRules),
-    format('[Execute] Sorted rules by priority: ~q~n', [SortedRules]),
+    log_trace(info,'[Execute] Sorted rules by priority: ~q', [SortedRules]),
     apply_matching_rules(SortedRules, DictIn, DictOut),
-    format('[Execute] After apply_matching_rules: ~q~n', [DictOut]),
+    log_trace(info,'[Execute] After apply_matching_rules: ~q', [DictOut]),
     EventOut = event(EventType, DictOut),
     assert_event(EventOut),
-    format('[Execute] Final event to assert: ~q~n', [EventOut]),
+    log_trace(info,'[Execute] Final event to assert: ~q', [EventOut]),
     log_event(EventOut),
     safe_thread_send_message(timer_queue, EventOut).
 
@@ -99,6 +99,6 @@ queue_exists(QueueName) :-
 safe_thread_send_message(QueueName, Message) :-
     ( queue_exists(QueueName) ->
         thread_send_message(QueueName, Message)
-    ; format(user_error, '[ERROR] Message queue ~w does not exist. Message not sent.~n', [QueueName])
+    ; format(user_error, '[ERROR] Message queue ~w does not exist. Message not sent.', [QueueName])
     ).
 

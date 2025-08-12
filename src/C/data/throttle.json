@@ -1,0 +1,23 @@
+[
+  {
+    "type": "snmptrap",
+    "status": "open",
+    "severity": "info",
+    "env": "dev",
+    "message": "Hello World!"
+  },
+  {
+    "type": "snmptrap",
+    "status": "open",
+    "severity": "info",
+    "env": "dev",
+    "message": "Hello World!"
+  },
+  {
+    "type": "snmptrap",
+    "status": "open",
+    "severity": "info",
+    "env": "dev",
+    "message": "Hello World!"
+  }
+]

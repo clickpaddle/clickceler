@@ -16,11 +16,11 @@ init_queue :-
     ( catch(message_queue_property(trigger_queue, _), _, fail) ->
         true
     ; message_queue_create(trigger_queue),
-      format('[Trigger] Created message queue trigger~n')
+      log_trace(info,'[Trigger] Created message queue trigger',[])
     ).
 
 thread_goal_trigger(ClientID) :-
-    format('[Trigger ~w] Thread started~n', [ClientID]).
+    log_trace(info,'[Trigger ~w] Thread started', [ClientID]).
 
 % Load Dynamic rules
 
@@ -31,10 +31,10 @@ load_trigger_rules :-
     exists_file(RuleFile),           
     !,
     load_files(RuleFile, [if(changed)]),
-    format('[Trigger] Rules loaded from ~w~n', [RuleFile]).
+    log_trace(info,'[Trigger] Rules loaded from ~w', [RuleFile]).
 
 load_trigger_rules :-
-    format('[Trigger] Warning: Rules file not found.~n', []).
+    log_trace(info,'[Trigger] Warning: Rules file not found.', []).
 
 % Main loop of the trigger thread.
 % It continuously fetches messages from its message queue and processes them.
@@ -48,11 +48,11 @@ start_trigger_loop :-
 trigger_loop :-
     thread_get_message(trigger_queue, EventTerm),
     (   catch(handle_event(EventTerm), E,
-              (format('[Trigger] Error: ~w~n', [E]), fail))
+              (log_trace(info,'[Trigger] Error: ~w', [E]), fail))
     ->  true
-    ;   format('[Trigger] Warning: EventTerm not handled: ~w~n', [EventTerm])
+    ;   log_trace(info,'[Trigger] Warning: EventTerm not handled: ~w', [EventTerm])
     ),
-    format('[Trigger] Received: ~q~n', [EventTerm]),
+    log_trace(info,'[Trigger] Received: ~q', [EventTerm]),
     trigger_loop.
 
 
@@ -60,20 +60,20 @@ trigger_loop :-
 % handle_event(+EventTerm) event is normalized
 % Trigger Normalized event of the form event(Type, Dict)
 handle_event(event(EventType, DictIn)) :-
-    format('[Trigger] Normalized DictIn: ~q~n', [DictIn]),
+    log_trace(info,'[Trigger] Normalized DictIn: ~q', [DictIn]),
     findall( rule(Priority, RuleID, Conditions, Transformations),
     trigger_rule_match(EventType, Priority, RuleID, Conditions, Transformations, DictIn),
     RuleList
     ),
-    format('[Trigger] Matched rules: ~q~n', [RuleList]),
+    log_trace(info,'[Trigger] Matched rules: ~q', [RuleList]),
     % Sort by decreasing priority PRIORITY 100 > PRIORITY 10 
     sort(1, @>=, RuleList, SortedRules),
-    format('[Trigger] Sorted rules by priority: ~q~n', [SortedRules]),
+    log_trace(info,'[Trigger] Sorted rules by priority: ~q', [SortedRules]),
     apply_matching_rules(SortedRules, DictIn, DictOut),
-    format('[Trigger] After apply_matching_rules: ~q~n', [DictOut]),
+    log_trace(info,'[Trigger] After apply_matching_rules: ~q', [DictOut]),
     EventOut = event(EventType, DictOut),
     assert_event(EventOut),
-    format('[Trigger] Final event to assert: ~q~n', [EventOut]),
+    log_trace(info,'[Trigger] Final event to assert: ~q', [EventOut]),
     log_event(EventOut).
 
 

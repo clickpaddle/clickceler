@@ -11,6 +11,23 @@ void handle_sigint(int sig) {
 }
 
 //------------------------------------------------------------------------------------------
+static void redirect_all_output(const char *filename) {
+    int fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+    if (fd < 0) {
+        perror("open log file");
+        exit(1);
+    }
+
+    // Redirige stdout et stderr vers le fichier
+    if (dup2(fd, STDOUT_FILENO) < 0) perror("dup2 stdout");
+    if (dup2(fd, STDERR_FILENO) < 0) perror("dup2 stderr");
+    close(fd);
+
+    // Pas de buffering pour stderr, buffering ligne pour stdout
+    setvbuf(stdout, NULL, _IOLBF, 0);
+    setvbuf(stderr, NULL, _IONBF, 0);
+}
+//------------------------------------------------------------------------------------------
 void create_and_detach_thread(pthread_t *tid, void *(*start_routine)(void *), int thread_id, const char *thread_name) {
   if (pthread_create(tid, NULL, start_routine, (void *)(intptr_t)thread_id) != 0) {
     fprintf(stderr, "[ERR] [Main Thread] pthread_create %s\n", thread_name);
@@ -40,7 +57,7 @@ int main(int argc, char *argv[]) {
   int num_threads = sizeof(threads) / sizeof(ThreadInfo);
   signal(SIGINT, handle_sigint); // Set up signal handler
   fprintf(stderr, "[DEBUG] [Main Thread] Entering main function.\n");
-
+  redirect_all_output("../logs/clickceler.log");
   char *plav[2] = {argv[0], "-q"};
   if (!PL_initialise(2, plav)) {
     fprintf(stderr, "[ERR] [Main Thread] Failure to initialize SWI-Prolog\n");

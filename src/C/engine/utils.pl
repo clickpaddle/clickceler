@@ -8,8 +8,69 @@
     greater_equal/2,
     less_than/2,
     less_equal/2,
-    memberchk_conv/2
-]).
+    memberchk_conv/2,
+    duration_to_seconds/2,
+    unit_to_seconds/2,
+    log_trace/3,
+    set_log_level/1,
+    get_log_level/1
+    ]).
+    
+
+:- use_module(library(date)).
+:- use_module(library(time)).
+
+:- dynamic current_log_level/1.
+
+current_log_level(info).
+
+% Log level numeric values for comparison
+log_level_value(debug, 10).
+log_level_value(info, 20).
+log_level_value(warning, 30).
+log_level_value(error, 40).
+
+%% set_log_level(+Level)
+%  Sets the minimal log level to output messages
+set_log_level(Level) :-
+    retractall(current_log_level(_)),
+    assert(current_log_level(Level)).
+
+%% get_log_level(-Level)
+%  Gets the current minimal log level
+get_log_level(Level) :-
+    current_log_level(Level).
+
+%% log_trace(+Level, +Format, +Args)
+%  Logs a message if Level is >= current_log_level
+log_trace(Level, Format, Args) :-
+    current_log_level(CurrentLevel),
+    log_level_value(Level, LevelVal),
+    log_level_value(CurrentLevel, CurrentLevelVal),
+    LevelVal >= CurrentLevelVal,
+    get_time(TS),
+    format_time(string(TimeStamp), '%Y-%m-%dT%H:%M:%S', TS),
+    format('[~w] [~w] ', [TimeStamp, Level]),
+    format(Format, Args),
+    nl.
+
+% Fail silently if below threshold
+log_trace(Level, _Format, _Args) :-
+    current_log_level(CurrentLevel),
+    log_level_value(Level, LevelVal),
+    log_level_value(CurrentLevel, CurrentLevelVal),
+    LevelVal < CurrentLevelVal,
+    !, fail.
+
+
+%log_trace(Level, FormatString, Args) :-
+%    get_time(TimeFloat),
+%    Seconds is floor(TimeFloat),
+%    Microsecs is round((TimeFloat - Seconds) * 1_000_000),
+%    format_time(atom(DatePart), '%Y-%m-%dT%H:%M:%S', Seconds),
+%    format(atom(Timestamp), '~w.~06d', [DatePart, Microsecs]),
+%    format(atom(Message), FormatString, Args),
+%    format('[~w] [~w] ~w~n', [Timestamp, Level, Message]).
 
 %% ========================
 %% === MATCH CONDITIONS ===
@@ -53,6 +114,11 @@ match_condition(within(_E,Field, List), Dict) :-
 match_condition(notin(_E,Field, List), Dict) :-
     get_dict(Field, Dict, V),
     \+ memberchk_conv(V, List).
+
+match_condition(contains(_E, Field, SubStr), Dict) :-
+    get_dict(Field, Dict, V),
+    string(V),
+    sub_string(V, _, _, _, SubStr).
 
 
 %% ============================
@@ -183,3 +249,17 @@ memberchk_conv(Value, List) :-
     to_string(Value, S),
     memberchk_string(S, List).
 
+duration_to_seconds(DurationAtom, Seconds) :-
+    atom_chars(DurationAtom, Chars),
+    append(NumberChars, [UnitChar], Chars),
+    number_chars(Number, NumberChars),
+    unit_to_seconds(UnitChar, UnitSeconds),
+    Seconds is Number * UnitSeconds.
+
+unit_to_seconds('s', 1).
+unit_to_seconds('m', 60).
+unit_to_seconds('h', 3600).
+unit_to_seconds('d', 86400).
+unit_to_seconds('w', 604800).
+unit_to_seconds('M', 2592000).
+unit_to_seconds('Y', 31536000).
