@@ -8,7 +8,7 @@ flowchart TD
     SCADA[SCADA Systems]
     Dash["Dashboards / HMI / Reporting<br>(REST, MQTTS, Kafka)"]
 
-    MTU -->|"OPC-UA (HA)"| Edge
+    MTU -->|"MODBUS TCP-RTU OPC-UA (HA)"| Edge
     Edge -->|"MQTTS (HA)/Kafka(Cluster)"| Central
     Central -->|"OPC-UA (HA / bidirectional)"| SCADA
     Central -->|"REST / MQTTS / Kafka"| Dash
