@@ -1,5 +1,18 @@
 # Clickceler Mid-Term Plan for Industrial Operations (12–24 months)
 
+```mermaid
+flowchart TD
+    MTU["MTUs<br>(Sensors / Edge)"]
+    Edge["Clickceler Light<br>(Edge Processing)"]
+    Central["Clickceler Central<br>(Data Enrichment, Correlation, AI)"]
+    SCADA[SCADA Systems]
+    Dash["Dashboards / HMI / Reporting<br>(REST, MQTTS, Kafka)"]
+
+    MTU -->|"OPC-UA (HA)"| Edge
+    Edge -->|"MQTTS (HA)/Kafka(Cluster)"| Central
+    Central -->|"OPC-UA (HA / bidirectional)"| SCADA
+    Central -->|"REST / MQTTS / Kafka"| Dash
+```
 ## 1. Vision & Objectives
 - Position Clickceler platform for industrial observability**.  
 - Enable **real-time monitoring, enrichment, correlation, and automation** across industrial SCADA and IT systems.  
