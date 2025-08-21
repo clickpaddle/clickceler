@@ -130,3 +130,67 @@ close_event(EventID) :-
 % existing_abstract(EventID, AbstractID)
 % remove_from_abstract_contrib(AbstractID, EventID)
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Abstract Rules Engine Helpers and Test Events
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+:- dynamic event/2.       % event(Type, Dict)
+:- dynamic abstract/2.    % abstract(Type, Dict)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Helper: generate a new abstract
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+generate_abstract(Type, EventDict, AbstractID) :-
+    gensym(abs_, AbstractID),
+    copy_dict(EventDict, AbsDict),
+    AbsDict0 = AbsDict.put(type, Type),
+    AbsDict1 = AbsDict0.put(abstract_contrib, []),
+    assertz(abstract(Type, AbsDict1)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Helper: check if an abstract exists matching event
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+existing_abstract(_, AbstractID) :-
+    abstract(_, AbsDict),
+    get_dict(abstract_contrib, AbsDict, Contrib),
+    Contrib \= [],
+    gensym_abs(AbsDict, AbstractID).
+
+gensym_abs(Dict, AbstractID) :-
+    abstract(_, Dict),
+    Dict = _{id:ID} -> AbstractID = ID ; gensym(abs_, AbstractID).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Helper: add event to abstract contributors
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+add_to_abstract_contrib(AbstractID, Event) :-
+    abstract(Type, AbsDict),
+    get_dict(id, AbsDict, AbstractID),
+    get_dict(abstract_contrib, AbsDict, Contrib),
+    \+ memberchk(Event, Contrib),
+    NewContrib = [Event | Contrib],
+    NewDict = AbsDict.put(abstract_contrib, NewContrib),
+    retract(abstract(Type, AbsDict)),
+    assertz(abstract(Type, NewDict)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Helper: add abstract to event
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+add_abstract_to_event(event(Type, Dict), AbstractID) :-
+    ( get_dict(linked_abstracts, Dict, L) -> true ; L = [] ),
+    \+ memberchk(AbstractID, L),
+    NewL = [AbstractID | L],
+    NewDict = Dict.put(linked_abstracts, NewL),
+    retract(event(Type, Dict)),
+    assertz(event(Type, NewDict)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Helper: apply_transformations_to_abstract 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+apply_abstract_transformations([], _AbstractEvent).
+apply_abstract_transformations([Transform | Rest], AbstractEvent) :-
+    % Reuse your existing apply_transformations/3 on the AbstractEvent dict
+    AbstractEvent = event(_, Dict),
+    apply_transformations([Transform], Dict, _UpdatedDict),
+    apply_abstract_transformations(Rest, AbstractEvent).

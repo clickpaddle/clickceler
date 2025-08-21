@@ -9,25 +9,6 @@
 :- dynamic kb_shared:event/2.
 :- multifile kb_shared:event/2.
 
-:- dynamic event_id_counter/1.
-
-init_event_id_counter :-
-    retractall(event_id_counter(_)),
-    assertz(event_id_counter(0)).
-
-generate_unique_event_id(Id) :-
-    get_time(TS),
-    TSint is floor(TS * 1000),  % ms depuis epoch
-    mutex_lock(event_id_mutex),
-    (   retract(event_id_counter(Count))
-    ->  NewCount is Count + 1
-    ;   NewCount = 1
-    ),
-    assertz(event_id_counter(NewCount)),
-    mutex_unlock(event_id_mutex),
-    % Compose un entier long : timestamp * 10000 + compteur (4 chiffres)
-    Id is TSint * 10000 + NewCount.
-
 
 
 thread_goal_collector(ClientID) :-

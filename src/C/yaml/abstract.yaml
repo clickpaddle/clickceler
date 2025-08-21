@@ -1,23 +1,70 @@
 abstract_rules:
-  - name: create_abstract_from_sensor_and_probe_events
+  - id: abstract_incident
     priority: 100
-    event_type:
-      - sensor(E)
-      - probe(U)
-    conditions:
-      - or:
-          - all:
-              - eq(E, status, open)
-              - eq(E, severity, critical)
-          - all:
-              - eq(U, status, open)
-              - eq(U, severity, critical)
-              - eq(U, hostname, E.hostname)
-    actions:
-      - create_abstract(A, E | U)       # Create abstract from the first matching event
-      - add_to_abs_contrib(A, E | U)    # Add the event to abstract contributors
-      - set_field(A.type, incident)
-      - set_field(A.status, open)
-      - set_field(A.severity, E | U.severity)
-      - set_field(A.hostname, E | U.hostname)
-      - log_message("Abstract created from sensor or probe event")
+    match:
+      any:
+        - type: server
+          where:
+            status: open
+            severity: critical
+            env: dev
+            msg: "host not responding" 
+        - type: disk
+          where:
+            status: open
+            message: "Disk full"
+            severity: critical
+            env: dev
+            used_space:
+             ge: 100
+        - type: memory
+          where:
+            status: open
+            message: "Memory full"
+            severity: critical
+            free_memory:
+              le: 0
+            env: dev
+    on_match:
+      create_or_associate: incident
+      actions: 
+        - set_field(E, severity, major)
+        - set_field(E, message, "Server unresponsive. Crash imminent")
+        - set_field(E, category, infrastructure)
+        - set_field(E, sub_category, server)
+        - set_field(E, priority, p2)
+        - set_field(E, impact, dev)
+        - set_field(E, reported_by, clickceller)
+        - set_field(E, hostname, Dict.hostname)
+
+  - id: abstract_network
+    priority: 90
+    match:
+      any:
+        - type: firewall
+          where:
+            status: open
+            severity: critical
+            env: prod
+        - type: snmptrap
+          where:
+            status: open
+            severity: critical
+            env: prod
+        - type: ping
+          where:
+            status: failed
+            severity: critical
+            env: prod
+    on_match:
+      create_or_associate: network_incident
+      actions:
+        - set_field(E, severity, critical)
+        - set_field(E, message, "Network connectivity issue detected")
+        - set_field(E, category, infrastructure)
+        - set_field(E, sub_category, network)
+        - set_field(E, priority, p1)
+        - set_field(E, impact, prod)
+        - set_field(E, reported_by, clickceller)
+        - set_field(E, source, Dict.type)
+        - set_field(E, hostname, Dict.hostname)

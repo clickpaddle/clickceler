@@ -1,0 +1,95 @@
+:- dynamic event/2.
+:- dynamic abstract/2.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Helpers
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Generate a new abstract from an event
+generate_abstract(EventID, AbstractID) :-
+    gensym(abstract, AbstractID),
+    event(Type, Dict),
+    assertz(abstract(AbstractID, Dict)),
+    add_abstract_to_event(EventID, AbstractID).
+
+% Add an event to an abstract's contributor list
+add_to_abstract_contrib(AbstractID, EventID) :-
+    retract(abstract(AbstractID, Dict)),
+    ( get_dict(contrib, Dict, Contrib) -> true ; Contrib = [] ),
+    append(Contrib, [EventID], NewContrib),
+    put_dict(contrib, Dict, NewContrib, NewDict),
+    assertz(abstract(AbstractID, NewDict)).
+
+% Link abstract to event
+add_abstract_to_event(EventID, AbstractID) :-
+    retract(event(Type, Dict)),
+    ( get_dict(linked_abstracts, Dict, Linked) -> true ; Linked = [] ),
+    append(Linked, [AbstractID], NewLinked),
+    put_dict(linked_abstracts, Dict, NewLinked, NewDict),
+    assertz(event(Type, NewDict)).
+
+% Set abstract field
+set_abstract_field(AbstractID, Field, Value) :-
+    retract(abstract(AbstractID, Dict)),
+    put_dict(Field, Dict, Value, NewDict),
+    assertz(abstract(AbstractID, NewDict)).
+
+% Trace helper
+trace(Level, Msg, _) :- format("~w: ~w~n", [Level, Msg]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Example rules
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Priority 100: create abstract from sensor or probe
+abstract_rule(create_abstract_from_sensor_and_probe_events, 100, EventID, AbstractID) :-
+    event(Type, Dict),
+    ( (Type = sensor, Dict.status = open, Dict.severity = critical)
+    ; (Type = probe,  Dict.status = open, Dict.severity = critical)
+    ),
+    \+ existing_abstract(EventID, _),
+    generate_abstract(EventID, AbstractID),
+    set_abstract_field(AbstractID, type, incident),
+    set_abstract_field(AbstractID, status, open),
+    set_abstract_field(AbstractID, severity, Dict.severity),
+    set_abstract_field(AbstractID, hostname, Dict.hostname),
+    trace(info, "Abstract created from sensor or probe event", []).
+
+% Priority 90: associate new event with existing abstract
+abstract_rule(associate_event_with_existing_abstract, 90, EventID, AbstractID) :-
+    event(_, Dict),
+    existing_abstract(EventID, AbstractID),
+    \+ member(AbstractID, Dict.linked_abstracts),
+    add_to_abstract_contrib(AbstractID, EventID),
+    add_abstract_to_event(EventID, AbstractID),
+    trace(info, "Event updated with new abstract association", []).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Check if event already linked to abstract
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+existing_abstract(EventID, AbstractID) :-
+    event(_, Dict),
+    get_dict(linked_abstracts, Dict, Linked),
+    member(AbstractID, Linked).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Example events
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+init_events :-
+    retractall(event(_, _)),
+    assertz(event(sensor, _{status:open, severity:critical, hostname:"host1"})),
+    assertz(event(probe,  _{status:open, severity:critical, hostname:"host1"})),
+    assertz(event(sensor, _{status:closed, severity:minor, hostname:"host2"})).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Run test
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+run_test :-
+    init_events,
+    forall(event(_, _), (
+        event(Type, Dict),
+        format("Checking ~w: ~w~n", [Type, Dict]),
+        ( abstract_rule(create_abstract_from_sensor_and_probe_events, 100, _, _) -> true ; true )
+    )),
+    forall(abstract(AID, Dict), format("Abstract ~w: ~w~n", [AID, Dict])).
+

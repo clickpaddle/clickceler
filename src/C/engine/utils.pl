@@ -21,6 +21,8 @@
 :- use_module(library(time)).
 
 :- dynamic current_log_level/1.
+:- dynamic event_id_counter/1.
+
 
 current_log_level(info).
 
@@ -62,15 +64,26 @@ log_trace(Level, _Format, _Args) :-
     LevelVal < CurrentLevelVal,
     !, fail.
 
+%% ========================
+%% == GENERATE UNIQUE ID == 
+%% ========================
 
-%log_trace(Level, FormatString, Args) :-
-%    get_time(TimeFloat),
-%    Seconds is floor(TimeFloat),
-%    Microsecs is round((TimeFloat - Seconds) * 1_000_000),
-%    format_time(atom(DatePart), '%Y-%m-%dT%H:%M:%S', Seconds),
-%    format(atom(Timestamp), '~w.~06d', [DatePart, Microsecs]),
-%    format(atom(Message), FormatString, Args),
-%    format('[~w] [~w] ~w~n', [Timestamp, Level, Message]).
+init_event_id_counter :-
+    retractall(event_id_counter(_)),
+    assertz(event_id_counter(0)).
+
+generate_unique_event_id(Id) :-
+    get_time(TS),
+    TSint is floor(TS * 1000),  % ms depuis epoch
+    mutex_lock(event_id_mutex),
+    (   retract(event_id_counter(Count))
+    ->  NewCount is Count + 1
+    ;   NewCount = 1
+    ),
+    assertz(event_id_counter(NewCount)),
+    mutex_unlock(event_id_mutex),
+    % Compose un entier long : timestamp * 10000 + compteur (4 chiffres)
+    Id is TSint * 10000 + NewCount.
 
 %% ========================
 %% === MATCH CONDITIONS ===
