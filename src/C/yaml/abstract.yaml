@@ -1,0 +1,23 @@
+abstract_rules:
+  - name: create_abstract_from_sensor_and_probe_events
+    priority: 100
+    event_type:
+      - sensor(E)
+      - probe(U)
+    conditions:
+      - or:
+          - all:
+              - eq(E, status, open)
+              - eq(E, severity, critical)
+          - all:
+              - eq(U, status, open)
+              - eq(U, severity, critical)
+              - eq(U, hostname, E.hostname)
+    actions:
+      - create_abstract(A, E | U)       # Create abstract from the first matching event
+      - add_to_abs_contrib(A, E | U)    # Add the event to abstract contributors
+      - set_field(A.type, incident)
+      - set_field(A.status, open)
+      - set_field(A.severity, E | U.severity)
+      - set_field(A.hostname, E | U.hostname)
+      - log_message("Abstract created from sensor or probe event")

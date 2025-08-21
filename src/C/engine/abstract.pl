@@ -102,3 +102,31 @@ safe_thread_send_message(QueueName, Message) :-
     ; format(user_error, '[ERROR] Message queue ~w does not exist. Message not sent.', [QueueName])
     ).
 
+
+
+
+----------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Closure handling (event closed)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+close_event(EventID) :-
+    event(EventID, _, closed, _, _, LinkedAbstracts),
+    forall(member(AbstractID, LinkedAbstracts),
+           remove_from_abstract_contrib(AbstractID, EventID)),
+    % Check if abstract has no more contributors
+    forall(existing_abstract(_, AbstractID),
+           (abstract(AbstractID, _, _, _, _, Contrib),
+            Contrib = [],
+            set_abstract_field(AbstractID, status, closed),
+            trace(info, "Abstract updated", []))).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Helper predicates (assumed implemented)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% generate_abstract(EventID, AbstractID)
+% add_to_abstract_contrib(AbstractID, EventID)
+% add_abstract_to_event(EventID, AbstractID)
+% set_abstract_field(AbstractID, Field, Value)
+% existing_abstract(EventID, AbstractID)
+% remove_from_abstract_contrib(AbstractID, EventID)
+
