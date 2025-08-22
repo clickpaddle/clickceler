@@ -1,8 +1,7 @@
 filter_rules:
   - name: filter_no_pass_log_critical_dev_drop_event 
     priority: 100
-    event_type:
-      - cpu(E)
+    event: cpu(E)
     conditions:
       - within(E, severity, [info, ok])
       - eq(E, env, dev)
@@ -11,8 +10,7 @@ filter_rules:
 
   - name: filter_pass_log_major_prod_event 
     priority: 100
-    event_type:
-      - server(E)
+    event: server(E)
     conditions:
       - within(E, severity, [warning, major, critical, fatal])
       - eq(E, env, prod)

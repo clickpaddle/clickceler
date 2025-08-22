@@ -4,8 +4,8 @@ import filter_yaml2pl
 import throttle_yaml2pl
 import abstract_yaml2pl
 
-#refine_yaml2pl.convert_all_yaml_to_prolog()
-#filter_yaml2pl.convert_all_yaml_to_prolog()
-#throttle_yaml2pl.convert_all_yaml_to_prolog()
+refine_yaml2pl.convert_all_yaml_to_prolog()
+filter_yaml2pl.convert_all_yaml_to_prolog()
+throttle_yaml2pl.convert_all_yaml_to_prolog()
 abstract_yaml2pl.convert_all_yaml_to_prolog()
 

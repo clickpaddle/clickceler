@@ -1,8 +1,7 @@
 throttle_rules:
   - name: throttle_network_event
     priority: 100
-    event_type:
-      - snmptrap(E)
+    event: snmptrap(E)
     conditions:
       - within(E, severity, [info])
       - eq(E, env, dev)

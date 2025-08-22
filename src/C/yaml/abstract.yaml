@@ -1,70 +1,66 @@
 abstract_rules:
-  - id: abstract_incident
+  - name: infrastructure_issue
     priority: 100
-    match:
-      any:
-        - type: server
-          where:
-            status: open
-            severity: critical
-            env: dev
-            msg: "host not responding" 
-        - type: disk
-          where:
-            status: open
-            message: "Disk full"
-            severity: critical
-            env: dev
-            used_space:
-             ge: 100
-        - type: memory
-          where:
-            status: open
-            message: "Memory full"
-            severity: critical
-            free_memory:
-              le: 0
-            env: dev
-    on_match:
-      create_or_associate: incident
-      actions: 
-        - set_field(E, severity, major)
-        - set_field(E, message, "Server unresponsive. Crash imminent")
-        - set_field(E, category, infrastructure)
-        - set_field(E, sub_category, server)
-        - set_field(E, priority, p2)
-        - set_field(E, impact, dev)
-        - set_field(E, reported_by, clickceller)
-        - set_field(E, hostname, Dict.hostname)
+    events:
+      - event: server(E)
+        conditions:
+          - eq(E, status, open)
+          - eq(E, severity, critical)
+          - eq(E, env, dev)
 
-  - id: abstract_network
+      - event: disk(E)
+        conditions:
+          - eq(E, status, open)
+          - eq(E, severity, critical)
+          - eq(E, env, dev)
+          - ge(E, used_space, 100)
+
+      - event: memory(E)
+        conditions:
+          - eq(E, status, open)
+          - eq(E, severity, critical)
+          - eq(E, env, dev)
+          - le(E, free_memory, 0)
+
+    actions:
+      - set_field(E, status, open)
+      - set_field(E, severity, major)
+      - set_field(E, message, "<to_be_defined>")
+      - set_field(E, category, infrastructure)
+      - set_field(E, sub_category, "<to_be_defined>")
+      - set_field(E, priority, p2)
+      - set_field(E, impact, dev)
+      - set_field(E, reported_by, clickceller)
+      - set_field(E, hostname, E.hostname)
+
+abstract_rules:
+  - name: abstract_network
+    type: incident
     priority: 90
-    match:
-      any:
-        - type: firewall
-          where:
-            status: open
-            severity: critical
-            env: prod
-        - type: snmptrap
-          where:
-            status: open
-            severity: critical
-            env: prod
-        - type: ping
-          where:
-            status: failed
-            severity: critical
-            env: prod
-    on_match:
-      create_or_associate: network_incident
-      actions:
-        - set_field(E, severity, critical)
-        - set_field(E, message, "Network connectivity issue detected")
-        - set_field(E, category, infrastructure)
-        - set_field(E, sub_category, network)
-        - set_field(E, priority, p1)
-        - set_field(E, impact, prod)
-        - set_field(E, reported_by, clickceller)
-        - set_field(E, source, Dict.type)
-        - set_field(E, hostname, Dict.hostname)
+    events:
+      - event: firewall(E)
+        conditions:
+          - eq(E, status, open)
+          - eq(E, severity, critical)
+          - eq(E, env, prod)
+
+      - event: snmptrap(E)
+        conditions:
+          - eq(E, status, open)
+          - eq(E, severity, critical)
+          - eq(E, env, prod)
+
+      - event: ping(E)
+        conditions:
+          - eq(E, status, failed)
+          - eq(E, severity, critical)
+          - eq(E, env, prod)
+
+    actions:
+      - set_field(E, severity, critical)
+      - set_field(E, message, "Network connectivity issue detected")
+      - set_field(E, category, infrastructure)
+      - set_field(E, sub_category, network)
+      - set_field(E, priority, p1)
+      - set_field(E, impact, prod)
+
