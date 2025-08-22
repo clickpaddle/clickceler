@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import refine_yaml2pl
 import filter_yaml2pl
 import throttle_yaml2pl
