@@ -3,21 +3,21 @@ abstract_rule(infrastructure_issue, 100,
     [ event(server(F)) ],
     [ eq(F, status, open), eq(F, severity, critical), eq(F, env, dev) ],
     [ incident(E) ],
-    [ set_field(E, status, open), set_field(E, severity, major), set_field(E, message, "<to_be_defined>"), set_field(E, category, infrastructure), set_field(E, sub_category, "<to_be_defined>"), set_field(E, priority, p2), set_field(E, impact, dev), set_field(E, reported_by, clickceller), set_field(E, hostname, F.hostname) ]
+    [ set_field(E, status, open), set_field(E, severity, major), set_field(E, message, "infrastructure issue"), set_field(E, category, infrastructure), set_field(E, sub_category, "infrastructure issue"), set_field(E, priority, p2), set_field(E, impact, dev), set_field(E, reported_by, clickceller), set_field(E, hostname, F.hostname) ]
 ).
     
 abstract_rule(infrastructure_issue, 100,
     [ event(disk(F)) ],
     [ eq(F, status, open), eq(F, severity, critical), eq(F, env, dev), ge(F, used_space, 100) ],
     [ incident(E) ],
-    [ set_field(E, status, open), set_field(E, severity, major), set_field(E, message, "<to_be_defined>"), set_field(E, category, infrastructure), set_field(E, sub_category, "<to_be_defined>"), set_field(E, priority, p2), set_field(E, impact, dev), set_field(E, reported_by, clickceller), set_field(E, hostname, F.hostname) ]
+    [ set_field(E, status, open), set_field(E, severity, major), set_field(E, message, "infrastructure issue"), set_field(E, category, infrastructure), set_field(E, sub_category, "infrastructure issue"), set_field(E, priority, p2), set_field(E, impact, dev), set_field(E, reported_by, clickceller), set_field(E, hostname, F.hostname) ]
 ).
     
 abstract_rule(infrastructure_issue, 100,
     [ event(memory(F)) ],
     [ eq(F, status, open), eq(F, severity, critical), eq(F, env, dev), le(F, free_memory, 0) ],
     [ incident(E) ],
-    [ set_field(E, status, open), set_field(E, severity, major), set_field(E, message, "<to_be_defined>"), set_field(E, category, infrastructure), set_field(E, sub_category, "<to_be_defined>"), set_field(E, priority, p2), set_field(E, impact, dev), set_field(E, reported_by, clickceller), set_field(E, hostname, F.hostname) ]
+    [ set_field(E, status, open), set_field(E, severity, major), set_field(E, message, "infrastructure issue"), set_field(E, category, infrastructure), set_field(E, sub_category, "infrastructure issue"), set_field(E, priority, p2), set_field(E, impact, dev), set_field(E, reported_by, clickceller), set_field(E, hostname, F.hostname) ]
 ).
     
 
