@@ -1,0 +1,9 @@
+{%- for rule in abstract_rules %}
+{%- for e in rule.events %}
+abstract_rule({{ rule.name }}, {{ rule.priority }},
+    [ {%- for c in e.conditions %}{{ c }}{% if not loop.last %}, {% endif %}{%- endfor %} ],
+    [ {%- for action in rule.actions %}{{ action }}{% if not loop.last %}, {% endif %}{%- endfor %} ]
+).
+{%- endfor %}
+{%- endfor %}
+

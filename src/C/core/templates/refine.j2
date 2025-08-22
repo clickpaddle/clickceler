@@ -1,0 +1,8 @@
+{%- for rule in refine_rules %}
+refine_rule({{ rule.name }}, {{ rule.priority }},
+    [ {{ rule.event }} ],
+    [ {%- for c in rule.conditions %}{{ c }}{% if not loop.last %}, {% endif %}{%- endfor %} ],
+    [ {%- for action in rule.actions %}{{ action }}{% if not loop.last %}, {% endif %}{%- endfor %} ]
+).
+{%- endfor %}
+
