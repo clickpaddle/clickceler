@@ -1,0 +1,9 @@
+{%- for rule in throttle_rules %}
+throttle_rule({{ rule.name }}, {{ rule.priority }},
+    [ {{ rule.event }} ],
+    [ {%- for c in rule.conditions %}{{ c }}{% if not loop.last %}, {% endif %}{%- endfor %} ],
+    [ {%- for s in rule.settings %}settings{{ s | tojson }}{% if not loop.last %}, {% endif %}{%- endfor %} ],
+    [ {%- for a in rule.action %}{{ a }}{% if not loop.last %}, {% endif %}{%- endfor %} ]
+).
+{%- endfor %}
+
