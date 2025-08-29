@@ -1,0 +1,47 @@
+[
+  {
+    "type": "server",
+    "hostname": "server01",
+    "status": "open",
+    "severity": "critical",
+    "env": "dev"
+  },
+  {
+    "type": "disk",
+    "hostname": "disk01",
+    "status": "open",
+    "severity": "critical",
+    "used_space": 150,
+    "env": "dev"
+  },
+  {
+    "type": "memory",
+    "hostname": "memory01",
+    "status": "open",
+    "severity": "critical",
+    "free_memory": 0,
+    "env": "dev"
+  },
+  {
+    "type": "firewall",
+    "hostname": "fw01",
+    "status": "open",
+    "severity": "critical",
+    "env": "prod"
+  },
+  {
+    "type": "snmptrap",
+    "hostname": "snmp01",
+    "status": "open",
+    "severity": "critical",
+    "env": "prod"
+  },
+  {
+    "type": "ping",
+    "hostname": "router01",
+    "status": "failed",
+    "severity": "critical",
+    "env": "prod"
+  }
+]
+
