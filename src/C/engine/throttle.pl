@@ -83,11 +83,12 @@ handle_event_throttle(event(EventType, DictIn)) :-
     apply_throttle_rules(SortedRules, event(EventType, DictIn)).
 
 
-apply_throttle_rules([], _Event) :-
+apply_throttle_rules([], Event) :-
     % No rules left to apply, send event directly
-    log_trace(info,'[Throttle] No more throttle rules, Prepare to send event with  a delay'[]).
+    safe_thread_send_message(abstract_queue, Event),
+    log_trace(info,'[Throttle] No more throttle rules, Prepare to send event with  a delay',[]).
 
-apply_throttle_rules([throttle_rule(RuleID, _Priority, [Pattern], _Conditions, ParamList, Transformations)| Rest], event(EventType, DictIn)) :-
+apply_throttle_rules([throttle_rule(RuleID, _Priority, [_Pattern], _Conditions, ParamList, Transformations)| Rest], event(EventType, DictIn)) :-
     % Extract params
     log_trace(info,'[Throttle] Parsing settings: ~q ',[ParamList]), 
     ParamList = [Params],

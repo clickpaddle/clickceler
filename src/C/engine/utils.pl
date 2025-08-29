@@ -52,9 +52,11 @@ log_trace(Level, Format, Args) :-
     LevelVal >= CurrentLevelVal,
     get_time(TS),
     format_time(string(TimeStamp), '%Y-%m-%dT%H:%M:%S', TS),
-    format('[~w] [~w] ', [TimeStamp, Level]),
-    format(Format, Args),
-    nl.
+    % Construire le message formaté
+    format(string(Msg), Format, Args),
+    % Écrire tout en une seule fois
+    format('[~w] [~w] ~w~n', [TimeStamp, Level, Msg]),
+    flush_output(user_output).  % flush pour éviter merge multi-thread
 
 % Fail silently if below threshold
 log_trace(Level, _Format, _Args) :-

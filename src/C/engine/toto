@@ -1,0 +1,58 @@
+[DEBUG] [Main Thread] Abstract handler thread created.
+[abstract thread engine] [DEBUG] Thread 6 started.
+Warning: /opt/automation/clickceler/src/C/engine/abstract.pl:51:
+Warning:    Singleton variables: [Abstract]
+Warning: /opt/automation/clickceler/src/C/engine/abstract.pl:132:
+Warning:    Singleton variables: [Abstract,DictIn]
+ERROR: /opt/automation/clickceler/src/C/engine/abstract.pl:132:
+Warning: /opt/automation/clickceler/src/C/engine/abstract.pl:141:
+Warning: /opt/automation/clickceler/src/C/engine/abstract.pl:149:
+Warning:    Local definition of abstract:apply_transformations/3 overrides weak import from utils
+Warning: /opt/automation/clickceler/src/C/engine/abstract.pl:249:
+[DEBUG] [Thread 140635641419456] Rules loaded from ../engine/abstract.pl
+[INFO] [Thread 140635641419456] Captured output: [2025-08-29T19:45:14] [info] [Abstract 140635641419456] Thread started
+[abstract thread engine] [INFO] Module 'abstract' successfully loaded.
+[2025-08-29T19:45:14] [info] [Abstract] Rules loaded from ../rules/abstract.pl
+[2025-08-29T19:45:14] [info] [Abstract] Created message queue abstract
+[2025-08-29T19:45:23] [info] [Abstract] Normalized DictIn: _4472{counter:0,env:"dev",hostname:"server01",id:17564895237900001,severity:"critical",status:"open",timestamp_collected:1756489523.7902014}
+[2025-08-29T19:45:23] [warning] [Abstract] Rule _4682 raised error: error(existence_error(procedure,abstract:abstract_rule_match/7),context(system: <meta-call> / 1,_4878))
+[2025-08-29T19:45:23] [info] [Abstract] Matched rules: [rule(_4894,_4896,_4898,_4900)]
+[2025-08-29T19:45:23] [info] [Abstract] Sorted rules by priority: [rule(_4894,_4896,_4898,_4900)]
+[2025-08-29T19:45:23] [info] [Abstract] Applying rule _5080
+[2025-08-29T19:45:23] [info] [Abstract Transforms: _4900 
+[2025-08-29T19:45:23] [info] [Abstract] Received: event(server,_4472{counter:0,env:"dev",hostname:"server01",id:17564895237900001,severity:"critical",status:"open",timestamp_collected:1756489523.7902014})
+[2025-08-29T19:45:23] [info] [Abstract] Normalized DictIn: _5524{counter:0,env:"dev",hostname:"disk01",id:17564895237900002,severity:"critical",status:"open",timestamp_collected:1756489523.7903728,used_space:150}
+[2025-08-29T19:45:23] [warning] [Abstract] Rule _5740 raised error: error(existence_error(procedure,abstract:abstract_rule_match/7),context(system: <meta-call> / 1,_5936))
+[2025-08-29T19:45:23] [info] [Abstract] Matched rules: [rule(_5952,_5954,_5956,_5958)]
+[2025-08-29T19:45:23] [info] [Abstract] Sorted rules by priority: [rule(_5952,_5954,_5956,_5958)]
+[2025-08-29T19:45:23] [info] [Abstract] Applying rule _6138
+[2025-08-29T19:45:23] [info] [Abstract Transforms: _5958 
+[2025-08-29T19:45:23] [info] [Abstract] Received: event(disk,_5524{counter:0,env:"dev",hostname:"disk01",id:17564895237900002,severity:"critical",status:"open",timestamp_collected:1756489523.7903728,used_space:150})
+[2025-08-29T19:45:23] [info] [Abstract] Normalized DictIn: _6584{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17564895237900003,severity:"critical",status:"open",timestamp_collected:1756489523.7904413}
+[2025-08-29T19:45:23] [warning] [Abstract] Rule _6802 raised error: error(existence_error(procedure,abstract:abstract_rule_match/7),context(system: <meta-call> / 1,_6998))
+[2025-08-29T19:45:23] [info] [Abstract] Matched rules: [rule(_7014,_7016,_7018,_7020)]
+[2025-08-29T19:45:23] [info] [Abstract] Sorted rules by priority: [rule(_7014,_7016,_7018,_7020)]
+[2025-08-29T19:45:23] [info] [Abstract] Applying rule _7200
+[2025-08-29T19:45:23] [info] [Abstract Transforms: _7020 
+[2025-08-29T19:45:23] [info] [Abstract] Received: event(memory,_6584{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17564895237900003,severity:"critical",status:"open",timestamp_collected:1756489523.7904413})
+[2025-08-29T19:45:23] [info] [Abstract] Normalized DictIn: _7646{counter:0,env:"prod",hostname:"fw01",id:17564895237900004,severity:"critical",status:"open",timestamp_collected:1756489523.7904947}
+[2025-08-29T19:45:23] [warning] [Abstract] Rule _7854 raised error: error(existence_error(procedure,abstract:abstract_rule_match/7),context(system: <meta-call> / 1,_8050))
+[2025-08-29T19:45:23] [info] [Abstract] Matched rules: [rule(_8066,_8068,_8070,_8072)]
+[2025-08-29T19:45:23] [info] [Abstract] Sorted rules by priority: [rule(_8066,_8068,_8070,_8072)]
+[2025-08-29T19:45:23] [info] [Abstract] Applying rule _8252
+[2025-08-29T19:45:23] [info] [Abstract Transforms: _8072 
+[2025-08-29T19:45:23] [info] [Abstract] Received: event(firewall,_7646{counter:0,env:"prod",hostname:"fw01",id:17564895237900004,severity:"critical",status:"open",timestamp_collected:1756489523.7904947})
+[2025-08-29T19:45:23] [info] [Abstract] Normalized DictIn: _8694{counter:0,env:"prod",hostname:"snmp01",id:17564895237900005,severity:"critical",status:"open",timestamp_collected:1756489523.7905543}
+[2025-08-29T19:45:23] [warning] [Abstract] Rule _8902 raised error: error(existence_error(procedure,abstract:abstract_rule_match/7),context(system: <meta-call> / 1,_9098))
+[2025-08-29T19:45:23] [info] [Abstract] Matched rules: [rule(_9114,_9116,_9118,_9120)]
+[2025-08-29T19:45:23] [info] [Abstract] Sorted rules by priority: [rule(_9114,_9116,_9118,_9120)]
+[2025-08-29T19:45:23] [info] [Abstract] Applying rule _9300
+[2025-08-29T19:45:23] [info] [Abstract Transforms: _9120 
+[2025-08-29T19:45:23] [info] [Abstract] Received: event(snmptrap,_8694{counter:0,env:"prod",hostname:"snmp01",id:17564895237900005,severity:"critical",status:"open",timestamp_collected:1756489523.7905543})
+[2025-08-29T19:45:23] [info] [Abstract] Normalized DictIn: _9744{counter:0,env:"prod",hostname:"router01",id:17564895237900006,severity:"critical",status:"failed",timestamp_collected:1756489523.7906055}
+[2025-08-29T19:45:23] [warning] [Abstract] Rule _9954 raised error: error(existence_error(procedure,abstract:abstract_rule_match/7),context(system: <meta-call> / 1,_10150))
+[2025-08-29T19:45:23] [info] [Abstract] Matched rules: [rule(_10166,_10168,_10170,_10172)]
+[2025-08-29T19:45:23] [info] [Abstract] Sorted rules by priority: [rule(_10166,_10168,_10170,_10172)]
+[2025-08-29T19:45:23] [info] [Abstract] Applying rule _10354
+[2025-08-29T19:45:23] [info] [Abstract Transforms: _10172 
+[2025-08-29T19:45:23] [info] [Abstract] Received: event(ping,_9744{counter:0,env:"prod",hostname:"router01",id:17564895237900006,severity:"critical",status:"failed",timestamp_collected:1756489523.7906055})

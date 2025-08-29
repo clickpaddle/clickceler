@@ -3,102 +3,6 @@
 [DEBUG] [Main Thread] Refine handler thread created.
 [refine thread engine] [DEBUG] Thread 3 started.
 [DEBUG] [Main Thread] Filter handler thread created.
-[DEBUG] [Main Thread] Throttle handler thread created.
-[filter thread engine] [DEBUG] Thread 4 started.
-[DEBUG] [Main Thread] Abstract handler thread created.
-[throttle thread engine] [DEBUG] Thread 5 started.
-[abstract thread engine] [DEBUG] Thread 6 started.
-[DEBUG] [Main Thread] Update handler thread created.
-[update thread engine] [DEBUG] Thread 7 started.
-[DEBUG] [Main Thread] Correlate handler thread created.
-[DEBUG] [Main Thread] Execute handler thread created.
-[correlate thread engine] [DEBUG] Thread 8 started.
-[execute thread engine] [DEBUG] Thread 9 started.
-[DEBUG] [Main Thread] Timer handler thread created.
-[DEBUG] [Main Thread] Propagate handler thread created.
-[timer thread engine] [DEBUG] Thread 10 started.
-[propagate thread engine] [DEBUG] Thread 11 started.
-[DEBUG] [Main Thread] Trigger handler thread created.
-[trigger thread engine] [DEBUG] Thread 12 started.
-[DEBUG] [Main Thread] Collector handler thread created.
-[DEBUG] [Collector Handler 2] Entering collector_handler_thread
-[DEBUG] [Collector Handler 2] Socket created.
-[DEBUG] [Collector Handler 2] Socket bound to port 65432.
-[INFO] [Collector Handler 2] Server started and listening on port 65432
-[DEBUG] [Collector Handler 2] Waiting for new connections...
-[DEBUG] [Thread 140062456309440] Rules loaded from ../engine/kb_shared.pl
-[INFO] [Thread 140062456309440] Captured output: [2025-08-29T16:28:25] [info] [Kb_shared 140062456309440  ] Thread started
-
-[kb_shared thread engine] [INFO] Module 'kb_shared' successfully loaded.
-[DEBUG] [Thread 140062296913600] Rules loaded from ../engine/trigger.pl
-[INFO] [Thread 140062296913600] Captured output: [2025-08-29T16:28:25] [info] [Trigger 140062296913600] Thread started
-
-[trigger thread engine] [INFO] Module 'trigger' successfully loaded.
-[Kb_shared] Starting kb_shared loop[2025-08-29T16:28:25] [info] [Trigger] Warning: Rules file not found.
-[DEBUG] [Thread 140062422460096] Rules loaded from ../engine/update.pl
-[2025-08-29T16:28:25] [info] [Trigger] Created message queue trigger
-[DEBUG] [Thread 140062396901056] Rules loaded from ../engine/timer.pl
-[INFO] [Thread 140062422460096] Captured output: [2025-08-29T16:28:25] [info] [Update 140062422460096] Thread started
-
-[update thread engine] [INFO] Module 'update' successfully loaded.
-[INFO] [Thread 140062396901056] Captured output: [2025-08-29T16:28:25] [info] [Timer 140062396901056] Thread started
-
-[timer thread engine] [INFO] Module 'timer' successfully loaded.
-[2025-08-29T16:28:25] [info] [Update] Warning: Rules file not found.
-[DEBUG] [Thread 140062405293760] Rules loaded from ../engine/execute.pl
-[2025-08-29T16:28:25] [info] [Update] Created message queue update
-[DEBUG] [Thread 140062388508352] Rules loaded from ../engine/propagate.pl
-[2025-08-29T16:28:25] [info] [Timer] Warning: Rules file not found.
-[INFO] [Thread 140062405293760] Captured output: [2025-08-29T16:28:25] [info] [Execute 140062405293760] Thread started
-
-[execute thread engine] [INFO] Module 'execute' successfully loaded.
-[2025-08-29T16:28:25] [info] [Timer] Created message queue timer
-[2025-08-29T16:28:25] [info] [Execute] Warning: Rules file not found.
-[INFO] [Thread 140062388508352] Captured output: [2025-08-29T16:28:25] [info] [Propagate 140062388508352] Thread started
-
-[propagate thread engine] [INFO] Module 'propagate' successfully loaded.
-[2025-08-29T16:28:25] [info] [Execute] Created message queue execute
-[DEBUG] [Thread 140062447916736] Rules loaded from ../engine/refine.pl
-[2025-08-29T16:28:25] [warning] [Propagate] Rules file not found.
-[DEBUG] [Thread 140062414067392] Rules loaded from ../engine/correlate.pl
-[2025-08-29T16:28:25] [info] [Propagate] Created message queue propagate
-[INFO] [Thread 140062414067392] Captured output: [2025-08-29T16:28:25] [info] [Correlate 140062414067392] Thread started
-
-[correlate thread engine] [INFO] Module 'correlate' successfully loaded.
-[2025-08-29T16:28:25] [warning] [Correlate] Warning: Rules file not found.
-[2025-08-29T16:28:25] [info] [Correlate] Created message queue correlate
-[DEBUG] [Thread 140062305306304] Rules loaded from ../engine/filter.pl
-[INFO] [Thread 140062305306304] Captured output: [2025-08-29T16:28:25] [info] [Filter 140062305306304] Thread started
-
-[filter thread engine] [INFO] Module 'filter' successfully loaded.
-ERROR: [Thread 4] /opt/automation/clickceler/src/C/engine/throttle.pl:88:90: Syntax error: Operator expected
-[INFO] [Thread 140062447916736] Captured output: [2025-08-29T16:28:25] [info] [Refine 140062447916736] Thread started
-[2025-08-29T16:28:25] [info] [Refine] Created message queue refine
-[2025-08-29T16:28:25] [info] [Refine] Rules loaded from ../rules/refine.pl
-
-[refine thread engine] [INFO] Module 'refine' successfully loaded.
-Warning: /opt/automation/clickceler/src/C/engine/throttle.pl:90:
-Warning:    Singleton variables: [Pattern]
-[DEBUG] [Thread 140062431028928] Rules loaded from ../engine/abstract.pl
-[INFO] [Thread 140062431028928] Captured output: [2025-08-29T16:28:25] [info] [Abstract 140062431028928] Thread started
-
-[2025-08-29T16:28:25] [info] [Filter] Rules loaded from ../rules/filter.pl
-[abstract thread engine] [INFO] Module 'abstract' successfully loaded.
-[2025-08-29T16:28:25] [info] [Filter] Created message queue filter
-[2025-08-29T16:28:25] [info] [Abstract] Rules loaded from ../rules/abstract.pl
-[2025-08-29T16:28:25] [info] [Abstract] Created message queue abstract
-[DEBUG] [Thread 140062439421632] Rules loaded from ../engine/throttle.pl
-[INFO] [Thread 140062439421632] Captured output: [2025-08-29T16:28:25] [info] [Throttle 140062439421632] Thread started
-
-[throttle thread engine] [INFO] Module 'throttle' successfully loaded.
-ERROR: [Thread 4] /opt/automation/clickceler/src/C/rules/throttle.pl:5:13: Syntax error: key_expected
-[2025-08-29T16:28:25] [info] [Throttle] Rules loaded from ../rules/throttle.pl
-[2025-08-29T16:28:25] [info] [Throttle] Created message queue throttle
-[DEBUG] [Main Thread] Kb_shared handler thread created.
-[kb_shared thread engine] [DEBUG] Thread 1 started.
-[DEBUG] [Main Thread] Refine handler thread created.
-[DEBUG] [Main Thread] Filter handler thread created.
-[refine thread engine] [DEBUG] Thread 3 started.
 [filter thread engine] [DEBUG] Thread 4 started.
 [DEBUG] [Main Thread] Throttle handler thread created.
 [throttle thread engine] [DEBUG] Thread 5 started.
@@ -107,14 +11,14 @@ ERROR: [Thread 4] /opt/automation/clickceler/src/C/rules/throttle.pl:5:13: Synta
 [DEBUG] [Main Thread] Update handler thread created.
 [update thread engine] [DEBUG] Thread 7 started.
 [DEBUG] [Main Thread] Correlate handler thread created.
+[correlate thread engine] [DEBUG] Thread 8 started.
 [DEBUG] [Main Thread] Execute handler thread created.
 [DEBUG] [Main Thread] Timer handler thread created.
-[timer thread engine] [DEBUG] Thread 10 started.
-[correlate thread engine] [DEBUG] Thread 8 started.
-[DEBUG] [Main Thread] Propagate handler thread created.
 [execute thread engine] [DEBUG] Thread 9 started.
-[propagate thread engine] [DEBUG] Thread 11 started.
+[timer thread engine] [DEBUG] Thread 10 started.
+[DEBUG] [Main Thread] Propagate handler thread created.
 [DEBUG] [Main Thread] Trigger handler thread created.
+[propagate thread engine] [DEBUG] Thread 11 started.
 [trigger thread engine] [DEBUG] Thread 12 started.
 [DEBUG] [Main Thread] Collector handler thread created.
 [DEBUG] [Collector Handler 2] Entering collector_handler_thread
@@ -122,274 +26,361 @@ ERROR: [Thread 4] /opt/automation/clickceler/src/C/rules/throttle.pl:5:13: Synta
 [DEBUG] [Collector Handler 2] Socket bound to port 65432.
 [INFO] [Collector Handler 2] Server started and listening on port 65432
 [DEBUG] [Collector Handler 2] Waiting for new connections...
-[DEBUG] [Thread 139870246794944] Rules loaded from ../engine/kb_shared.pl
-[INFO] [Thread 139870246794944] Captured output: [2025-08-29T16:28:35] [info] [Kb_shared 139870246794944  ] Thread started
+[DEBUG] [Thread 140635666736832] Rules loaded from ../engine/kb_shared.pl
+[INFO] [Thread 140635666736832] Captured output: [2025-08-29T19:45:14] [info] [Kb_shared 140635666736832  ] Thread started
 
 [kb_shared thread engine] [INFO] Module 'kb_shared' successfully loaded.
-[DEBUG] [Thread 139869821064896] Rules loaded from ../engine/trigger.pl
-[DEBUG] [Thread 139869837850304] Rules loaded from ../engine/timer.pl
-[INFO] [Thread 139869821064896] Captured output: [2025-08-29T16:28:35] [info] [Trigger 139869821064896] Thread started
+[Kb_shared] Starting kb_shared loop
+Warning: /opt/automation/clickceler/src/C/engine/abstract.pl:51:
+Warning:    Singleton variables: [Abstract]
+[DEBUG] [Thread 140635507340992] Rules loaded from ../engine/trigger.pl
+[INFO] [Thread 140635507340992] Captured output: [2025-08-29T19:45:14] [info] [Trigger 140635507340992] Thread started
 
 [trigger thread engine] [INFO] Module 'trigger' successfully loaded.
-[DEBUG] [Thread 139870188046016] Rules loaded from ../engine/execute.pl
-[INFO] [Thread 139869837850304] Captured output: [2025-08-29T16:28:35] [info] [Timer 139869837850304] Thread started
-
-[timer thread engine] [INFO] Module 'timer' successfully loaded.
-[Kb_shared] Starting kb_shared loop[2025-08-29T16:28:35] [info] [Trigger] Warning: Rules file not found.
-[DEBUG] [Thread 139870196438720] Rules loaded from ../engine/correlate.pl
-[2025-08-29T16:28:35] [info] [Timer] Warning: Rules file not found.
-[INFO] [Thread 139870188046016] Captured output: [2025-08-29T16:28:35] [info] [Execute 139870188046016] Thread started
+[2025-08-29T19:45:14] [info] [Trigger] Warning: Rules file not found.
+[DEBUG] [Thread 140635541595840] Rules loaded from ../engine/execute.pl
+[2025-08-29T19:45:14] [info] [Trigger] Created message queue trigger
+[DEBUG] [Thread 140635524810432] Rules loaded from ../engine/propagate.pl
+[DEBUG] [Thread 140635632850624] Rules loaded from ../engine/update.pl
+[DEBUG] [Thread 140635549988544] Rules loaded from ../engine/correlate.pl
+[DEBUG] [Thread 140635533203136] Rules loaded from ../engine/timer.pl
+[INFO] [Thread 140635541595840] Captured output: [2025-08-29T19:45:14] [info] [Execute 140635541595840] Thread started
 
 [execute thread engine] [INFO] Module 'execute' successfully loaded.
-[2025-08-29T16:28:35] [info] [Timer] Created message queue timer
-[INFO] [Thread 139870196438720] Captured output: [2025-08-29T16:28:35] [info] [Correlate 139870196438720] Thread started
+[INFO] [Thread 140635549988544] Captured output: [2025-08-29T19:45:14] [info] [Correlate 140635549988544] Thread started
 
 [correlate thread engine] [INFO] Module 'correlate' successfully loaded.
-[2025-08-29T16:28:35] [info] [Trigger] Created message queue trigger
-[2025-08-29T16:28:35] [info] [Execute] Warning: Rules file not found.
-[2025-08-29T16:28:35] [warning] [Correlate] Warning: Rules file not found.
-[2025-08-29T16:28:35] [info] [Execute] Created message queue execute
-[DEBUG] [Thread 139870204831424] Rules loaded from ../engine/update.pl
-[2025-08-29T16:28:35] [info] [Correlate] Created message queue correlate
-[DEBUG] [Thread 139870238402240] Rules loaded from ../engine/refine.pl
-[INFO] [Thread 139870204831424] Captured output: [2025-08-29T16:28:35] [info] [Update 139870204831424] Thread started
+[INFO] [Thread 140635632850624] Captured output: [2025-08-29T19:45:14] [info] [Update 140635632850624] Thread started
 
 [update thread engine] [INFO] Module 'update' successfully loaded.
-[2025-08-29T16:28:35] [info] [Update] Warning: Rules file not found.
-[2025-08-29T16:28:35] [info] [Update] Created message queue update
-[DEBUG] [Thread 139869829457600] Rules loaded from ../engine/propagate.pl
-[INFO] [Thread 139869829457600] Captured output: [2025-08-29T16:28:35] [info] [Propagate 139869829457600] Thread started
+[INFO] [Thread 140635524810432] Captured output: [2025-08-29T19:45:14] [info] [Propagate 140635524810432] Thread started
 
+[2025-08-29T19:45:14] [info] [Execute] Warning: Rules file not found.
 [propagate thread engine] [INFO] Module 'propagate' successfully loaded.
-[2025-08-29T16:28:35] [warning] [Propagate] Rules file not found.
-[2025-08-29T16:28:35] [info] [Propagate] Created message queue propagate
-[DEBUG] [Thread 139870230009536] Rules loaded from ../engine/filter.pl
-[INFO] [Thread 139870230009536] Captured output: [2025-08-29T16:28:35] [info] [Filter 139870230009536] Thread started
+[INFO] [Thread 140635533203136] Captured output: [2025-08-29T19:45:14] [info] [Timer 140635533203136] Thread started
 
-[filter thread engine] [INFO] Module 'filter' successfully loaded.
-ERROR: [Thread 5] /opt/automation/clickceler/src/C/engine/throttle.pl:88:90: Syntax error: Operator expected
-[INFO] [Thread 139870238402240] Captured output: [2025-08-29T16:28:35] [info] [Refine 139870238402240] Thread started
-[2025-08-29T16:28:35] [info] [Refine] Created message queue refine
-[2025-08-29T16:28:35] [info] [Refine] Rules loaded from ../rules/refine.pl
+[2025-08-29T19:45:14] [warning] [Correlate] Warning: Rules file not found.
+[timer thread engine] [INFO] Module 'timer' successfully loaded.
+[2025-08-29T19:45:14] [info] [Update] Warning: Rules file not found.
+[2025-08-29T19:45:14] [info] [Execute] Created message queue execute
+[2025-08-29T19:45:14] [warning] [Propagate] Rules file not found.
+[2025-08-29T19:45:14] [info] [Timer] Warning: Rules file not found.
+[2025-08-29T19:45:14] [info] [Timer] Created message queue timer
+[DEBUG] [Thread 140635658344128] Rules loaded from ../engine/refine.pl
+[2025-08-29T19:45:14] [info] [Propagate] Created message queue propagate
+[2025-08-29T19:45:14] [info] [Update] Created message queue update
+[2025-08-29T19:45:14] [info] [Correlate] Created message queue correlate
+Warning: /opt/automation/clickceler/src/C/engine/abstract.pl:132:
+Warning:    Singleton variables: [Abstract,DictIn]
+[INFO] [Thread 140635658344128] Captured output: [2025-08-29T19:45:14] [info] [Refine 140635658344128] Thread started
+[2025-08-29T19:45:14] [info] [Refine] Created message queue refine
+[2025-08-29T19:45:14] [warning] [Refine] Rules file not found.
 
 [refine thread engine] [INFO] Module 'refine' successfully loaded.
-Warning: /opt/automation/clickceler/src/C/engine/throttle.pl:90:
-Warning:    Singleton variables: [Pattern]
-[DEBUG] [Thread 139870213224128] Rules loaded from ../engine/abstract.pl
-[2025-08-29T16:28:35] [info] [Filter] Rules loaded from ../rules/filter.pl
-[INFO] [Thread 139870213224128] Captured output: [2025-08-29T16:28:35] [info] [Abstract 139870213224128] Thread started
+ERROR: /opt/automation/clickceler/src/C/engine/abstract.pl:132:
+ERROR:    No permission to modify static procedure `(',')/2'
+ERROR:    Defined at /usr/lib/swipl/boot/init.pl:400
+[DEBUG] [Thread 140635515733696] Rules loaded from ../engine/filter.pl
+[INFO] [Thread 140635515733696] Captured output: [2025-08-29T19:45:14] [info] [Filter 140635515733696] Thread started
 
-[abstract thread engine] [INFO] Module 'abstract' successfully loaded.
-[2025-08-29T16:28:35] [info] [Filter] Created message queue filter
-[2025-08-29T16:28:35] [info] [Abstract] Rules loaded from ../rules/abstract.pl
-[2025-08-29T16:28:35] [info] [Abstract] Created message queue abstract
-[DEBUG] [Thread 139870221616832] Rules loaded from ../engine/throttle.pl
-[INFO] [Thread 139870221616832] Captured output: [2025-08-29T16:28:35] [info] [Throttle 139870221616832] Thread started
+[filter thread engine] [INFO] Module 'filter' successfully loaded.
+[2025-08-29T19:45:14] [warning] [Filter] Warning: Rules file not found.
+[2025-08-29T19:45:14] [info] [Filter] Created message queue filter
+[DEBUG] [Thread 140635649914560] Rules loaded from ../engine/throttle.pl
+[INFO] [Thread 140635649914560] Captured output: [2025-08-29T19:45:14] [info] [Throttle 140635649914560] Thread started
 
 [throttle thread engine] [INFO] Module 'throttle' successfully loaded.
-ERROR: [Thread 5] /opt/automation/clickceler/src/C/rules/throttle.pl:5:13: Syntax error: key_expected
-[2025-08-29T16:28:35] [info] [Throttle] Rules loaded from ../rules/throttle.pl
-[2025-08-29T16:28:35] [info] [Throttle] Created message queue throttle
-[DEBUG] [Collector Handler 139869812672192] Accepted new connection on socket 4.
-[DEBUG] [Collector Handler 139869812672192] created thread.
+[2025-08-29T19:45:14] [warning] [Throttle]Rules file not found.
+[2025-08-29T19:45:14] [info] [Throttle] Created message queue throttle
+Warning: /opt/automation/clickceler/src/C/engine/abstract.pl:141:
+Warning:    Singleton variables: [RuleID]
+Warning: /opt/automation/clickceler/src/C/engine/abstract.pl:149:
+Warning:    Local definition of abstract:apply_transformations/3 overrides weak import from utils
+Warning: /opt/automation/clickceler/src/C/engine/abstract.pl:249:
+Warning:    Singleton variables: [AbastractID]
+[DEBUG] [Thread 140635641419456] Rules loaded from ../engine/abstract.pl
+[INFO] [Thread 140635641419456] Captured output: [2025-08-29T19:45:14] [info] [Abstract 140635641419456] Thread started
+
+[abstract thread engine] [INFO] Module 'abstract' successfully loaded.
+[2025-08-29T19:45:14] [info] [Abstract] Rules loaded from ../rules/abstract.pl
+[2025-08-29T19:45:14] [info] [Abstract] Created message queue abstract
+[DEBUG] [Collector Handler 140635498948288] Accepted new connection on socket 4.
+[DEBUG] [Collector Handler 140635498948288] created thread.
 [DEBUG] [Collector Handler 2] Waiting for new connections...
-[DEBUG] [Collector 139869812672192] Starting per_client_thread for socket 4
-[DEBUG] [Collector 139869812672192] Prolog engine attached.
-[DEBUG] [Thread 139869804279488] Rules loaded from ../engine/collector.pl
-[INFO] [Thread 139869804279488] Captured output: [2025-08-29T16:31:14] [info] [Collector 139869804279488] Thread started
+[DEBUG] [Collector 140635498948288] Starting per_client_thread for socket 4
+[DEBUG] [Collector 140635498948288] Prolog engine attached.
+[DEBUG] [Thread 140635080226496] Rules loaded from ../engine/collector.pl
+[INFO] [Thread 140635080226496] Captured output: [2025-08-29T19:45:23] [info] [Collector 140635080226496] Thread started
 
 [Collector] Rules loaded.
 [DEBUG] [Collector 13] Entering collector_handler for socket 4
 [Collector] ready to receive JSON EVENT or QUERY.
-[DEBUG] [Main Thread] Kb_shared handler thread created.
-[kb_shared thread engine] [DEBUG] Thread 1 started.
-[DEBUG] [Main Thread] Refine handler thread created.
-[refine thread engine] [DEBUG] Thread 3 started.
-[DEBUG] [Main Thread] Filter handler thread created.
-[filter thread engine] [DEBUG] Thread 4 started.
-[DEBUG] [Main Thread] Throttle handler thread created.
-[throttle thread engine] [DEBUG] Thread 5 started.
-[DEBUG] [Main Thread] Abstract handler thread created.
-[DEBUG] [Main Thread] Update handler thread created.
-[update thread engine] [DEBUG] Thread 7 started.
-[DEBUG] [Main Thread] Correlate handler thread created.
-[abstract thread engine] [DEBUG] Thread 6 started.
-[correlate thread engine] [DEBUG] Thread 8 started.
-[DEBUG] [Main Thread] Execute handler thread created.
-[execute thread engine] [DEBUG] Thread 9 started.
-[DEBUG] [Main Thread] Timer handler thread created.
-[timer thread engine] [DEBUG] Thread 10 started.
-[DEBUG] [Main Thread] Propagate handler thread created.
-[DEBUG] [Main Thread] Trigger handler thread created.
-[propagate thread engine] [DEBUG] Thread 11 started.
-[trigger thread engine] [DEBUG] Thread 12 started.
-[DEBUG] [Main Thread] Collector handler thread created.
-[DEBUG] [Collector Handler 2] Entering collector_handler_thread
-[DEBUG] [Collector Handler 2] Socket created.
-[DEBUG] [Collector Handler 2] Socket bound to port 65432.
-[INFO] [Collector Handler 2] Server started and listening on port 65432
-[DEBUG] [Collector Handler 2] Waiting for new connections...
-[DEBUG] [Thread 140714377569984] Rules loaded from ../engine/kb_shared.pl
-[INFO] [Thread 140714377569984] Captured output: [2025-08-29T16:37:48] [info] [Kb_shared 140714377569984  ] Thread started
+[Collector] Received 808 bytes: EVENT [
+  {
+    "type": "server",
+    "hostname": "server01",
+    "status": "open",
+    "severity": "critical",
+    "env": "dev"
+  },
+  {
+    "type": "disk",
+    "hostname": "disk01",
+    "status": "open",
+    "severity": "critical",
+    "used_space": 150,
+    "env": "dev"
+  },
+  {
+    "type": "memory",
+    "hostname": "memory01",
+    "status": "open",
+    "severity": "critical",
+    "free_memory": 0,
+    "env": "dev"
+  },
+  {
+    "type": "firewall",
+    "hostname": "fw01",
+    "status": "open",
+    "severity": "critical",
+    "env": "prod"
+  },
+  {
+    "type": "snmptrap",
+    "hostname": "snmp01",
+    "status": "open",
+    "severity": "critical",
+    "env": "prod"
+  },
+  {
+    "type": "ping",
+    "hostname": "router01",
+    "status": "failed",
+    "severity": "critical",
+    "env": "prod"
+  }
+]
 
-[kb_shared thread engine] [INFO] Module 'kb_shared' successfully loaded.
-[DEBUG] [Thread 140714226722496] Rules loaded from ../engine/trigger.pl
-[DEBUG] [Thread 140714134468288] Rules loaded from ../engine/update.pl
-[INFO] [Thread 140714226722496] Captured output: [2025-08-29T16:37:48] [info] [Trigger 140714226722496] Thread started
 
-[DEBUG] [Thread 140714235115200] Rules loaded from ../engine/propagate.pl
-[trigger thread engine] [INFO] Module 'trigger' successfully loaded.
-[INFO] [Thread 140714134468288] Captured output: [2025-08-29T16:37:48] [info] [Update 140714134468288] Thread started
+[DEBUG] [Collector 13] Identified as EVENT. JSON: [
+  {
+    "type": "server",
+    "hostname": "server01",
+    "status": "open",
+    "severity": "critical",
+    "env": "dev"
+  },
+  {
+    "type": "disk",
+    "hostname": "disk01",
+    "status": "open",
+    "severity": "critical",
+    "used_space": 150,
+    "env": "dev"
+  },
+  {
+    "type": "memory",
+    "hostname": "memory01",
+    "status": "open",
+    "severity": "critical",
+    "free_memory": 0,
+    "env": "dev"
+  },
+  {
+    "type": "firewall",
+    "hostname": "fw01",
+    "status": "open",
+    "severity": "critical",
+    "env": "prod"
+  },
+  {
+    "type": "snmptrap",
+    "hostname": "snmp01",
+    "status": "open",
+    "severity": "critical",
+    "env": "prod"
+  },
+  {
+    "type": "ping",
+    "hostname": "router01",
+    "status": "failed",
+    "severity": "critical",
+    "env": "prod"
+  }
+]
 
-[update thread engine] [INFO] Module 'update' successfully loaded.
-[INFO] [Thread 140714235115200] Captured output: [2025-08-29T16:37:48] [info] [Propagate 140714235115200] Thread started
 
-[Kb_shared] Starting kb_shared loop[2025-08-29T16:37:48] [info] [Trigger] Warning: Rules file not found.
-[propagate thread engine] [INFO] Module 'propagate' successfully loaded.
-[2025-08-29T16:37:48] [info] [Update] Warning: Rules file not found.
-[DEBUG] [Thread 140714251900608] Rules loaded from ../engine/execute.pl
-[2025-08-29T16:37:48] [info] [Trigger] Created message queue trigger
-[2025-08-29T16:37:48] [info] [Update] Created message queue update
-[2025-08-29T16:37:48] [warning] [Propagate] Rules file not found.
-[INFO] [Thread 140714251900608] Captured output: [2025-08-29T16:37:48] [info] [Execute 140714251900608] Thread started
-
-[DEBUG] [Thread 140714260293312] Rules loaded from ../engine/correlate.pl
-[2025-08-29T16:37:48] [info] [Propagate] Created message queue propagate
-[execute thread engine] [INFO] Module 'execute' successfully loaded.
-[INFO] [Thread 140714260293312] Captured output: [2025-08-29T16:37:48] [info] [Correlate 140714260293312] Thread started
-
-[2025-08-29T16:37:48] [info] [Execute] Warning: Rules file not found.
-[correlate thread engine] [INFO] Module 'correlate' successfully loaded.
-[2025-08-29T16:37:48] [info] [Execute] Created message queue execute
-[DEBUG] [Thread 140714369177280] Rules loaded from ../engine/refine.pl
-[2025-08-29T16:37:48] [warning] [Correlate] Warning: Rules file not found.
-[2025-08-29T16:37:48] [info] [Correlate] Created message queue correlate
-ERROR: [Thread 4] /opt/automation/clickceler/src/C/engine/throttle.pl:88:90: Syntax error: Operator expected
-[DEBUG] [Thread 140714268686016] Rules loaded from ../engine/filter.pl
-[INFO] [Thread 140714268686016] Captured output: [2025-08-29T16:37:48] [info] [Filter 140714268686016] Thread started
-
-[filter thread engine] [INFO] Module 'filter' successfully loaded.
-Warning: /opt/automation/clickceler/src/C/engine/throttle.pl:90:
-Warning:    Singleton variables: [Pattern]
-[DEBUG] [Thread 140714243507904] Rules loaded from ../engine/timer.pl
-[INFO] [Thread 140714369177280] Captured output: [2025-08-29T16:37:48] [info] [Refine 140714369177280] Thread started
-[2025-08-29T16:37:48] [info] [Refine] Created message queue refine
-[2025-08-29T16:37:48] [info] [Refine] Rules loaded from ../rules/refine.pl
-
-[refine thread engine] [INFO] Module 'refine' successfully loaded.
-[INFO] [Thread 140714243507904] Captured output: [2025-08-29T16:37:48] [info] [Timer 140714243507904] Thread started
-
-[timer thread engine] [INFO] Module 'timer' successfully loaded.
-[2025-08-29T16:37:48] [info] [Timer] Warning: Rules file not found.
-[2025-08-29T16:37:48] [info] [Timer] Created message queue timer
-[DEBUG] [Thread 140714352252608] Rules loaded from ../engine/abstract.pl
-[INFO] [Thread 140714352252608] Captured output: [2025-08-29T16:37:48] [info] [Abstract 140714352252608] Thread started
-
-[abstract thread engine] [INFO] Module 'abstract' successfully loaded.
-[2025-08-29T16:37:48] [info] [Filter] Rules loaded from ../rules/filter.pl
-[2025-08-29T16:37:48] [info] [Filter] Created message queue filter
-[2025-08-29T16:37:48] [info] [Abstract] Rules loaded from ../rules/abstract.pl
-[2025-08-29T16:37:48] [info] [Abstract] Created message queue abstract
-[DEBUG] [Thread 140714360682176] Rules loaded from ../engine/throttle.pl
-[INFO] [Thread 140714360682176] Captured output: [2025-08-29T16:37:48] [info] [Throttle 140714360682176] Thread started
-
-[throttle thread engine] [INFO] Module 'throttle' successfully loaded.
-ERROR: [Thread 4] /opt/automation/clickceler/src/C/rules/throttle.pl:5:13: Syntax error: key_expected
-[2025-08-29T16:37:48] [info] [Throttle] Rules loaded from ../rules/throttle.pl
-[2025-08-29T16:37:48] [info] [Throttle] Created message queue throttle
-[DEBUG] [Main Thread] Kb_shared handler thread created.
-[kb_shared thread engine] [DEBUG] Thread 1 started.
-[DEBUG] [Main Thread] Refine handler thread created.
-[refine thread engine] [DEBUG] Thread 3 started.
-[DEBUG] [Main Thread] Filter handler thread created.
-[filter thread engine] [DEBUG] Thread 4 started.
-[DEBUG] [Main Thread] Throttle handler thread created.
-[throttle thread engine] [DEBUG] Thread 5 started.
-[DEBUG] [Main Thread] Abstract handler thread created.
-[abstract thread engine] [DEBUG] Thread 6 started.
-[DEBUG] [Main Thread] Update handler thread created.
-[update thread engine] [DEBUG] Thread 7 started.
-[DEBUG] [Main Thread] Correlate handler thread created.
-[correlate thread engine] [DEBUG] Thread 8 started.
-[DEBUG] [Main Thread] Execute handler thread created.
-[execute thread engine] [DEBUG] Thread 9 started.
-[DEBUG] [Main Thread] Timer handler thread created.
-[DEBUG] [Main Thread] Propagate handler thread created.
-[timer thread engine] [DEBUG] Thread 10 started.
-[propagate thread engine] [DEBUG] Thread 11 started.
-[DEBUG] [Main Thread] Trigger handler thread created.
-[trigger thread engine] [DEBUG] Thread 12 started.
-[DEBUG] [Main Thread] Collector handler thread created.
-[DEBUG] [Collector Handler 2] Entering collector_handler_thread
-[DEBUG] [Collector Handler 2] Socket created.
-[DEBUG] [Collector Handler 2] Socket bound to port 65432.
-[INFO] [Collector Handler 2] Server started and listening on port 65432
-[DEBUG] [Collector Handler 2] Waiting for new connections...
-[DEBUG] [Thread 139907596379840] Rules loaded from ../engine/kb_shared.pl
-[INFO] [Thread 139907596379840] Captured output: [2025-08-29T16:39:34] [info] [Kb_shared 139907596379840  ] Thread started
-
-[kb_shared thread engine] [INFO] Module 'kb_shared' successfully loaded.
-[DEBUG] [Thread 139907436984000] Rules loaded from ../engine/trigger.pl
-[INFO] [Thread 139907436984000] Captured output: [2025-08-29T16:39:34] [info] [Trigger 139907436984000] Thread started
-
-[trigger thread engine] [INFO] Module 'trigger' successfully loaded.
-[Kb_shared] Starting kb_shared loop[2025-08-29T16:39:34] [info] [Trigger] Warning: Rules file not found.
-[2025-08-29T16:39:34] [info] [Trigger] Created message queue trigger
-[DEBUG] [Thread 139907485923008] Rules loaded from ../engine/correlate.pl
-[DEBUG] [Thread 139907477530304] Rules loaded from ../engine/execute.pl
-[DEBUG] [Thread 139907460441792] Rules loaded from ../engine/propagate.pl
-[INFO] [Thread 139907485923008] Captured output: [2025-08-29T16:39:34] [info] [Correlate 139907485923008] Thread started
-
-[correlate thread engine] [INFO] Module 'correlate' successfully loaded.
-[INFO] [Thread 139907477530304] Captured output: [2025-08-29T16:39:34] [info] [Execute 139907477530304] Thread started
-
-[execute thread engine] [INFO] Module 'execute' successfully loaded.
-[INFO] [Thread 139907460441792] Captured output: [2025-08-29T16:39:34] [info] [Propagate 139907460441792] Thread started
-
-[propagate thread engine] [INFO] Module 'propagate' successfully loaded.
-[2025-08-29T16:39:34] [warning] [Correlate] Warning: Rules file not found.
-[2025-08-29T16:39:34] [warning] [Propagate] Rules file not found.
-[2025-08-29T16:39:34] [info] [Correlate] Created message queue correlate
-[2025-08-29T16:39:34] [info] [Execute] Warning: Rules file not found.
-[2025-08-29T16:39:34] [info] [Propagate] Created message queue propagate
-[2025-08-29T16:39:34] [info] [Execute] Created message queue execute
-[DEBUG] [Thread 139907587987136] Rules loaded from ../engine/refine.pl
-[DEBUG] [Thread 139907445376704] Rules loaded from ../engine/filter.pl
-[INFO] [Thread 139907445376704] Captured output: [2025-08-29T16:39:34] [info] [Filter 139907445376704] Thread started
-
-[filter thread engine] [INFO] Module 'filter' successfully loaded.
-[DEBUG] [Thread 139907469137600] Rules loaded from ../engine/timer.pl
-[INFO] [Thread 139907469137600] Captured output: [2025-08-29T16:39:34] [info] [Timer 139907469137600] Thread started
-
-[timer thread engine] [INFO] Module 'timer' successfully loaded.
-[2025-08-29T16:39:34] [info] [Timer] Warning: Rules file not found.
-[2025-08-29T16:39:34] [info] [Timer] Created message queue timer
-ERROR: [Thread 5] /opt/automation/clickceler/src/C/engine/throttle.pl:88:90: Syntax error: Operator expected
-[DEBUG] [Thread 139907562809024] Rules loaded from ../engine/update.pl
-[INFO] [Thread 139907562809024] Captured output: [2025-08-29T16:39:34] [info] [Update 139907562809024] Thread started
-
-[update thread engine] [INFO] Module 'update' successfully loaded.
-[2025-08-29T16:39:34] [info] [Update] Warning: Rules file not found.
-[INFO] [Thread 139907587987136] Captured output: [2025-08-29T16:39:34] [info] [Refine 139907587987136] Thread started
-[2025-08-29T16:39:34] [info] [Refine] Created message queue refine
-[2025-08-29T16:39:34] [info] [Refine] Rules loaded from ../rules/refine.pl
-
-[2025-08-29T16:39:34] [info] [Update] Created message queue update
-[refine thread engine] [INFO] Module 'refine' successfully loaded.
-[2025-08-29T16:39:34] [info] [Filter] Rules loaded from ../rules/filter.pl
-[2025-08-29T16:39:34] [info] [Filter] Created message queue filter
-Warning: /opt/automation/clickceler/src/C/engine/throttle.pl:90:
-Warning:    Singleton variables: [Pattern]
-[DEBUG] [Thread 139907571201728] Rules loaded from ../engine/abstract.pl
-[INFO] [Thread 139907571201728] Captured output: [2025-08-29T16:39:34] [info] [Abstract 139907571201728] Thread started
-
-[abstract thread engine] [INFO] Module 'abstract' successfully loaded.
-[2025-08-29T16:39:34] [info] [Abstract] Rules loaded from ../rules/abstract.pl
-[2025-08-29T16:39:34] [info] [Abstract] Created message queue abstract
-[DEBUG] [Thread 139907579594432] Rules loaded from ../engine/throttle.pl
-[INFO] [Thread 139907579594432] Captured output: [2025-08-29T16:39:34] [info] [Throttle 139907579594432] Thread started
-
-[throttle thread engine] [INFO] Module 'throttle' successfully loaded.
-ERROR: [Thread 5] /opt/automation/clickceler/src/C/rules/throttle.pl:5:13: Syntax error: key_expected
-[2025-08-29T16:39:34] [info] [Throttle] Rules loaded from ../rules/throttle.pl
-[2025-08-29T16:39:34] [info] [Throttle] Created message queue throttle
+Module name: collector
+[2025-08-29T19:45:23] [info] [Refine] Normalized DictIn: _8662{counter:0,env:"dev",hostname:"server01",id:17564895237900001,severity:"critical",status:"open",timestamp_collected:1756489523.7902014}
+[2025-08-29T19:45:23] [info] [Refine] Matched rules: []
+[2025-08-29T19:45:23] [info] [Refine] Sorted rules by priority: []
+[DEBUG] [Collector 13] collect_events/1 succeeded.
+[2025-08-29T19:45:23] [info] [Refine] After apply_matching_rules: _8662{counter:0,env:"dev",hostname:"server01",id:17564895237900001,severity:"critical",status:"open",timestamp_collected:1756489523.7902014}
+[DEBUG] [Collector] Client disconnected from socket 4.
+[Collector] Collector handler finished.
+[2025-08-29T19:45:23] [info] [Refine] Final event to assert: event(server,_8662{counter:0,env:"dev",hostname:"server01",id:17564895237900001,severity:"critical",status:"open",timestamp_collected:1756489523.7902014})
+[2025-08-29T19:45:23] [info] [Refine] Received: event(server,_8662{counter:0,env:"dev",hostname:"server01",id:17564895237900001,severity:"critical",status:"open",timestamp_collected:1756489523.7902014})
+[2025-08-29T19:45:23] [info] [Refine] Normalized DictIn: _9436{counter:0,env:"dev",hostname:"disk01",id:17564895237900002,severity:"critical",status:"open",timestamp_collected:1756489523.7903728,used_space:150}
+[2025-08-29T19:45:23] [info] [Filter] Normalized DictIn: _388{counter:0,env:"dev",hostname:"server01",id:17564895237900001,severity:"critical",status:"open",timestamp_collected:1756489523.7902014}
+[DEBUG] [Collector 140635498948288] Exiting per_client_thread.
+[2025-08-29T19:45:23] [info] [Refine] Matched rules: []
+[2025-08-29T19:45:23] [info] [Refine] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Filter] Matched rules: []
+[2025-08-29T19:45:23] [info] [Refine] After apply_matching_rules: _9436{counter:0,env:"dev",hostname:"disk01",id:17564895237900002,severity:"critical",status:"open",timestamp_collected:1756489523.7903728,used_space:150}
+[2025-08-29T19:45:23] [info] [Filter] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Refine] Final event to assert: event(disk,_9436{counter:0,env:"dev",hostname:"disk01",id:17564895237900002,severity:"critical",status:"open",timestamp_collected:1756489523.7903728,used_space:150})
+[2025-08-29T19:45:23] [info] [Refine] Received: event(disk,_9436{counter:0,env:"dev",hostname:"disk01",id:17564895237900002,severity:"critical",status:"open",timestamp_collected:1756489523.7903728,used_space:150})
+[2025-08-29T19:45:23] [info] [Refine] Normalized DictIn: _10222{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17564895237900003,severity:"critical",status:"open",timestamp_collected:1756489523.7904413}
+[2025-08-29T19:45:23] [info] [Refine] Matched rules: []
+[2025-08-29T19:45:23] [info] [Refine] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Refine] After apply_matching_rules: _10222{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17564895237900003,severity:"critical",status:"open",timestamp_collected:1756489523.7904413}
+[2025-08-29T19:45:23] [info] [Filter] Received: event(server,_388{counter:0,env:"dev",hostname:"server01",id:17564895237900001,severity:"critical",status:"open",timestamp_collected:1756489523.7902014})
+[2025-08-29T19:45:23] [info] [Refine] Final event to assert: event(memory,_10222{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17564895237900003,severity:"critical",status:"open",timestamp_collected:1756489523.7904413})
+[2025-08-29T19:45:23] [info] [Filter] Normalized DictIn: _1104{counter:0,env:"dev",hostname:"disk01",id:17564895237900002,severity:"critical",status:"open",timestamp_collected:1756489523.7903728,used_space:150}
+[2025-08-29T19:45:23] [info] [Filter] Matched rules: []
+[2025-08-29T19:45:23] [info] [Refine] Received: event(memory,_10222{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17564895237900003,severity:"critical",status:"open",timestamp_collected:1756489523.7904413})
+[2025-08-29T19:45:23] [info] [Throttle] Normalized DictIn: _1194{counter:0,env:"dev",hostname:"server01",id:17564895237900001,severity:"critical",status:"open",timestamp_collected:1756489523.7902014}
+[2025-08-29T19:45:23] [info] [Refine] Normalized DictIn: _11016{counter:0,env:"prod",hostname:"fw01",id:17564895237900004,severity:"critical",status:"open",timestamp_collected:1756489523.7904947}
+[2025-08-29T19:45:23] [info] [Filter] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Refine] Matched rules: []
+[2025-08-29T19:45:23] [info] [Throttle] Matched rules: []
+[2025-08-29T19:45:23] [info] [Throttle] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Refine] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Refine] After apply_matching_rules: _11016{counter:0,env:"prod",hostname:"fw01",id:17564895237900004,severity:"critical",status:"open",timestamp_collected:1756489523.7904947}
+[2025-08-29T19:45:23] [info] [Filter] Received: event(disk,_1104{counter:0,env:"dev",hostname:"disk01",id:17564895237900002,severity:"critical",status:"open",timestamp_collected:1756489523.7903728,used_space:150})
+[2025-08-29T19:45:23] [info] [Refine] Final event to assert: event(firewall,_11016{counter:0,env:"prod",hostname:"fw01",id:17564895237900004,severity:"critical",status:"open",timestamp_collected:1756489523.7904947})
+[2025-08-29T19:45:23] [info] [Filter] Normalized DictIn: _1828{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17564895237900003,severity:"critical",status:"open",timestamp_collected:1756489523.7904413}
+[2025-08-29T19:45:23] [info] [Refine] Received: event(firewall,_11016{counter:0,env:"prod",hostname:"fw01",id:17564895237900004,severity:"critical",status:"open",timestamp_collected:1756489523.7904947})
+[2025-08-29T19:45:23] [info] [Filter] Matched rules: []
+[2025-08-29T19:45:23] [info] [Throttle] No more throttle rules, Prepare to send event with  a delay
+[2025-08-29T19:45:23] [info] [Filter] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Refine] Normalized DictIn: _11786{counter:0,env:"prod",hostname:"snmp01",id:17564895237900005,severity:"critical",status:"open",timestamp_collected:1756489523.7905543}
+[2025-08-29T19:45:23] [info] [Throttle] Received: event(server,_1194{counter:0,env:"dev",hostname:"server01",id:17564895237900001,severity:"critical",status:"open",timestamp_collected:1756489523.7902014})
+[2025-08-29T19:45:23] [info] [Abstract] Normalized DictIn: _4472{counter:0,env:"dev",hostname:"server01",id:17564895237900001,severity:"critical",status:"open",timestamp_collected:1756489523.7902014}
+[2025-08-29T19:45:23] [info] [Refine] Matched rules: []
+[2025-08-29T19:45:23] [info] [Throttle] Normalized DictIn: _1984{counter:0,env:"dev",hostname:"disk01",id:17564895237900002,severity:"critical",status:"open",timestamp_collected:1756489523.7903728,used_space:150}
+[2025-08-29T19:45:23] [info] [Refine] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Throttle] Matched rules: []
+[2025-08-29T19:45:23] [info] [Filter] Received: event(memory,_1828{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17564895237900003,severity:"critical",status:"open",timestamp_collected:1756489523.7904413})
+[2025-08-29T19:45:23] [info] [Throttle] Sorted rules by priority: []
+[2025-08-29T19:45:23] [warning] [Abstract] Rule _4682 raised error: error(existence_error(procedure,abstract:abstract_rule_match/7),context(system: <meta-call> / 1,_4878))
+[2025-08-29T19:45:23] [info] [Refine] After apply_matching_rules: _11786{counter:0,env:"prod",hostname:"snmp01",id:17564895237900005,severity:"critical",status:"open",timestamp_collected:1756489523.7905543}
+[2025-08-29T19:45:23] [info] [Abstract] Matched rules: [rule(_4894,_4896,_4898,_4900)]
+[2025-08-29T19:45:23] [info] [Filter] Normalized DictIn: _2554{counter:0,env:"prod",hostname:"fw01",id:17564895237900004,severity:"critical",status:"open",timestamp_collected:1756489523.7904947}
+[2025-08-29T19:45:23] [info] [Abstract] Sorted rules by priority: [rule(_4894,_4896,_4898,_4900)]
+[2025-08-29T19:45:23] [info] [Refine] Final event to assert: event(snmptrap,_11786{counter:0,env:"prod",hostname:"snmp01",id:17564895237900005,severity:"critical",status:"open",timestamp_collected:1756489523.7905543})
+[2025-08-29T19:45:23] [info] [Filter] Matched rules: []
+[2025-08-29T19:45:23] [info] [Abstract] Applying rule _5080
+[2025-08-29T19:45:23] [info] [Refine] Received: event(snmptrap,_11786{counter:0,env:"prod",hostname:"snmp01",id:17564895237900005,severity:"critical",status:"open",timestamp_collected:1756489523.7905543})
+[2025-08-29T19:45:23] [info] [Filter] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Throttle] No more throttle rules, Prepare to send event with  a delay
+[2025-08-29T19:45:23] [info] [Abstract Transforms: _4900 
+[2025-08-29T19:45:23] [info] [Refine] Normalized DictIn: _12560{counter:0,env:"prod",hostname:"router01",id:17564895237900006,severity:"critical",status:"failed",timestamp_collected:1756489523.7906055}
+[2025-08-29T19:45:23] [info] [Throttle] Received: event(disk,_1984{counter:0,env:"dev",hostname:"disk01",id:17564895237900002,severity:"critical",status:"open",timestamp_collected:1756489523.7903728,used_space:150})
+[2025-08-29T19:45:23] [info] [Refine] Matched rules: []
+[2025-08-29T19:45:23] [info] [Throttle] Normalized DictIn: _2782{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17564895237900003,severity:"critical",status:"open",timestamp_collected:1756489523.7904413}
+[2025-08-29T19:45:23] [info] [Filter] Received: event(firewall,_2554{counter:0,env:"prod",hostname:"fw01",id:17564895237900004,severity:"critical",status:"open",timestamp_collected:1756489523.7904947})
+[2025-08-29T19:45:23] [info] [Refine] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Throttle] Matched rules: []
+[2025-08-29T19:45:23] [info] [Filter] Normalized DictIn: _3266{counter:0,env:"prod",hostname:"snmp01",id:17564895237900005,severity:"critical",status:"open",timestamp_collected:1756489523.7905543}
+[2025-08-29T19:45:23] [info] [Throttle] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Filter] Matched rules: []
+[2025-08-29T19:45:23] [info] [Abstract] Received: event(server,_4472{counter:0,env:"dev",hostname:"server01",id:17564895237900001,severity:"critical",status:"open",timestamp_collected:1756489523.7902014})
+[2025-08-29T19:45:23] [info] [Filter] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Refine] After apply_matching_rules: _12560{counter:0,env:"prod",hostname:"router01",id:17564895237900006,severity:"critical",status:"failed",timestamp_collected:1756489523.7906055}
+[2025-08-29T19:45:23] [info] [Abstract] Normalized DictIn: _5524{counter:0,env:"dev",hostname:"disk01",id:17564895237900002,severity:"critical",status:"open",timestamp_collected:1756489523.7903728,used_space:150}
+[2025-08-29T19:45:23] [info] [Update] Normalized DictIn: _7186{}
+[2025-08-29T19:45:23] [info] [Refine] Final event to assert: event(ping,_12560{counter:0,env:"prod",hostname:"router01",id:17564895237900006,severity:"critical",status:"failed",timestamp_collected:1756489523.7906055})
+[2025-08-29T19:45:23] [info] [Throttle] No more throttle rules, Prepare to send event with  a delay
+[2025-08-29T19:45:23] [info] [Update] Matched rules: []
+[2025-08-29T19:45:23] [info] [Refine] Received: event(ping,_12560{counter:0,env:"prod",hostname:"router01",id:17564895237900006,severity:"critical",status:"failed",timestamp_collected:1756489523.7906055})
+[2025-08-29T19:45:23] [info] [Update] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Throttle] Received: event(memory,_2782{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17564895237900003,severity:"critical",status:"open",timestamp_collected:1756489523.7904413})
+[2025-08-29T19:45:23] [info] [Filter] Received: event(snmptrap,_3266{counter:0,env:"prod",hostname:"snmp01",id:17564895237900005,severity:"critical",status:"open",timestamp_collected:1756489523.7905543})
+[2025-08-29T19:45:23] [warning] [Abstract] Rule _5740 raised error: error(existence_error(procedure,abstract:abstract_rule_match/7),context(system: <meta-call> / 1,_5936))
+[2025-08-29T19:45:23] [info] [Throttle] Normalized DictIn: _3582{counter:0,env:"prod",hostname:"fw01",id:17564895237900004,severity:"critical",status:"open",timestamp_collected:1756489523.7904947}
+[2025-08-29T19:45:23] [info] [Update] Error: error(existence_error(procedure,update:apply_matching_rules/3),context(update:handle_event/1,_7570))
+[2025-08-29T19:45:23] [info] [Abstract] Matched rules: [rule(_5952,_5954,_5956,_5958)]
+[2025-08-29T19:45:23] [info] [Throttle] Matched rules: []
+[2025-08-29T19:45:23] [info] [Update] Warning: EventTerm not handled: event(server,_7186{})
+[2025-08-29T19:45:23] [info] [Filter] Normalized DictIn: _3980{counter:0,env:"prod",hostname:"router01",id:17564895237900006,severity:"critical",status:"failed",timestamp_collected:1756489523.7906055}
+[2025-08-29T19:45:23] [info] [Abstract] Sorted rules by priority: [rule(_5952,_5954,_5956,_5958)]
+[2025-08-29T19:45:23] [info] [Update] Received: event(server,_7186{})
+[2025-08-29T19:45:23] [info] [Throttle] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Filter] Matched rules: []
+[2025-08-29T19:45:23] [info] [Abstract] Applying rule _6138
+[2025-08-29T19:45:23] [info] [Filter] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Abstract Transforms: _5958 
+[2025-08-29T19:45:23] [info] [Throttle] No more throttle rules, Prepare to send event with  a delay
+[2025-08-29T19:45:23] [info] [Throttle] Received: event(firewall,_3582{counter:0,env:"prod",hostname:"fw01",id:17564895237900004,severity:"critical",status:"open",timestamp_collected:1756489523.7904947})
+[2025-08-29T19:45:23] [info] [Throttle] Normalized DictIn: _4368{counter:0,env:"prod",hostname:"snmp01",id:17564895237900005,severity:"critical",status:"open",timestamp_collected:1756489523.7905543}
+[2025-08-29T19:45:23] [info] [Throttle] Matched rules: []
+[2025-08-29T19:45:23] [info] [Filter] Received: event(ping,_3980{counter:0,env:"prod",hostname:"router01",id:17564895237900006,severity:"critical",status:"failed",timestamp_collected:1756489523.7906055})
+[2025-08-29T19:45:23] [info] [Throttle] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Abstract] Received: event(disk,_5524{counter:0,env:"dev",hostname:"disk01",id:17564895237900002,severity:"critical",status:"open",timestamp_collected:1756489523.7903728,used_space:150})
+[2025-08-29T19:45:23] [info] [Update] Normalized DictIn: _7742{}
+[2025-08-29T19:45:23] [info] [Throttle] No more throttle rules, Prepare to send event with  a delay
+[2025-08-29T19:45:23] [info] [Abstract] Normalized DictIn: _6584{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17564895237900003,severity:"critical",status:"open",timestamp_collected:1756489523.7904413}
+[2025-08-29T19:45:23] [info] [Update] Matched rules: []
+[2025-08-29T19:45:23] [info] [Throttle] Received: event(snmptrap,_4368{counter:0,env:"prod",hostname:"snmp01",id:17564895237900005,severity:"critical",status:"open",timestamp_collected:1756489523.7905543})
+[2025-08-29T19:45:23] [warning] [Abstract] Rule _6802 raised error: error(existence_error(procedure,abstract:abstract_rule_match/7),context(system: <meta-call> / 1,_6998))
+[2025-08-29T19:45:23] [info] [Update] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Abstract] Matched rules: [rule(_7014,_7016,_7018,_7020)]
+[2025-08-29T19:45:23] [info] [Throttle] Normalized DictIn: _5156{counter:0,env:"prod",hostname:"router01",id:17564895237900006,severity:"critical",status:"failed",timestamp_collected:1756489523.7906055}
+[2025-08-29T19:45:23] [info] [Abstract] Sorted rules by priority: [rule(_7014,_7016,_7018,_7020)]
+[2025-08-29T19:45:23] [info] [Update] Error: error(existence_error(procedure,update:apply_matching_rules/3),context(update:handle_event/1,_8126))
+[2025-08-29T19:45:23] [info] [Throttle] Matched rules: []
+[2025-08-29T19:45:23] [info] [Update] Warning: EventTerm not handled: event(disk,_7742{})
+[2025-08-29T19:45:23] [info] [Update] Received: event(disk,_7742{})
+[2025-08-29T19:45:23] [info] [Throttle] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Abstract] Applying rule _7200
+[2025-08-29T19:45:23] [info] [Abstract Transforms: _7020 
+[2025-08-29T19:45:23] [info] [Throttle] No more throttle rules, Prepare to send event with  a delay
+[2025-08-29T19:45:23] [info] [Throttle] Received: event(ping,_5156{counter:0,env:"prod",hostname:"router01",id:17564895237900006,severity:"critical",status:"failed",timestamp_collected:1756489523.7906055})
+[2025-08-29T19:45:23] [info] [Update] Normalized DictIn: _8296{}
+[2025-08-29T19:45:23] [info] [Abstract] Received: event(memory,_6584{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17564895237900003,severity:"critical",status:"open",timestamp_collected:1756489523.7904413})
+[2025-08-29T19:45:23] [info] [Update] Matched rules: []
+[2025-08-29T19:45:23] [info] [Update] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Abstract] Normalized DictIn: _7646{counter:0,env:"prod",hostname:"fw01",id:17564895237900004,severity:"critical",status:"open",timestamp_collected:1756489523.7904947}
+[2025-08-29T19:45:23] [warning] [Abstract] Rule _7854 raised error: error(existence_error(procedure,abstract:abstract_rule_match/7),context(system: <meta-call> / 1,_8050))
+[2025-08-29T19:45:23] [info] [Update] Error: error(existence_error(procedure,update:apply_matching_rules/3),context(update:handle_event/1,_8680))
+[2025-08-29T19:45:23] [info] [Abstract] Matched rules: [rule(_8066,_8068,_8070,_8072)]
+[2025-08-29T19:45:23] [info] [Abstract] Sorted rules by priority: [rule(_8066,_8068,_8070,_8072)]
+[2025-08-29T19:45:23] [info] [Update] Warning: EventTerm not handled: event(memory,_8296{})
+[2025-08-29T19:45:23] [info] [Abstract] Applying rule _8252
+[2025-08-29T19:45:23] [info] [Abstract Transforms: _8072 
+[2025-08-29T19:45:23] [info] [Update] Received: event(memory,_8296{})
+[2025-08-29T19:45:23] [info] [Update] Normalized DictIn: _8852{}
+[2025-08-29T19:45:23] [info] [Abstract] Received: event(firewall,_7646{counter:0,env:"prod",hostname:"fw01",id:17564895237900004,severity:"critical",status:"open",timestamp_collected:1756489523.7904947})
+[2025-08-29T19:45:23] [info] [Update] Matched rules: []
+[2025-08-29T19:45:23] [info] [Update] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Abstract] Normalized DictIn: _8694{counter:0,env:"prod",hostname:"snmp01",id:17564895237900005,severity:"critical",status:"open",timestamp_collected:1756489523.7905543}
+[2025-08-29T19:45:23] [warning] [Abstract] Rule _8902 raised error: error(existence_error(procedure,abstract:abstract_rule_match/7),context(system: <meta-call> / 1,_9098))
+[2025-08-29T19:45:23] [info] [Abstract] Matched rules: [rule(_9114,_9116,_9118,_9120)]
+[2025-08-29T19:45:23] [info] [Abstract] Sorted rules by priority: [rule(_9114,_9116,_9118,_9120)]
+[2025-08-29T19:45:23] [info] [Abstract] Applying rule _9300
+[2025-08-29T19:45:23] [info] [Update] Error: error(existence_error(procedure,update:apply_matching_rules/3),context(update:handle_event/1,_164))
+[2025-08-29T19:45:23] [info] [Abstract Transforms: _9120 
+[2025-08-29T19:45:23] [info] [Update] Warning: EventTerm not handled: event(firewall,_126{})
+[2025-08-29T19:45:23] [info] [Update] Received: event(firewall,_126{})
+[2025-08-29T19:45:23] [info] [Update] Normalized DictIn: _338{}
+[2025-08-29T19:45:23] [info] [Abstract] Received: event(snmptrap,_8694{counter:0,env:"prod",hostname:"snmp01",id:17564895237900005,severity:"critical",status:"open",timestamp_collected:1756489523.7905543})
+[2025-08-29T19:45:23] [info] [Update] Matched rules: []
+[2025-08-29T19:45:23] [info] [Update] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Abstract] Normalized DictIn: _9744{counter:0,env:"prod",hostname:"router01",id:17564895237900006,severity:"critical",status:"failed",timestamp_collected:1756489523.7906055}
+[2025-08-29T19:45:23] [info] [Update] Error: error(existence_error(procedure,update:apply_matching_rules/3),context(update:handle_event/1,_722))
+[2025-08-29T19:45:23] [info] [Update] Warning: EventTerm not handled: event(snmptrap,_338{})
+[2025-08-29T19:45:23] [warning] [Abstract] Rule _9954 raised error: error(existence_error(procedure,abstract:abstract_rule_match/7),context(system: <meta-call> / 1,_10150))
+[2025-08-29T19:45:23] [info] [Update] Received: event(snmptrap,_338{})
+[2025-08-29T19:45:23] [info] [Abstract] Matched rules: [rule(_10166,_10168,_10170,_10172)]
+[2025-08-29T19:45:23] [info] [Abstract] Sorted rules by priority: [rule(_10166,_10168,_10170,_10172)]
+[2025-08-29T19:45:23] [info] [Abstract] Applying rule _10354
+[2025-08-29T19:45:23] [info] [Abstract Transforms: _10172 
+[2025-08-29T19:45:23] [info] [Update] Normalized DictIn: _896{}
+[2025-08-29T19:45:23] [info] [Abstract] Received: event(ping,_9744{counter:0,env:"prod",hostname:"router01",id:17564895237900006,severity:"critical",status:"failed",timestamp_collected:1756489523.7906055})
+[2025-08-29T19:45:23] [info] [Update] Matched rules: []
+[2025-08-29T19:45:23] [info] [Update] Sorted rules by priority: []
+[2025-08-29T19:45:23] [info] [Update] Error: error(existence_error(procedure,update:apply_matching_rules/3),context(update:handle_event/1,_1280))
+[2025-08-29T19:45:23] [info] [Update] Warning: EventTerm not handled: event(ping,_896{})
+[2025-08-29T19:45:23] [info] [Update] Received: event(ping,_896{})
