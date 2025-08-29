@@ -13,7 +13,7 @@ thread_goal_kb_shared(ClientID) :-
 
 % Principal Loop
 start_kb_shared_loop :-
-    thread_self(Main),
+    thread_self(_Main),
     format("[Kb_shared] Starting kb_shared loop", []),
     loop.
 
