@@ -1,3 +1,4 @@
+```mermaid
 flowchart TD
     A["New Event Received (sensor/probe)"] --> B{"Event matches abstract rule conditions?"}
     B -- "Yes" --> C{"Matching Abstract Exists?"}
@@ -17,5 +18,5 @@ flowchart TD
     Q --> R["Log: Abstract updated"]
     P -- "No" --> S["Abstract remains open"]
     S --> T["Log: Abstract updated"]
-
+```
 
