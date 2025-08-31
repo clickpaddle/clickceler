@@ -130,14 +130,6 @@ delete_event(event(Type, Dict)) :-
       )
     ).
 
-assert_event(event(Type, Dict)) :-
-    eventlog_mutex(Mutex),
-    with_mutex(Mutex,
-      (
-        retractall(kb_shared:event(Type, Dict)),
-        assertz(kb_shared:event(Type, Dict))
-      )
-    ).
 
 
 queue_exists(QueueName) :-

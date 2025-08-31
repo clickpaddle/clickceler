@@ -216,15 +216,6 @@ safe_thread_send_message(QueueName, Message) :-
     ; format(user_error, '[ERROR] Message queue ~w does not exist. Message not sent.', [QueueName])
     ).
 
-% Assert event safely under mutex to kb_shared:event/2
-assert_event(event(Type, Dict)) :-
-    eventlog_mutex(Mutex),
-    with_mutex(Mutex,
-      (
-        retractall(kb_shared:event(Type, Dict)),
-        assertz(kb_shared:event(Type, Dict))
-      )
-    ).
 
 current_time(Time) :-
     get_time(Time).

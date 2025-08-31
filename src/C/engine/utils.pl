@@ -13,7 +13,11 @@
     unit_to_seconds/2,
     log_trace/3,
     set_log_level/1,
-    get_log_level/1
+    get_log_level/1,
+    assert_event/1,
+    get_events_by_type/2,
+    find_event/3,
+    replace_event/2
     ]).
     
 
@@ -22,7 +26,8 @@
 
 :- dynamic current_log_level/1.
 :- dynamic event_id_counter/1.
-
+:- dynamic event_store_type/2.
+:- dynamic eventlog_mutex/1.
 
 current_log_level(info).
 
@@ -74,18 +79,6 @@ init_event_id_counter :-
     retractall(event_id_counter(_)),
     assertz(event_id_counter(0)).
 
-generate_unique_event_id(Id) :-
-    get_time(TS),
-    TSint is floor(TS * 1000),  % ms depuis epoch
-    mutex_lock(event_id_mutex),
-    (   retract(event_id_counter(Count))
-    ->  NewCount is Count + 1
-    ;   NewCount = 1
-    ),
-    assertz(event_id_counter(NewCount)),
-    mutex_unlock(event_id_mutex),
-    % Compose un entier long : timestamp * 10000 + compteur (4 chiffres)
-    Id is TSint * 10000 + NewCount.
 
 %% ========================
 %% === MATCH CONDITIONS ===
@@ -278,3 +271,59 @@ unit_to_seconds('d', 86400).
 unit_to_seconds('w', 604800).
 unit_to_seconds('M', 2592000).
 unit_to_seconds('Y', 31536000).
+
+
+
+% Store the event indexed by EventType
+assert_event(event(Type, Dict)) :-
+    eventlog_mutex(Mutex),
+    with_mutex(Mutex,
+        (   ( event_store_type(Type, L0) -> L1 = [Dict|L0], retract(event_store_type(Type, L0))
+            ; L1 = [Dict]
+            ),
+            assertz(event_store_type(Type, L1))
+        )
+    ).
+
+% Retrieve all events of a specific type
+get_events_by_type(Type, List) :-
+    ( event_store_type(Type, List0) -> List = List0 ; List = [] ).
+
+% Retrieve the first event of EventType matching Predicate
+find_event(Type, Pred, Dict) :-
+    get_events_by_type(Type, List),
+    member(Dict, List),
+    call(Pred, Dict),
+    !.
+
+
+% Replace an existing event of EventType with NewDict based on id
+replace_event(Type, NewDict) :-
+    eventlog_mutex(Mutex),
+    with_mutex(Mutex,
+        (   event_store_type(Type, L0) ->
+                exclude({NewDict}/[D]>>(
+                    get_dict(id,D,IDOld),
+                    get_dict(id,NewDict,IDNew),
+                    IDOld =:= IDNew
+                ), L0, L1),
+                L2 = [NewDict|L1],
+                retract(event_store_type(Type, L0)),
+                assertz(event_store_type(Type, L2))
+        ;   assertz(event_store_type(Type, [NewDict]))
+        )
+    ).
+
+generate_unique_event_id(Id) :-
+    get_time(TS),
+    TSint is floor(TS * 1000),  % ms depuis epoch
+    mutex_lock(event_id_mutex),
+    (   retract(event_id_counter(Count))
+    ->  NewCount is Count + 1
+    ;   NewCount = 1
+    ),
+    assertz(event_id_counter(NewCount)),
+    mutex_unlock(event_id_mutex),
+    % Compose un entier long : timestamp * 10000 + compteur (4 chiffres)
+    Id is TSint * 10000 + NewCount.
+

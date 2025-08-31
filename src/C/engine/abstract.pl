@@ -51,8 +51,7 @@ abstract_loop :-
 % Handle event
 handle_event(event(EventType, DictIn)) :-
     log_trace(info,'[Abstract] Normalized event: ~q', [event(EventType,DictIn)]),
-
-    % On essaye de trouver toutes les règles qui matchent
+   Pattern =..  [EventType, DictIn], 
     findall(
         abstract_rule(RuleID, Priority,[Pattern], Conditions,[Abstract], Transformations),
         (
@@ -67,35 +66,35 @@ handle_event(event(EventType, DictIn)) :-
         ),
         RuleList
     ),
-
     ( RuleList \= [] ->
         log_trace(info,'[Abstract] Matched rules: ~q', [RuleList]),
-        sort(1, @>=, RuleList, SortedRules),
+        sort(2, @>=, RuleList, SortedRules),
         log_trace(info,'[Abstract] Sorted rules by priority: ~q', [SortedRules]),
-        apply_matching_rules(SortedRules, event(EventType, DictIn), DictOut),
-        log_trace(info,'[Abstract] After apply_matching_rules: ~q', [DictOut]),   
-        EventOut = event(EventType, DictOut),
-        log_event(EventOut),
-        safe_thread_send_message(update_queue, EventOut)
+        apply_matching_rules(SortedRules, event(EventType, DictIn), DictOut, DictOutLast),
+        log_trace(info,'[Abstract] After apply_matching_rules: ~q', [DictOut]),
+        EventOut = event(EventType, DictOutLast),
+        log_event(EventOut)
+        %safe_thread_send_message(update_queue, EventOut)
     ; log_trace(warning,'[Abstract] No rules matched for EventTerm: ~w', [event(EventType, DictIn)])
     ).
 
-% abstract_rule_match(+RuleID, +Priority, +EventType, +Conditions, -Abstract, -Transformations, +DictIn)
-abstract_rule_match(RuleID, Priority, [Pattern], Conditions, [Abstract], Transformations, event(EventType,DictIn)) :-
-    % Retrieve the abstract rule
-    abstract_rule(RuleID, Priority, [Pattern], Conditions, [Abstract], Transformations),
-    Pattern =.. [RuleEventType,E],
-    DictIn = E,
-    is_subtype(EventType, RuleEventType),
-    log_trace(info, '[Abstract] EventType ~w  matches RuleEventType: ~w', [EventType,RuleEventType]),
 
-    % Vérification des conditions
-    ( match_all_conditions(Conditions, E) ->
+% abstract_rule_match(+RuleID, +Priority, +EventType, +Conditions, -Abstract, -Transformations, +DictIn)
+abstract_rule_match(RuleID, Priority, [Pattern], Conditions, [Abstract], Transformations, event(EventType, DictIn)) :-
+    abstract_rule(RuleID, Priority, PatternList, Conditions, AbstractList, Transformations),
+    log_trace(info,'[Abstract] Testing abstract_rule: RuleID=~w, Priority=~w, Pattern=~w, Abstract=~w', [RuleID, Priority, Pattern, Abstract]),
+    Pattern = [RawPattern],
+    RawPattern =.. [RuleEventType, F],
+    F = DictIn,
+    is_subtype(EventType, RuleEventType),
+    log_trace(info, '[Abstract] EventType ~w matches RuleEventType: ~w', [EventType, RuleEventType]),
+    ),
+    ( match_all_conditions(Conditions, F) ->
         log_trace(info, '[Abstract] Conditions matched for RuleID ~w', [RuleID])
-    ;
-        log_trace(info, '[Abstract] Conditions FAILED for RuleID ~w', [RuleID]),
-        fail
+    ; log_trace(info, '[Abstract] Conditions FAILED for RuleID ~w', [RuleID]),
+      fail
     ).
+
 
 
 
@@ -118,7 +117,7 @@ get_or_create_abstract(event(EventType,EventDict), event(AbsType, AbsDict),Condi
         )
     ),
     EventOut = event(AbsType,AbsDictNext),
-   log_event(EventOut
+   log_event(EventOut).
 
 ).
 
@@ -139,17 +138,20 @@ update_linked_abstract(event(EventType, EventDict),event(AbsType,AbsDict)) :-
 
 % apply_matching_rules(+RuleList, +Event, -DictOut)
 % Applies rules to the event, handling abstracts, transformations, and linked abstracts
-apply_matching_rules([], event(_, DictIn), DictIn).  % nothing to do
+apply_matching_rules([], _, DictIn, DictIn).
 
 apply_matching_rules([abstract_rule(RuleID, Priority, [_Pattern], Conditions, [Abstract], Transforms)|Rest],
-                     event(EventType, DictIn)) :-
+                     event(EventType, DictIn),
+                     DictOut) :-
     log_trace(info, '[Abstract] Applying abstract_rule ~w (Priority: ~w)', [RuleID, Priority]),
-    Abstract =.. [AbsType,AbsDict],
-    % Ensure abstract exists and get its ID
-    get_or_create_abstract(event(EventType, DictIn), event(AbsType, AbsDict),Conditions,Transforms),
 
-    % Continue with the rest of the rules, passing updated linked abstracts
-    apply_matching_rules(Rest, event(EventType,DictIn),DictOut).
+    Abstract =.. [AbsType, AbsDict],
+
+    % get_or_create_abstract should return updated Dict
+    get_or_create_abstract(event(EventType, DictIn), event(AbsType, UpdatedDict), Conditions, Transforms),
+
+    % recursively apply remaining rules with updated Dict
+    apply_matching_rules(Rest, event(EventType, UpdatedDict), DictOut).
 
 % Helper predicate to call each condition on the pattern
 call_condition(Pattern, Condition) :-

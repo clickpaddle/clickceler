@@ -5,7 +5,6 @@
 
 :- dynamic event/2.
 :- multifile event/2.
-:- dynamic eventlog_mutex/1.
 :- mutex_create(event_id_mutex).
 
 thread_goal_kb_shared(ClientID) :-
@@ -69,13 +68,6 @@ print_attrs([Key-Value | Rest]) :-
     format("~q-~q, ", [Key, Value]),
     print_attrs(Rest).
 
-% assert_event(+Type, +EventDict)
-%  Protected by Mutex
-assert_event(event(Type, Dict)) :-
-    eventlog_mutex(Mutex),
-    with_mutex(Mutex,
-        assertz(kb_shared:event(Type, Dict))
-    ).
 
 %% log_event(+EventTerm) EventTerm is normalized
 log_event(EventTerm) :-

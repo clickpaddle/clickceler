@@ -71,7 +71,6 @@ handle_event(event(EventType, DictIn)) :-
     apply_matching_rules(SortedRules, DictIn, DictOut),
     log_trace(info,'[Refine] After apply_matching_rules: ~q', [DictOut]),
     EventOut = event(EventType, DictOut),
-    %assert_event(EventOut),
     log_trace(info,'[Refine] Final event to assert: ~q', [EventOut]),
     safe_thread_send_message(filter_queue, EventOut).
 
@@ -94,16 +93,6 @@ apply_matching_rules([refine_rule( RuleID, _Priority, [_Pattern], _Conds, Transf
     log_trace(info,'[Refine Transforms: ~w ',[Transforms]),
     apply_transformations(Transforms, DictIn, DictNext),
     apply_matching_rules(Rest, DictNext, DictOut).
-
-
-assert_event(event(Type, Dict)) :-
-    eventlog_mutex(Mutex),
-    with_mutex(Mutex,
-      (
-        retractall(kb_shared:event(Type, Dict)),
-        assertz(kb_shared:event(Type, Dict))
-      )
-    ).
 
 queue_exists(QueueName) :-
     catch(message_queue_property(QueueName, _), _, fail).
