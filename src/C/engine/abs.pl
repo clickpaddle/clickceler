@@ -69,10 +69,7 @@ handle_event(event(EventType, DictIn)) :-
         log_trace(info,'[Abstract] Matched rules: ~q', [RuleList]),
         sort(2, @>=, RuleList, SortedRules),
         log_trace(info,'[Abstract] Sorted rules by priority: ~q', [SortedRules]),
-        apply_matching_rules(SortedRules, event(EventType, DictIn), DictOut, DictEnd),
-        log_trace(info,'[Abstract] After apply_matching_rules: ~q', [DictOut]),
-        EventOut = event(EventType, DictEnd),
-        log_event(EventOut)
+        apply_matching_rules(SortedRules, event(EventType, DictIn), DictOut, DictEnd)
     ;   log_trace(warning,'[Abstract] No rules matched for EventTerm: ~w', [event(EventType, DictIn)])
     ).
 
@@ -93,8 +90,11 @@ get_or_create_abstract(event(EventType, EventDict), event(AbsType, AbsDict), Con
     log_trace(info, '[Abstract] get_or_create_abstract for type ~w', [AbsType]),
     ( existing_abstract(event(EventType, EventDict), Conditions, event(AbsType, AbsDict)) ->
         add_to_abstract_contrib(event(EventType, EventDict), event(AbsType, AbsDict)),
-        log_trace(info, '[Abstract] Found existing abstract ~q for event ~q', [event(AbsType, AbsDict), event(EventType, EventDict)])
-    ;   with_mutex(abstract_lock,
+        log_trace(info, '[Abstract] Found existing abstract ~q for event ~q', [event(AbsType, AbsDict), event(EventType, EventDict)]),
+        update_linked_abstract(_EventType, EventDict, AbsDict.id, EventDictUpdated), 
+        replace_event(EventType,EventDict,EventDictUpdated)
+    ;   eventlog_mutex(Mutex),
+        with_mutex(Mutex,
             generate_abstract(event(EventType, EventDict), event(AbsType, AbsDict), Transforms)
         )
     ),
@@ -131,15 +131,20 @@ generate_abstract(event(EventType, EventDict), event(AbsType, AbsDictNext), Tran
     generate_unique_event_id(AbstractID),
     AbsDict0 = EventDict.put(_{id: AbstractID, is_abstract:true, abstract_contrib:[], status:"open"}),
     apply_transformations(Transforms, AbsDict0, AbsDictNext),
-    add_to_abstract_contrib(event(EventType, EventDict), event(AbsType, AbsDictNext)),
-    assert_event(event(AbsType, AbsDictNext)),
-    log_trace(info, '[Abstract] Generated new abstract: ~w', [event(AbsType, AbsDictNext)]).
+    add_to_abstract_contrib(event(EventType, EventDict),AbsType, AbsDictNext,AbsDictUpdated),
+    log_trace(info,'[Abstract] generate_abstract AbsDictUpdated: ~w',[AbsDictUpdated]), 
+    assert_event(event(AbsType, AbsDictUpdated)),
+    log_trace(info, '[Abstract] Generated new abstract: ~w', [event(AbsType, AbsDictUpdated)]),
+    update_linked_abstract(_EventType, EventDict, AbsDictUpdated.id, EventDictUpdated),
+    log_trace(info, '[Abstract] generate_abstract Updated Dict of Event: ~w', [event(EventType, EventDictUpdated)]),
+    replace_event(EventType,EventDict,EventDictUpdated).
+
 
 % add_to_abstract_contrib(+EventDict, +AbsDict, -AbsDictUpdated)
-add_to_abstract_contrib(event(_EventType,EventDict),event(_AbsType,AbsDict)) :-
+add_to_abstract_contrib(event(_EventType,EventDict),_AbsType,AbsDict,AbsDictUpdated) :-
+    log_trace(info, "[Abstract] add_to_abstract_contrib Received EventDict: ~w AbsDict: ~w", [EventDict,AbsDict]),
     must_be(dict, EventDict),
     must_be(dict,AbsDict),
-    log_trace(info, "[Abstract] Received EventDict: ~w AbsDict: ~w", [EventDict,AbsDict]),
 
     % retrieve existing list or create empty
     ( get_dict(abstract_contrib, AbsDict, ContribList) ->
@@ -158,4 +163,13 @@ add_to_abstract_contrib(event(_EventType,EventDict),event(_AbsType,AbsDict)) :-
     % update the dict
     AbsDictUpdated = AbsDict.put(_{abstract_contrib: NewContrib}),
     log_trace(info, "[Abstract] AbsDict updated: ~w", [AbsDictUpdated]).
+
+% update the linked_abstract_field with the AbsDict.id
+
+update_linked_abstract(_EventType, EventDict, AbstractID, EventDictUpdated) :-
+    must_be(dict, EventDict),
+    ( get_dict(linked_abstract, EventDict, LinkedList) -> true ; LinkedList = [] ),
+    NewLinkedList = [AbstractID | LinkedList],
+    EventDictUpdated = EventDict.put(_{linked_abstract: NewLinkedList}),
+    log_trace(info, '[Abstract] Updated linked_abstract for EventDict: ~w', [EventDictUpdated]).
 
