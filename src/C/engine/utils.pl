@@ -1,4 +1,5 @@
 :- module(utils, [
+    eventlog_mutex/1,
     match_all_conditions/2,
     match_condition/2,
     apply_transformations/3,
@@ -17,7 +18,10 @@
     assert_event/1,
     get_events_by_type/2,
     find_event/3,
-    replace_event/2
+    replace_event/3,
+    replace_event_without_mutex/3,
+    generate_unique_event_id/1,
+    instantiate_transforms/3
     ]).
     
 
@@ -30,6 +34,7 @@
 :- dynamic eventlog_mutex/1.
 
 current_log_level(info).
+eventlog_mutex(mutex_event).
 
 % Log level numeric values for comparison
 log_level_value(debug, 10).
@@ -133,45 +138,61 @@ match_condition(contains(_E, Field, SubStr), Dict) :-
 %% === TRANSFORMATIONS CORE ===
 %% ============================
 
+% Liste vide
+% Liste vide : fin des transformations
 % apply_transformations(+TransformList, +DictIn, -DictOut)
-apply_transformations([], Dict, Dict).
+%% ============================
+%% === CORE TRANSFORMATIONS ===
+%% ============================
 
-% Transformation: set_field(Key, Value)
-apply_transformations([set_field(_E,Key, Value) | Rest], DictIn, DictOut) :-
-    put_dict(Key, DictIn, Value, DictNext),
+% Empty list: end of transformations
+% Empty list: done
+apply_transformations([], Dict, Dict) :-
+    log_trace(info, '[Utils] No more transformations, final Dict: ~w', [Dict]).
+
+apply_transformations([Transform | Rest], DictIn, DictOut) :-
+    % unify E with DictIn if the first argument is a variable
+    (arg(1, Transform, E), var(E) -> E = DictIn ; true),
+    call(Transform, DictIn, DictNext),
+    % recurse on rest
     apply_transformations(Rest, DictNext, DictOut).
 
+% Set a field in a dict
+set_field(_E, Key, Value, DictIn, DictOut) :-
+    put_dict(Key, DictIn, Value, DictOut),
+    log_trace(info, '[Utils] Processed Transformation set_field(E,~w,~w); ~w', [Key, Value, DictOut]).
 
+% Add a tag to the tags list in the dict
+add_tag(_E, Tag, DictIn, DictOut) :-
+    (get_dict(tags, DictIn, Tags0) -> true ; Tags0 = []),
+    (memberchk(Tag, Tags0) -> Tags1 = Tags0 ; Tags1 = [Tag|Tags0]),
+    put_dict(tags, DictIn, Tags1, DictOut),
+    log_trace(info, '[Utils] Processed Transformation: add_tag(E,~w): ~w ',[Tags1,DictOut]).
 
-% Transformation: add_tag(Tag)
-apply_transformations([add_tag(_E,Tag) | Rest], DictIn, DictOut) :-
-    ( get_dict(tags, DictIn, Tags0) -> true ; Tags0 = [] ),
-    ( memberchk(Tag, Tags0) -> Tags1 = Tags0 ; Tags1 = [Tag | Tags0] ),
-    put_dict(tags, DictIn, Tags1, DictNext),
-    apply_transformations(Rest, DictNext, DictOut).
-
-% Transformation: remove_tag(Tag)
-apply_transformations([remove_tag(_E,Tag) | Rest], DictIn, DictOut) :-
-    ( get_dict(tags, DictIn, Tags0) -> true ; Tags0 = [] ),
+% Remove a tag from the tags list in the dict
+remove_tag(_E, Tag, DictIn, DictOut) :-
+    (get_dict(tags, DictIn, Tags0) -> true ; Tags0 = []),
     delete(Tags0, Tag, Tags1),
-    put_dict(tags, DictIn, Tags1, DictNext),
-    apply_transformations(Rest, DictNext, DictOut).
+    put_dict(tags, DictIn, Tags1, DictOut),
+    log_trace(info, '[Utils] Processed Transformation: remove_tag,(E,~w): ~w ',[Tag,DictOut]).
 
-% Transformation: increment_field(Field)
-apply_transformations([increment_field(_E,Field) | Rest], DictIn, DictOut) :-
-    ( get_dict(Field, DictIn, Val), number(Val) ->
+% Increment a numeric field
+increment_field(_E, Field, DictIn, DictOut) :-
+    (get_dict(Field, DictIn, Val), number(Val) ->
         NewVal is Val + 1,
-        put_dict(Field, DictIn, NewVal, DictNext)
-    ;   put_dict(Field, DictIn, 1, DictNext)
-    ),
-    apply_transformations(Rest, DictNext, DictOut).
-
-% Unknown transformation
-apply_transformations([Unknown | Rest], DictIn, DictOut) :-
-    format('[Refine] Warning: Unknown transformation ~w~n', [Unknown]),
-    apply_transformations(Rest, DictIn, DictOut).
+        put_dict(Field, DictIn, NewVal, DictOut)
+    ; put_dict(Field, DictIn, 1, DictOut)),
+      log_trace(info, '[Utils] Processed Transformation: increment_field,(E,~w): ~w ',[Field,DictOut]).
 
 
+% Instantiate E before applying Transformations
+instantiate_transforms([], _, []).
+
+instantiate_transforms([], _, []).
+instantiate_transforms([T|Ts], E, [TInst|TsInst]) :-
+    T =.. [Functor, _ | Args],   % ignore l’ancien "E"
+    TInst =.. [Functor, E | Args],
+    instantiate_transforms(Ts, E, TsInst).
 %% ========================
 %% === VALUE COMPARISON ===
 %% ========================
@@ -277,43 +298,78 @@ unit_to_seconds('Y', 31536000).
 % Store the event indexed by EventType
 assert_event(event(Type, Dict)) :-
     eventlog_mutex(Mutex),
-    with_mutex(Mutex,
-        (   ( event_store_type(Type, L0) -> L1 = [Dict|L0], retract(event_store_type(Type, L0))
+    with_mutex(Mutex, (   ( event_store_type(Type, L0) -> L1 = [Dict|L0], retract(event_store_type(Type, L0))
             ; L1 = [Dict]
             ),
             assertz(event_store_type(Type, L1))
         )
     ).
 
-% Retrieve all events of a specific type
-get_events_by_type(Type, List) :-
-    ( event_store_type(Type, List0) -> List = List0 ; List = [] ).
 
 % Retrieve the first event of EventType matching Predicate
 find_event(Type, Pred, Dict) :-
     get_events_by_type(Type, List),
+    List \= [],                   % fail immediately if no events of this type
     member(Dict, List),
     call(Pred, Dict),
-    !.
+    !.  % cut: only the first match
 
+% Retrieve all events of a given type
+get_events_by_type(Type, List) :-
+    log_trace(info,'[Utils] Entering get_events_by_type',[]),
+    (   event_store_type(Type, List0)
+    ->  List = List0
+    ;   List = []
+    ),
+    log_trace(info,'[Utils] List of events found ~w',[List]).
+
+% Return all events of a given type from the store
+event_store(Type, Events) :-
+    (   event_store_type(Type, Events)
+    ->  true
+    ;   Events = []
+    ).
 
 % Replace an existing event of EventType with NewDict based on id
-replace_event(Type, NewDict) :-
+replace_event(Type, OldDict, NewDict) :-
     eventlog_mutex(Mutex),
     with_mutex(Mutex,
-        (   event_store_type(Type, L0) ->
-                exclude({NewDict}/[D]>>(
-                    get_dict(id,D,IDOld),
-                    get_dict(id,NewDict,IDNew),
-                    IDOld =:= IDNew
-                ), L0, L1),
-                L2 = [NewDict|L1],
-                retract(event_store_type(Type, L0)),
-                assertz(event_store_type(Type, L2))
-        ;   assertz(event_store_type(Type, [NewDict]))
+        (   event_store_type(Type, OldList) ->
+                % Remplace uniquement l'événement correspondant à OldDict
+                maplist({OldDict, NewDict}/[D,R]>>(
+                    ( get_dict(id, D, IDOld),
+                      get_dict(id, OldDict, IDTarget),
+                      IDOld =:= IDTarget
+                    -> R = NewDict
+                    ;  R = D
+                    )
+                ), OldList, NewList),
+                retract(event_store_type(Type, OldList)),
+                assertz(event_store_type(Type, NewList))
+        ;   % Aucun événement de ce type n'existe encore, on ajoute NewDict
+            assertz(event_store_type(Type, [NewDict]))
         )
     ).
 
+replace_event_without_mutex(Type, OldDict, NewDict) :-
+       ( event_store_type(Type, OldList) ->
+                % Remplace uniquement l'événement correspondant à OldDict
+                maplist({OldDict, NewDict}/[D,R]>>(
+                    ( get_dict(id, D, IDOld),
+                      get_dict(id, OldDict, IDTarget),
+                      IDOld =:= IDTarget
+                    -> R = NewDict
+                    ;  R = D
+                    )
+                ), OldList, NewList),
+                retract(event_store_type(Type, OldList)),
+                assertz(event_store_type(Type, NewList))
+        ;   % Aucun événement de ce type n'existe encore, on ajoute NewDict
+            assertz(event_store_type(Type, [NewDict]))
+        ).
+
+
+% Generate unique id of event
 generate_unique_event_id(Id) :-
     get_time(TS),
     TSint is floor(TS * 1000),  % ms depuis epoch
@@ -326,4 +382,6 @@ generate_unique_event_id(Id) :-
     mutex_unlock(event_id_mutex),
     % Compose un entier long : timestamp * 10000 + compteur (4 chiffres)
     Id is TSint * 10000 + NewCount.
+
+
 

@@ -7,7 +7,7 @@
 :- use_module(library(thread)).
 :- use_module(library(time)).
 :- use_module(library(error)).
-:- use_module(kb_shared, [eventlog_mutex/1, log_event/1, print_all_events/1]).
+:- use_module(kb_shared, [ log_event/1, print_all_events/1]).
 :- use_module(utils).
 :- use_module(library(debug)).
 :- use_module(abs).

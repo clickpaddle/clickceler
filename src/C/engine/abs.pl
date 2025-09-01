@@ -3,7 +3,7 @@
 :- use_module(library(thread)).
 :- use_module(library(time)).
 :- use_module(library(error)).
-:- use_module(kb_shared,[eventlog_mutex/1,log_event/1,print_all_events/1]).
+:- use_module(kb_shared,[log_event/1,print_all_events/1]).
 :- use_module(utils).
 
 :- dynamic kb_shared:event/2.
@@ -135,5 +135,27 @@ generate_abstract(event(EventType, EventDict), event(AbsType, AbsDictNext), Tran
     assert_event(event(AbsType, AbsDictNext)),
     log_trace(info, '[Abstract] Generated new abstract: ~w', [event(AbsType, AbsDictNext)]).
 
-% Les autres helpers (queue, listing, safe_thread_send_message) restent inchangés
+% add_to_abstract_contrib(+EventDict, +AbsDict, -AbsDictUpdated)
+add_to_abstract_contrib(event(_EventType,EventDict),event(_AbsType,AbsDict)) :-
+    must_be(dict, EventDict),
+    must_be(dict,AbsDict),
+    log_trace(info, "[Abstract] Received EventDict: ~w AbsDict: ~w", [EventDict,AbsDict]),
+
+    % retrieve existing list or create empty
+    ( get_dict(abstract_contrib, AbsDict, ContribList) ->
+        log_trace(info, "[Abstract] Existing contribution list found: ~w", [ContribList])
+    ;
+        ContribList = [],
+        log_trace(info, "[Abstract] No existing list, creating an empty one", [])
+    ),
+
+    % add the event ID to the list
+    EventID = EventDict.id,
+    log_trace(info, "[Abstract] Event ID to add: ~w", [EventID]),
+    NewContrib = [EventID | ContribList],
+    log_trace(info, "[Abstract] Updated contribution list: ~w", [NewContrib]),
+
+    % update the dict
+    AbsDictUpdated = AbsDict.put(_{abstract_contrib: NewContrib}),
+    log_trace(info, "[Abstract] AbsDict updated: ~w", [AbsDictUpdated]).
 
