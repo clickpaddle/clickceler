@@ -17,11 +17,12 @@
     get_log_level/1,
     assert_event/1,
     get_events_by_type/2,
-    find_event/3,
+    find_event/2,
     replace_event/3,
     replace_event_without_mutex/3,
     generate_unique_event_id/1,
-    instantiate_transforms/3
+    instantiate_transforms/3,
+    print_all_events/0
     ]).
     
 
@@ -93,6 +94,7 @@ init_event_id_counter :-
 match_all_conditions([], _).
 match_all_conditions([Cond | Rest], Dict) :-
     match_condition(Cond, Dict),
+    log_trace(info,'[Utils] Matched Cond: ~w Dict: ~w',[Cond,Dict]), 
     match_all_conditions(Rest, Dict).
 
 % match_condition(+Condition, +Dict)
@@ -307,12 +309,18 @@ assert_event(event(Type, Dict)) :-
 
 
 % Retrieve the first event of EventType matching Predicate
-find_event(Type, Pred, Dict) :-
+find_event(Type, Dict) :-
     get_events_by_type(Type, List),
-    List \= [],                   % fail immediately if no events of this type
+    List \= [],                   % fail immédiatement si aucun event
     member(Dict, List),
-    call(Pred, Dict),
-    !.  % cut: only the first match
+    nonvar(Dict),
+    get_dict(is_abstract, Dict, true),
+    log_trace(info,
+              '[Abstract] Found existing abstract ~w matching EventType ~w',
+              [Dict.id, Type]),
+    !.  % ne garder que le premier match
+
+
 
 % Retrieve all events of a given type
 get_events_by_type(Type, List) :-
@@ -384,4 +392,14 @@ generate_unique_event_id(Id) :-
     Id is TSint * 10000 + NewCount.
 
 
+% Collect all events and return a single string
+%% print_all_events_direct/0
+%% Affiche tous les événements, 1 par ligne
+print_all_events :-
+    forall(
+        ( event_store_type(Type, List),
+          member(Dict, List)
+        ),
+        writeln(event(Type, Dict))
+    ).
 

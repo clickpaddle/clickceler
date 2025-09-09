@@ -3,7 +3,7 @@
 :- use_module(library(thread)).
 :- use_module(library(time)).
 :- use_module(library(error)).
-:- use_module(kb_shared,[log_event/1,print_all_events/1]).
+:- use_module(kb_shared,[log_event/1]).
 :- use_module(utils).
 
 :- dynamic kb_shared:event/2.
@@ -89,9 +89,9 @@ abstract_rule_match(RuleID, Priority, [Pattern], Conditions, [Abstract], Transfo
 get_or_create_abstract(event(EventType, EventDict), event(AbsType, AbsDict), Conditions, Transforms) :-
     log_trace(info, '[Abstract] get_or_create_abstract for type ~w', [AbsType]),
     ( existing_abstract(event(EventType, EventDict), Conditions, event(AbsType, AbsDict)) ->
-        add_to_abstract_contrib(event(EventType, EventDict), event(AbsType, AbsDict)),
-        log_trace(info, '[Abstract] Found existing abstract ~q for event ~q', [event(AbsType, AbsDict), event(EventType, EventDict)]),
-        update_linked_abstract(_EventType, EventDict, AbsDict.id, EventDictUpdated), 
+        add_to_abstract_contrib(event(EventType, EventDict),AbsType, AbsDict,AbsDictUpdated),
+        log_trace(info, '[Abstract] Found existing abstract ~q for event ~q', [event(AbsType, AbsDictUpdated), event(EventType, EventDict)]),
+        update_linked_abstract(EventType, EventDict, AbsDict.id, EventDictUpdated), 
         replace_event(EventType,EventDict,EventDictUpdated)
     ;   eventlog_mutex(Mutex),
         with_mutex(Mutex,
@@ -121,7 +121,7 @@ apply_matching_rules([abstract_rule(RuleID, Priority, Patterns, Conditions, Abst
 existing_abstract(event(EventType, DictIn), Conditions, event(AbsType, AbsDict)) :-
     log_trace(info,'[Abstract] Enter existing_abstract',[]),
     match_all_conditions(Conditions, DictIn),
-    find_event(AbsType, (functor(DictCandidate) :- match_all_conditions(Conditions, DictCandidate)), AbsDict),
+    find_event(AbsType, AbsDict),
     nonvar(AbsDict),
     get_dict(is_abstract, AbsDict, true),
     log_trace(info, '[Abstract] Found existing abstract ~w matching EventType ~w', [AbsDict.id, EventType]).
@@ -135,7 +135,7 @@ generate_abstract(event(EventType, EventDict), event(AbsType, AbsDictNext), Tran
     log_trace(info,'[Abstract] generate_abstract AbsDictUpdated: ~w',[AbsDictUpdated]), 
     assert_event(event(AbsType, AbsDictUpdated)),
     log_trace(info, '[Abstract] Generated new abstract: ~w', [event(AbsType, AbsDictUpdated)]),
-    update_linked_abstract(_EventType, EventDict, AbsDictUpdated.id, EventDictUpdated),
+    update_linked_abstract(EventType, EventDict, AbsDictUpdated.id, EventDictUpdated),
     log_trace(info, '[Abstract] generate_abstract Updated Dict of Event: ~w', [event(EventType, EventDictUpdated)]),
     replace_event(EventType,EventDict,EventDictUpdated).
 
@@ -166,10 +166,11 @@ add_to_abstract_contrib(event(_EventType,EventDict),_AbsType,AbsDict,AbsDictUpda
 
 % update the linked_abstract_field with the AbsDict.id
 
-update_linked_abstract(_EventType, EventDict, AbstractID, EventDictUpdated) :-
+update_linked_abstract(EventType, EventDict, AbstractID, EventDictUpdated) :-
     must_be(dict, EventDict),
     ( get_dict(linked_abstract, EventDict, LinkedList) -> true ; LinkedList = [] ),
     NewLinkedList = [AbstractID | LinkedList],
     EventDictUpdated = EventDict.put(_{linked_abstract: NewLinkedList}),
-    log_trace(info, '[Abstract] Updated linked_abstract for EventDict: ~w', [EventDictUpdated]).
+    log_trace(info, '[Abstract] Updated linked_abstract for Event: ~w', [event(EventType,EventDictUpdated)]),
+    assert_event(event(EventType,EventDictUpdated)).
 

@@ -8,7 +8,7 @@ abstract_rule(infrastructure_issue, 100,
     
 abstract_rule(infrastructure_issue, 100,
     [ disk(F) ],
-    [ eq(F, status, open), eq(F, severity, critical), eq(F, env, dev), ge(F, used_space, 100) ],
+    [ eq(F, status, open), eq(F, severity, critical), eq(F, env, dev), gte(F, used_space, 100) ],
     [ incident(E) ],
     [ set_field(E, status, open), set_field(E, severity, major), set_field(E, message, "infrastructure issue"), set_field(E, category, infrastructure), set_field(E, sub_category, "infrastructure issue"), set_field(E, priority, p2), set_field(E, impact, dev), set_field(E, reported_by, clickceller), set_field(E, hostname, F.hostname) ]
 ).

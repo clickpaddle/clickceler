@@ -11,7 +11,7 @@
     "hostname": "disk01",
     "status": "open",
     "severity": "critical",
-    "used_space": 150,
+    "used_space": 100,
     "env": "dev"
   },
   {

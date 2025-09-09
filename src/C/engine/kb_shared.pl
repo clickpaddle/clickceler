@@ -1,4 +1,4 @@
-:- module(kb_shared, [thread_goal_kb_shared/1,start_kb_shared_loop/0,assert_json_event/2, event/2, print_all_events/1, log_event/1, is_subtype/2]).
+:- module(kb_shared, [thread_goal_kb_shared/1,start_kb_shared_loop/0,assert_json_event/2, event/2,  log_event/1, is_subtype/2]).
 :- use_module(library(http/json)).
 :- use_module('../types/types.pl',[subtype/2, valid_severity/1, valid_status/1]).
 :- use_module(utils).
@@ -42,13 +42,9 @@ assert_json_event(Id, Json) :-
         (format("[kb_shared ERROR] Failed to assert event ~w: ~w", [Id, Err]), fail)
     ).
 
-print_all_events(ResultString) :-
-    findall(EventString,
-            ( event(Type, Attrs),
-              event_to_string(event(Type, Attrs), EventString)
-            ),
-            EventsStrings),
-    atomic_list_concat(EventsStrings, "", ResultString).
+% Convert event to string
+event_to_string(event(Type, Attrs), String) :-
+    format(atom(String), "event(~w, ~w)", [Type, Attrs]).
 
 event_to_string(event(Type, Attrs), EventString) :-
     ( string(Type) -> atom_string(AtomType, Type) ; AtomType = Type ),
