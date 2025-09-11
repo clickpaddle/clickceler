@@ -32,7 +32,6 @@ abstract_rules:
       - set_field(E, priority, p2)
       - set_field(E, impact, dev)
       - set_field(E, reported_by, clickceller)
-      - set_field(E, hostname, F.hostname)
 
   - name: abstract_network
     priority: 90

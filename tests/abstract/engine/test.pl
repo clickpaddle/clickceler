@@ -46,35 +46,43 @@ run_test :-
         id:17565601999960001,
         severity:critical,
         status:open,
+        origin: 111,
+        source: "AAA",
         timestamp_collected:1756560199.9969842
     }),
     send_event(Event1),
 
     % Event that matches the "disk" rule
     Event2 = event(disk, _{
-        counter:1,
+        counter:0,
         env:dev,
         hostname:"server01",
         id:17565602000000002,
         severity:critical,
         status:open,
         used_space:150,  % >= 100 to match gte(F, used_space, 100)
+        origin: 111,
+        source: "AAA",
         timestamp_collected:1756560200.123456
     }),
     send_event(Event2),
 
     % Event that matches the "memory" rule
     Event3 = event(memory, _{
-        counter:2,
+        counter:0,
         env:dev,
         hostname:"server01",
         id:17565602000000003,
         severity:critical,
         status:open,
         free_memory:0,   % <= 0 to match le(F, free_memory, 0)
+        origin: 111,
+        source: "AAA",
         timestamp_collected:1756560200.654321
     }),
     send_event(Event3),
     
-     sleep(5), halt.
+     sleep(5), 
+     print_all_events,
+     halt.
 

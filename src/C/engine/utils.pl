@@ -17,7 +17,7 @@
     get_log_level/1,
     assert_event/1,
     get_events_by_type/2,
-    find_event/2,
+    find_event/3,
     replace_event/3,
     replace_event_without_mutex/3,
     generate_unique_event_id/1,
@@ -309,16 +309,32 @@ assert_event(event(Type, Dict)) :-
 
 
 % Retrieve the first event of EventType matching Predicate
-find_event(Type, Dict) :-
-    get_events_by_type(Type, List),
-    List \= [],                   % fail immédiatement si aucun event
-    member(Dict, List),
-    nonvar(Dict),
-    get_dict(is_abstract, Dict, true),
-    log_trace(info,
-              '[Abstract] Found existing abstract ~w matching EventType ~w',
-              [Dict.id, Type]),
-    !.  % ne garder que le premier match
+find_event(EventType, KeysDict, Candidate) :-
+    log_trace(info, '[Utils] find_event Enter for type ~w ~w', [EventType, KeysDict]),
+    ( event_store(EventType, Events) ->
+        log_trace(info, '[Utils] find_event event_store returned ~w events', [Events])
+    ;   log_trace(warning, '[Utils] No event_store found for type ~w', [EventType]),
+        fail
+    ),
+    Events \= [],
+    member(Candidate, Events),
+    log_trace(info, '[Utils] find_event Considering Candidate: ~w', [Candidate]),
+    nonvar(Candidate),
+    dict_keys(KeysDict, Keys),
+    match_keys(Keys, KeysDict, Candidate),
+    log_trace(info, '[Utils] find_event Found event ~w matching type ~w', [Candidate.id, EventType]),
+    !.
+
+
+% match_keys(+Keys, +EventDict, +Candidate)
+match_keys([], _, _).
+
+match_keys([K|Rest], EventDict, Candidate) :-
+    get_dict(K, EventDict, V1),
+    get_dict(K, Candidate, V2),
+    log_trace(info,'[Utils] match_keys ~w: EventDict=~w Candidate=~w',[K,V1,V2]),
+    V1 = V2,
+    match_keys(Rest, EventDict, Candidate).
 
 
 
@@ -394,10 +410,14 @@ generate_unique_event_id(Id) :-
 
 % Collect all events and return an event per line
 print_all_events :-
+    log_trace(info,' ',[]),
+    log_trace(info,'All Events Processed.',[]),
+    log_trace(info, '---------------------',[]),
+    log_trace(info,' ',[]),
     forall(
         ( event_store_type(Type, List),
           member(Dict, List)
         ),
-        writeln(event(Type, Dict))
+        log_trace(info,'~w',[event(Type, Dict)])
     ).
 

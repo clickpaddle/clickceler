@@ -2,6 +2,7 @@
 clickceler
 *.ok
 *.org
+.*.swp
 toto
-evendb.log
+eventdb.log
 clickceler.org
