@@ -50,12 +50,12 @@ handle_event(event(EventType, DictIn)) :-
 
     Pattern =.. [EventType, DictIn],
     findall(
-        abstract_rule(RuleID, Priority,[Pattern], Conditions,[Abstract], Transformations),
+        abstract_rule(RuleID, Priority,[Pattern], Conditions,[Abstract], Keys, Transformations),
         (
             catch(
                 (
-                    abstract_rule_match(RuleID, Priority, [Pattern], Conditions, [Abstract], Transformations, event(EventType,DictIn)),
-                    log_trace(info, '[Abstract] Rule matched: ~w (Priority: ~w)', [RuleID, Priority])
+                    abstract_rule_match(RuleID, Priority, [Pattern], Conditions, [Abstract], Keys, Transformations, event(EventType,DictIn)),
+                    log_trace(info, '[Abstract] Rule matched: ~w Priority: ~w Keys: ~w', [RuleID, Priority, Keys])
                 ),
                 E,
                 log_trace(warning,'[Abstract] Rule ~w raised error: ~w', [RuleID, E])
@@ -73,10 +73,9 @@ handle_event(event(EventType, DictIn)) :-
     ;   log_trace(warning,'[Abstract] No rules matched for EventTerm: ~w', [event(EventType, DictIn)])
     ).
 
-abstract_rule_match(RuleID, Priority, [Pattern], Conditions, [Abstract], Transformations,
+abstract_rule_match(RuleID, Priority, [Pattern], Conditions, [Abstract], Keys, Transformations,
                     event(EventType, DictIn)) :-
-    log_trace(info,'[Abstract]  Entering abstract_rule_match ',[]),
-    abstract_rule(RuleID, Priority, [Pattern], Conditions, [Abstract], Transformations),
+    abstract_rule(RuleID, Priority, [Pattern], Conditions, [Abstract], Keys, Transformations),
     Pattern =.. [EventType, F],
     F = DictIn,
     log_trace(info, '[Abstract] EventType ~w matches Pattern type ~w', [EventType, EventType]),
@@ -86,9 +85,9 @@ abstract_rule_match(RuleID, Priority, [Pattern], Conditions, [Abstract], Transfo
         fail
     ).
 
-get_or_create_abstract(event(EventType, EventDict), event(AbsType, AbsDict), Conditions, Transforms) :-
+get_or_create_abstract(event(EventType, EventDict), event(AbsType, AbsDict), Keys, Conditions, Transforms) :-
     log_trace(info, '[Abstract] get_or_create_abstract for type ~w', [AbsType]),
-    ( existing_abstract(event(EventType, EventDict), Conditions, event(AbsType, AbsDict)) ->
+    ( existing_abstract(event(EventType, EventDict), Conditions, event(AbsType, AbsDict), Keys) ->
         add_to_abstract_contrib(event(EventType, EventDict),AbsType, AbsDict,AbsDictUpdated),
         replace_event(AbsType, AbsDict,AbsDictUpdated),
         log_trace(info, '[Abstract] Found existing abstract ~q for event ~q', [event(AbsType, AbsDictUpdated), event(EventType, EventDict)]),
@@ -96,7 +95,7 @@ get_or_create_abstract(event(EventType, EventDict), event(AbsType, AbsDict), Con
         replace_event(EventType,EventDict,EventDictUpdated)
     ;   eventlog_mutex(Mutex),
         with_mutex(Mutex,
-            generate_abstract(event(EventType, EventDict), event(AbsType, AbsDict), Transforms)
+            generate_abstract(event(EventType, EventDict), event(AbsType, AbsDict), Keys, Transforms)
         )
     ),
     EventOut = event(AbsType, AbsDict),
@@ -104,20 +103,20 @@ get_or_create_abstract(event(EventType, EventDict), event(AbsType, AbsDict), Con
 
 apply_matching_rules([], _).
 
-apply_matching_rules([abstract_rule(RuleID, Priority, Patterns, Conditions, Abstracts,Transforms)|Rest], event(EventType, DictIn)) :-
+apply_matching_rules([abstract_rule(RuleID, Priority, Patterns, Conditions, Abstracts, Keys,Transforms)|Rest], event(EventType, DictIn)) :-
     log_trace(info, '[Abstract] Applying abstract_rule ~w (Priority: ~w)', [RuleID, Priority]),
     Patterns = [Pattern | _],
     Abstracts = [Abstract | _],
     log_trace(info, '[Debug] Pattern: ~q, Abstract: ~q', [Pattern, Abstract]),
     Abstract =.. [AbsType, _],
-    ( get_or_create_abstract(event(EventType, DictIn), event(AbsType, UpdatedDict), Conditions, Transforms)
+    ( get_or_create_abstract(event(EventType, DictIn), event(AbsType, UpdatedDict), Keys, Conditions, Transforms)
       -> log_trace(info, '[Debug] Rule applied successfully: ~w', [RuleID])
       ;  log_trace(warn, '[Debug] Rule FAILED: ~w', [RuleID]), UpdatedDict = DictIn
     ),
     apply_matching_rules(Rest, event(EventType, UpdatedDict)).
 
 
-existing_abstract(event(EventType, DictIn), Conditions, event(AbsType, AbsDict)) :-
+existing_abstract(event(EventType, DictIn), Conditions, event(AbsType, AbsDict), Keys) :-
     log_trace(info,'[Abstract] Enter existing_abstract',[]),
     match_all_conditions(Conditions, DictIn),
     find_event(AbsType, AbsDict),
@@ -125,7 +124,7 @@ existing_abstract(event(EventType, DictIn), Conditions, event(AbsType, AbsDict))
     get_dict(is_abstract, AbsDict, true),
     log_trace(info, '[Abstract] Found existing abstract ~w matching EventType ~w', [AbsDict.id, EventType]).
 
-generate_abstract(event(EventType, EventDict), event(AbsType, AbsDictNext), Transforms) :-
+generate_abstract(event(EventType, EventDict), event(AbsType, AbsDictNext), Keys, Transforms) :-
     log_trace(info, '[Abstract] Generating Dictionary of new Abstract: ~w', [AbsType]),
     generate_unique_event_id(AbstractID),
     AbsDict0 = EventDict.put(_{id: AbstractID, is_abstract:true, abstract_contrib:[], status:"open"}),

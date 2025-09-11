@@ -74,5 +74,7 @@ run_test :-
         free_memory:0,   % <= 0 to match le(F, free_memory, 0)
         timestamp_collected:1756560200.654321
     }),
-    send_event(Event3).
+    send_event(Event3),
+    
+     sleep(5), halt.
 
