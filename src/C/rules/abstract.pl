@@ -15,7 +15,7 @@ abstract_rule(infrastructure_issue, 100,
     
 abstract_rule(infrastructure_issue, 100,
     [ memory(F) ],
-    [ eq(F, status, open), eq(F, severity, critical), eq(F, env, dev), le(F, free_memory, 0) ],
+    [ eq(F, status, open), eq(F, severity, critical), eq(F, env, dev), lte(F, free_memory, 0) ],
     [ incident(E) ],
     [ set_field(E, status, open), set_field(E, severity, major), set_field(E, message, "infrastructure issue"), set_field(E, category, infrastructure), set_field(E, sub_category, "infrastructure issue"), set_field(E, priority, p2), set_field(E, impact, dev), set_field(E, reported_by, clickceller), set_field(E, hostname, F.hostname) ]
 ).

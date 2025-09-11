@@ -139,7 +139,7 @@ generate_abstract(event(EventType, EventDict), event(AbsType, AbsDictNext), Tran
 
 
 % add_to_abstract_contrib(+EventDict, +AbsDict, -AbsDictUpdated)
-add_to_abstract_contrib(event(_EventType,EventDict),AbsType,AbsDict,AbsDictUpdated) :-
+add_to_abstract_contrib(event(_EventType,EventDict),_AbsType,AbsDict,AbsDictUpdated) :-
     log_trace(info, "[Abstract] add_to_abstract_contrib Received EventDict: ~w AbsDict: ~w", [EventDict,AbsDict]),
     must_be(dict, EventDict),
     must_be(dict,AbsDict),

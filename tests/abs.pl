@@ -69,7 +69,7 @@ handle_event(event(EventType, DictIn)) :-
         log_trace(info,'[Abstract] Matched rules: ~q', [RuleList]),
         sort(2, @>=, RuleList, SortedRules),
         log_trace(info,'[Abstract] Sorted rules by priority: ~q', [SortedRules]),
-        apply_matching_rules(SortedRules, event(EventType, DictIn)) 
+        apply_matching_rules(SortedRules, event(EventType, DictIn), DictOut, DictEnd)
     ;   log_trace(warning,'[Abstract] No rules matched for EventTerm: ~w', [event(EventType, DictIn)])
     ).
 
@@ -90,7 +90,6 @@ get_or_create_abstract(event(EventType, EventDict), event(AbsType, AbsDict), Con
     log_trace(info, '[Abstract] get_or_create_abstract for type ~w', [AbsType]),
     ( existing_abstract(event(EventType, EventDict), Conditions, event(AbsType, AbsDict)) ->
         add_to_abstract_contrib(event(EventType, EventDict),AbsType, AbsDict,AbsDictUpdated),
-        replace_event(AbsType, AbsDict,AbsDictUpdated),
         log_trace(info, '[Abstract] Found existing abstract ~q for event ~q', [event(AbsType, AbsDictUpdated), event(EventType, EventDict)]),
         update_linked_abstract(EventType, EventDict, AbsDict.id, EventDictUpdated), 
         replace_event(EventType,EventDict,EventDictUpdated)
@@ -102,9 +101,11 @@ get_or_create_abstract(event(EventType, EventDict), event(AbsType, AbsDict), Con
     EventOut = event(AbsType, AbsDict),
     log_event(EventOut).
 
-apply_matching_rules([], _).
+apply_matching_rules([], _, DictIn, DictIn).
 
-apply_matching_rules([abstract_rule(RuleID, Priority, Patterns, Conditions, Abstracts,Transforms)|Rest], event(EventType, DictIn)) :-
+apply_matching_rules([abstract_rule(RuleID, Priority, Patterns, Conditions, Abstracts, Transforms)|Rest],
+                     event(EventType, DictIn),
+                     DictIn, DictOut) :-
     log_trace(info, '[Abstract] Applying abstract_rule ~w (Priority: ~w)', [RuleID, Priority]),
     Patterns = [Pattern | _],
     Abstracts = [Abstract | _],
@@ -114,7 +115,7 @@ apply_matching_rules([abstract_rule(RuleID, Priority, Patterns, Conditions, Abst
       -> log_trace(info, '[Debug] Rule applied successfully: ~w', [RuleID])
       ;  log_trace(warn, '[Debug] Rule FAILED: ~w', [RuleID]), UpdatedDict = DictIn
     ),
-    apply_matching_rules(Rest, event(EventType, UpdatedDict)).
+    apply_matching_rules(Rest, event(EventType, UpdatedDict), UpdatedDict, DictOut).
 
 
 existing_abstract(event(EventType, DictIn), Conditions, event(AbsType, AbsDict)) :-
@@ -135,11 +136,12 @@ generate_abstract(event(EventType, EventDict), event(AbsType, AbsDictNext), Tran
     assert_event(event(AbsType, AbsDictUpdated)),
     log_trace(info, '[Abstract] Generated new abstract: ~w', [event(AbsType, AbsDictUpdated)]),
     update_linked_abstract(EventType, EventDict, AbsDictUpdated.id, EventDictUpdated),
-    log_trace(info, '[Abstract] generate_abstract Updated Dict of Event: ~w', [event(EventType, EventDictUpdated)]).
+    log_trace(info, '[Abstract] generate_abstract Updated Dict of Event: ~w', [event(EventType, EventDictUpdated)]),
+    replace_event(EventType,EventDict,EventDictUpdated).
 
 
 % add_to_abstract_contrib(+EventDict, +AbsDict, -AbsDictUpdated)
-add_to_abstract_contrib(event(_EventType,EventDict),AbsType,AbsDict,AbsDictUpdated) :-
+add_to_abstract_contrib(event(_EventType,EventDict),_AbsType,AbsDict,AbsDictUpdated) :-
     log_trace(info, "[Abstract] add_to_abstract_contrib Received EventDict: ~w AbsDict: ~w", [EventDict,AbsDict]),
     must_be(dict, EventDict),
     must_be(dict,AbsDict),
@@ -170,5 +172,5 @@ update_linked_abstract(EventType, EventDict, AbstractID, EventDictUpdated) :-
     NewLinkedList = [AbstractID | LinkedList],
     EventDictUpdated = EventDict.put(_{linked_abstract: NewLinkedList}),
     log_trace(info, '[Abstract] Updated linked_abstract for Event: ~w', [event(EventType,EventDictUpdated)]),
-    replace_event(EventType,EventDict, EventDictUpdated).
+    assert_event(event(EventType,EventDictUpdated)).
 

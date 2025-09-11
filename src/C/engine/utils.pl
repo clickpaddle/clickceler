@@ -392,9 +392,7 @@ generate_unique_event_id(Id) :-
     Id is TSint * 10000 + NewCount.
 
 
-% Collect all events and return a single string
-%% print_all_events_direct/0
-%% Affiche tous les événements, 1 par ligne
+% Collect all events and return an event per line
 print_all_events :-
     forall(
         ( event_store_type(Type, List),
