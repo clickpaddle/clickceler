@@ -1,4 +1,5 @@
 :- module(utils, [
+    eventlog_mutex/1,
     match_all_conditions/2,
     match_condition/2,
     apply_transformations/3,
@@ -13,7 +14,15 @@
     unit_to_seconds/2,
     log_trace/3,
     set_log_level/1,
-    get_log_level/1
+    get_log_level/1,
+    assert_event/1,
+    get_events_by_type/2,
+    find_event/4,
+    replace_event/3,
+    replace_event_without_mutex/3,
+    generate_unique_event_id/1,
+    instantiate_transforms/3,
+    print_all_events/0
     ]).
     
 
@@ -21,8 +30,12 @@
 :- use_module(library(time)).
 
 :- dynamic current_log_level/1.
+:- dynamic event_id_counter/1.
+:- dynamic event_store_type/2.
+:- dynamic eventlog_mutex/1.
 
 current_log_level(info).
+eventlog_mutex(mutex_event).
 
 % Log level numeric values for comparison
 log_level_value(debug, 10).
@@ -50,9 +63,11 @@ log_trace(Level, Format, Args) :-
     LevelVal >= CurrentLevelVal,
     get_time(TS),
     format_time(string(TimeStamp), '%Y-%m-%dT%H:%M:%S', TS),
-    format('[~w] [~w] ', [TimeStamp, Level]),
-    format(Format, Args),
-    nl.
+    % Construire le message formaté
+    format(string(Msg), Format, Args),
+    % Écrire tout en une seule fois
+    format('[~w] [~w] ~w~n', [TimeStamp, Level, Msg]),
+    flush_output(user_output).  % flush pour éviter merge multi-thread
 
 % Fail silently if below threshold
 log_trace(Level, _Format, _Args) :-
@@ -62,15 +77,14 @@ log_trace(Level, _Format, _Args) :-
     LevelVal < CurrentLevelVal,
     !, fail.
 
+%% ========================
+%% == GENERATE UNIQUE ID == 
+%% ========================
 
-%log_trace(Level, FormatString, Args) :-
-%    get_time(TimeFloat),
-%    Seconds is floor(TimeFloat),
-%    Microsecs is round((TimeFloat - Seconds) * 1_000_000),
-%    format_time(atom(DatePart), '%Y-%m-%dT%H:%M:%S', Seconds),
-%    format(atom(Timestamp), '~w.~06d', [DatePart, Microsecs]),
-%    format(atom(Message), FormatString, Args),
-%    format('[~w] [~w] ~w~n', [Timestamp, Level, Message]).
+init_event_id_counter :-
+    retractall(event_id_counter(_)),
+    assertz(event_id_counter(0)).
+
 
 %% ========================
 %% === MATCH CONDITIONS ===
@@ -80,6 +94,7 @@ log_trace(Level, _Format, _Args) :-
 match_all_conditions([], _).
 match_all_conditions([Cond | Rest], Dict) :-
     match_condition(Cond, Dict),
+    log_trace(info,'[Utils] Matched Cond: ~w Dict: ~w',[Cond,Dict]), 
     match_all_conditions(Rest, Dict).
 
 % match_condition(+Condition, +Dict)
@@ -95,7 +110,7 @@ match_condition(gt(_E,Field, Value), Dict) :-
     get_dict(Field, Dict, V),
     greater_than(V, Value).
 
-match_condition(gte(_E,Field, Value), Dict) :-
+match_condition(ge(_E,Field, Value), Dict) :-
     get_dict(Field, Dict, V),
     greater_equal(V, Value).
 
@@ -103,7 +118,7 @@ match_condition(lt(_E,Field, Value), Dict) :-
     get_dict(Field, Dict, V),
     less_than(V, Value).
 
-match_condition(lte(_E,Field, Value), Dict) :-
+match_condition(le(_E,Field, Value), Dict) :-
     get_dict(Field, Dict, V),
     less_equal(V, Value).
 
@@ -125,45 +140,61 @@ match_condition(contains(_E, Field, SubStr), Dict) :-
 %% === TRANSFORMATIONS CORE ===
 %% ============================
 
+% Liste vide
+% Liste vide : fin des transformations
 % apply_transformations(+TransformList, +DictIn, -DictOut)
-apply_transformations([], Dict, Dict).
+%% ============================
+%% === CORE TRANSFORMATIONS ===
+%% ============================
 
-% Transformation: set_field(Key, Value)
-apply_transformations([set_field(_E,Key, Value) | Rest], DictIn, DictOut) :-
-    put_dict(Key, DictIn, Value, DictNext),
+% Empty list: end of transformations
+% Empty list: done
+apply_transformations([], Dict, Dict) :-
+    log_trace(info, '[Utils] No more transformations, final Dict: ~w', [Dict]).
+
+apply_transformations([Transform | Rest], DictIn, DictOut) :-
+    % unify E with DictIn if the first argument is a variable
+    (arg(1, Transform, E), var(E) -> E = DictIn ; true),
+    call(Transform, DictIn, DictNext),
+    % recurse on rest
     apply_transformations(Rest, DictNext, DictOut).
 
+% Set a field in a dict
+set_field(_E, Key, Value, DictIn, DictOut) :-
+    put_dict(Key, DictIn, Value, DictOut),
+    log_trace(info, '[Utils] Processed Transformation set_field(E,~w,~w); ~w', [Key, Value, DictOut]).
 
+% Add a tag to the tags list in the dict
+add_tag(_E, Tag, DictIn, DictOut) :-
+    (get_dict(tags, DictIn, Tags0) -> true ; Tags0 = []),
+    (memberchk(Tag, Tags0) -> Tags1 = Tags0 ; Tags1 = [Tag|Tags0]),
+    put_dict(tags, DictIn, Tags1, DictOut),
+    log_trace(info, '[Utils] Processed Transformation: add_tag(E,~w): ~w ',[Tags1,DictOut]).
 
-% Transformation: add_tag(Tag)
-apply_transformations([add_tag(_E,Tag) | Rest], DictIn, DictOut) :-
-    ( get_dict(tags, DictIn, Tags0) -> true ; Tags0 = [] ),
-    ( memberchk(Tag, Tags0) -> Tags1 = Tags0 ; Tags1 = [Tag | Tags0] ),
-    put_dict(tags, DictIn, Tags1, DictNext),
-    apply_transformations(Rest, DictNext, DictOut).
-
-% Transformation: remove_tag(Tag)
-apply_transformations([remove_tag(_E,Tag) | Rest], DictIn, DictOut) :-
-    ( get_dict(tags, DictIn, Tags0) -> true ; Tags0 = [] ),
+% Remove a tag from the tags list in the dict
+remove_tag(_E, Tag, DictIn, DictOut) :-
+    (get_dict(tags, DictIn, Tags0) -> true ; Tags0 = []),
     delete(Tags0, Tag, Tags1),
-    put_dict(tags, DictIn, Tags1, DictNext),
-    apply_transformations(Rest, DictNext, DictOut).
+    put_dict(tags, DictIn, Tags1, DictOut),
+    log_trace(info, '[Utils] Processed Transformation: remove_tag,(E,~w): ~w ',[Tag,DictOut]).
 
-% Transformation: increment_field(Field)
-apply_transformations([increment_field(_E,Field) | Rest], DictIn, DictOut) :-
-    ( get_dict(Field, DictIn, Val), number(Val) ->
+% Increment a numeric field
+increment_field(_E, Field, DictIn, DictOut) :-
+    (get_dict(Field, DictIn, Val), number(Val) ->
         NewVal is Val + 1,
-        put_dict(Field, DictIn, NewVal, DictNext)
-    ;   put_dict(Field, DictIn, 1, DictNext)
-    ),
-    apply_transformations(Rest, DictNext, DictOut).
-
-% Unknown transformation
-apply_transformations([Unknown | Rest], DictIn, DictOut) :-
-    format('[Refine] Warning: Unknown transformation ~w~n', [Unknown]),
-    apply_transformations(Rest, DictIn, DictOut).
+        put_dict(Field, DictIn, NewVal, DictOut)
+    ; put_dict(Field, DictIn, 1, DictOut)),
+      log_trace(info, '[Utils] Processed Transformation: increment_field,(E,~w): ~w ',[Field,DictOut]).
 
 
+% Instantiate E before applying Transformations
+instantiate_transforms([], _, []).
+
+instantiate_transforms([], _, []).
+instantiate_transforms([T|Ts], E, [TInst|TsInst]) :-
+    T =.. [Functor, _ | Args],   % ignore l’ancien "E"
+    TInst =.. [Functor, E | Args],
+    instantiate_transforms(Ts, E, TsInst).
 %% ========================
 %% === VALUE COMPARISON ===
 %% ========================
@@ -263,3 +294,148 @@ unit_to_seconds('d', 86400).
 unit_to_seconds('w', 604800).
 unit_to_seconds('M', 2592000).
 unit_to_seconds('Y', 31536000).
+
+
+
+% Store the event indexed by EventType
+assert_event(event(Type, Dict)) :-
+    eventlog_mutex(Mutex),
+    with_mutex(Mutex, (   ( event_store_type(Type, L0) -> L1 = [Dict|L0], retract(event_store_type(Type, L0))
+            ; L1 = [Dict]
+            ),
+            assertz(event_store_type(Type, L1))
+        )
+    ).
+
+
+% Retrieve the first event of EventType matching Predicate
+find_event(EventType, TimeWindow, KeysDict, Candidate) :-
+    log_trace(info, '[Utils] find_event Enter for type ~w ~w', [EventType, KeysDict]),
+    ( event_store(EventType, Events) ->
+        log_trace(info, '[Utils] find_event event_store returned ~w events', [Events])
+    ;   log_trace(warning, '[Utils] No event_store found for type ~w', [EventType]),
+        fail
+    ),
+    Events \= [],
+    get_time(Now), 
+    member(Candidate, Events),
+    log_trace(info, '[Utils] find_event Considering Candidate: ~w', [Candidate]),
+    nonvar(Candidate),
+    dict_keys(KeysDict, Keys),
+    match_keys(Keys, KeysDict, Candidate),
+    get_dict(timestamp_collected, Candidate, Ts),
+    log_trace(info,'[Utils] find_event Candidate Abstract timestamp_collected: ~w',[Ts]),
+    Ts >= Now - TimeWindow,
+    Ts =< Now,
+    log_trace(info, '[Utils] find_event Found event ~w matching type ~w within TimeWindow ~w sec',
+              [Candidate.id, EventType, TimeWindow]),
+    !.
+
+
+% match_keys(+Keys, +EventDict, +Candidate)
+match_keys([], _, _).
+
+match_keys([K|Rest], EventDict, Candidate) :-
+    get_dict(K, EventDict, V1),
+    get_dict(K, Candidate, V2),
+    log_trace(info,'[Utils] match_keys ~w: EventDict=~w Candidate=~w',[K,V1,V2]),
+    V1 = V2,
+    match_keys(Rest, EventDict, Candidate).
+
+
+
+% Retrieve all events of a given type
+get_events_by_type(Type, List) :-
+    log_trace(info,'[Utils] Entering get_events_by_type',[]),
+    (   event_store_type(Type, List0)
+    ->  List = List0
+    ;   List = []
+    ),
+    log_trace(info,'[Utils] List of events found ~w',[List]).
+
+% Return all events of a given type from the store
+event_store(Type, Events) :-
+    (   event_store_type(Type, Events)
+    ->  true
+    ;   Events = []
+    ).
+
+% Replace an existing event of EventType with NewDict based on id
+replace_event(Type, OldDict, NewDict) :-
+    eventlog_mutex(Mutex),
+    with_mutex(Mutex,
+        (   event_store_type(Type, OldList) ->
+                % Remplace uniquement l'événement correspondant à OldDict
+                maplist({OldDict, NewDict}/[D,R]>>(
+                    ( get_dict(id, D, IDOld),
+                      get_dict(id, OldDict, IDTarget),
+                      IDOld =:= IDTarget
+                    -> R = NewDict
+                    ;  R = D
+                    )
+                ), OldList, NewList),
+                retract(event_store_type(Type, OldList)),
+                assertz(event_store_type(Type, NewList))
+        ;   % Aucun événement de ce type n'existe encore, on ajoute NewDict
+            assertz(event_store_type(Type, [NewDict]))
+        )
+    ).
+
+replace_event_without_mutex(Type, OldDict, NewDict) :-
+       ( event_store_type(Type, OldList) ->
+                % Remplace uniquement l'événement correspondant à OldDict
+                maplist({OldDict, NewDict}/[D,R]>>(
+                    ( get_dict(id, D, IDOld),
+                      get_dict(id, OldDict, IDTarget),
+                      IDOld =:= IDTarget
+                    -> R = NewDict
+                    ;  R = D
+                    )
+                ), OldList, NewList),
+                retract(event_store_type(Type, OldList)),
+                assertz(event_store_type(Type, NewList))
+        ;   % Aucun événement de ce type n'existe encore, on ajoute NewDict
+            assertz(event_store_type(Type, [NewDict]))
+        ).
+
+
+% Generate unique id of event
+%generate_unique_event_id(Id) :-
+%    get_time(TS),
+%    TSint is floor(TS * 1000),  % ms depuis epoch
+%    mutex_lock(event_id_mutex),
+%    (   retract(event_id_counter(Count))
+%    ->  NewCount is Count + 1
+%    ;   NewCount = 1
+%    ),
+%    assertz(event_id_counter(NewCount)),
+%    mutex_unlock(event_id_mutex),
+%    % Compose un entier long : timestamp * 10000 + compteur (4 chiffres)
+%    Id is TSint * 10000 + NewCount.
+
+generate_unique_event_id(Id) :-
+    get_time(TS),                        % TS en secondes float
+    mutex_lock(event_id_mutex),
+    (   retract(event_id_counter(Count))
+    ->  NewCount is Count + 1
+    ;   NewCount = 1
+    ),
+    assertz(event_id_counter(NewCount)),
+    mutex_unlock(event_id_mutex),
+    % Ajoute le compteur comme fraction de seconde
+    Id is TS + NewCount / 10000.0.
+
+
+% Collect all events and return an event per line
+print_all_events :-
+    log_trace(info,' ',[]),
+    log_trace(info,'All Events Processed.',[]),
+    log_trace(info, '---------------------',[]),
+    log_trace(info,' ',[]),
+    forall(
+        ( event_store_type(Type, List),
+          member(Dict, List)
+        ),
+        log_trace(info,'~w',[event(Type, Dict)])
+    ).
+

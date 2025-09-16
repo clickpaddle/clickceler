@@ -1,9 +1,13 @@
-{%- for rule in abstract_rules %}
-{%- for e in rule.events %}
+{# Loop over abstract rules and generate one Prolog clause per event #}
+{% for rule in abstract_rules %}
+{% for event in rule.events %}
 abstract_rule({{ rule.name }}, {{ rule.priority }},
-    [ {%- for c in e.conditions %}{{ c }}{% if not loop.last %}, {% endif %}{%- endfor %} ],
-    [ {%- for action in rule.actions %}{{ action }}{% if not loop.last %}, {% endif %}{%- endfor %} ]
+    [ {{ event.event }} ],
+    [ {% for cond in event.conditions %}{{ cond }}{% if not loop.last %}, {% endif %}{% endfor %} ],
+    [ {{ rule.abstract }} ],
+    [ {% for s in rule.settings %}settings{ {% for k,v in s.items() %}{{ k }}: {{ v }}{% if not loop.last %}, {% endif %}{% endfor %} }{% if not loop.last %}, {% endif %}{% endfor %} ],
+    [ {% for k in rule.keys %}{{ k }}{% if not loop.last %}, {% endif %}{% endfor %} ],
+    [ {% for a in rule.actions %}{{ a }}{% if not loop.last %}, {% endif %}{% endfor %}, set_field(E,origin, F.origin), set_field(E,source, F.source), set_field(E, hostname, F.hostname) ]
 ).
-{%- endfor %}
-{%- endfor %}
-
+{% endfor %}
+{% endfor %}

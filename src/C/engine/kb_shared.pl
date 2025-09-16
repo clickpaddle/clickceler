@@ -1,11 +1,10 @@
-:- module(kb_shared, [thread_goal_kb_shared/1,start_kb_shared_loop/0,assert_json_event/2, event/2, print_all_events/1, eventlog_mutex/1, log_event/1, is_subtype/2]).
+:- module(kb_shared, [thread_goal_kb_shared/1,start_kb_shared_loop/0,assert_json_event/2, event/2,  log_event/1, is_subtype/2]).
 :- use_module(library(http/json)).
 :- use_module('../types/types.pl',[subtype/2, valid_severity/1, valid_status/1]).
 :- use_module(utils).
 
 :- dynamic event/2.
 :- multifile event/2.
-:- dynamic eventlog_mutex/1.
 :- mutex_create(event_id_mutex).
 
 thread_goal_kb_shared(ClientID) :-
@@ -13,12 +12,10 @@ thread_goal_kb_shared(ClientID) :-
 
 % Principal Loop
 start_kb_shared_loop :-
-    thread_self(Main),
+    thread_self(_Main),
     format("[Kb_shared] Starting kb_shared loop", []),
     loop.
 
-%% Mutex pour la gestion des événements et log
-eventlog_mutex(mutex_event).
 
 
 % Get and Handle messages
@@ -45,13 +42,9 @@ assert_json_event(Id, Json) :-
         (format("[kb_shared ERROR] Failed to assert event ~w: ~w", [Id, Err]), fail)
     ).
 
-print_all_events(ResultString) :-
-    findall(EventString,
-            ( event(Type, Attrs),
-              event_to_string(event(Type, Attrs), EventString)
-            ),
-            EventsStrings),
-    atomic_list_concat(EventsStrings, "", ResultString).
+% Convert event to string
+event_to_string(event(Type, Attrs), String) :-
+    format(atom(String), "event(~w, ~w)", [Type, Attrs]).
 
 event_to_string(event(Type, Attrs), EventString) :-
     ( string(Type) -> atom_string(AtomType, Type) ; AtomType = Type ),
@@ -69,13 +62,6 @@ print_attrs([Key-Value | Rest]) :-
     format("~q-~q, ", [Key, Value]),
     print_attrs(Rest).
 
-% assert_event(+Type, +EventDict)
-%  Protected by Mutex
-assert_event(event(Type, Dict)) :-
-    eventlog_mutex(Mutex),
-    with_mutex(Mutex,
-        assertz(kb_shared:event(Type, Dict))
-    ).
 
 %% log_event(+EventTerm) EventTerm is normalized
 log_event(EventTerm) :-

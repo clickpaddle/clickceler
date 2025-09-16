@@ -5,7 +5,7 @@
 :- use_module(library(time)).      % For time management and log formatting
 :- use_module(library(error)).     % For error handling (e.g., must_be/2)
 :- use_module('../types/types.pl',[subtype/2, valid_severity/1, valid_status/1]).
-:- use_module(kb_shared,[eventlog_mutex/1, log_event/1, is_subtype/2, print_all_events/1]).
+:- use_module(kb_shared).
 :- use_module(library(apply)).
 :- use_module(utils).
 
@@ -83,11 +83,12 @@ handle_event_throttle(event(EventType, DictIn)) :-
     apply_throttle_rules(SortedRules, event(EventType, DictIn)).
 
 
-apply_throttle_rules([], _Event) :-
+apply_throttle_rules([], Event) :-
     % No rules left to apply, send event directly
-    log_trace(info,'[Throttle] No more throttle rules, Prepare to send event with  a delay'[]).
+    safe_thread_send_message(abstract_queue, Event),
+    log_trace(info,'[Throttle] No more throttle rules, Prepare to send event with  a delay',[]).
 
-apply_throttle_rules([throttle_rule(RuleID, _Priority, [Pattern], _Conditions, ParamList, Transformations)| Rest], event(EventType, DictIn)) :-
+apply_throttle_rules([throttle_rule(RuleID, _Priority, [_Pattern], _Conditions, ParamList, Transformations)| Rest], event(EventType, DictIn)) :-
     % Extract params
     log_trace(info,'[Throttle] Parsing settings: ~q ',[ParamList]), 
     ParamList = [Params],
@@ -215,15 +216,6 @@ safe_thread_send_message(QueueName, Message) :-
     ; format(user_error, '[ERROR] Message queue ~w does not exist. Message not sent.', [QueueName])
     ).
 
-% Assert event safely under mutex to kb_shared:event/2
-assert_event(event(Type, Dict)) :-
-    eventlog_mutex(Mutex),
-    with_mutex(Mutex,
-      (
-        retractall(kb_shared:event(Type, Dict)),
-        assertz(kb_shared:event(Type, Dict))
-      )
-    ).
 
 current_time(Time) :-
     get_time(Time).

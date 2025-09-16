@@ -1,5 +1,6 @@
+
 filter_rule(filter_no_pass_log_critical_dev_drop_event, 100,
-    [ cpu(E) ],
+    [ disk(E) ],
     [within(E, severity, [info, ok]), eq(E, env, dev) ],
     [nopass ]
 ).

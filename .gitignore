@@ -1,0 +1,8 @@
+*.o
+clickceler
+*.ok
+*.org
+.*.swp
+toto
+eventdb.log
+clickceler.org

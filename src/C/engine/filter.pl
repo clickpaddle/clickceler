@@ -5,7 +5,7 @@
 :- use_module(library(time)).      % For time management and log formatting
 :- use_module(library(error)).     % For error handling (e.g., must_be/2)
 :- use_module('../types/types.pl',[subtype/2, valid_severity/1, valid_status/1]).
-:- use_module(kb_shared,[eventlog_mutex/1, log_event/1, is_subtype/2, print_all_events/1]).
+:- use_module(kb_shared).
 :- use_module(utils).
 :- dynamic kb_shared:event/2.
 :- multifile kb_shared:event/2.
@@ -44,7 +44,7 @@ start_filter_loop :-
     init_queue, 
     filter_loop.
 
-    % Wait for a message.
+% Wait for a message.
 filter_loop :-
     thread_get_message(filter_queue, EventTerm),
     (   catch(handle_event_filter(EventTerm), E,
@@ -74,7 +74,6 @@ handle_event_filter(event(EventType, DictIn)) :-
     % Apply filter_rule 
     (   apply_filter_rules(SortedRules, event(EventType, DictIn))
     ->  ( EventOut = event(EventType, DictIn),
-          log_event(EventOut),
           safe_thread_send_message(throttle_queue, EventOut))
     ;   log_trace(info,'[Filter] Event was rejected.', [])
     ).
@@ -100,9 +99,8 @@ filter_rule_match(EventType, RuleID, Priority, [Pattern], CondsDict, TransDict, 
         )
     ).
 
-apply_filter_rules([], Event) :-
+apply_filter_rules([], _Event) :-
     % No matching rules: continue by default
-    assert_event(Event),
     !.
 
 apply_filter_rules([filter_rule(_, _, [_], _, Actions) | _], event(Type, Dict)) :-
@@ -130,14 +128,6 @@ delete_event(event(Type, Dict)) :-
       )
     ).
 
-assert_event(event(Type, Dict)) :-
-    eventlog_mutex(Mutex),
-    with_mutex(Mutex,
-      (
-        retractall(kb_shared:event(Type, Dict)),
-        assertz(kb_shared:event(Type, Dict))
-      )
-    ).
 
 
 queue_exists(QueueName) :-

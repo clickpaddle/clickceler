@@ -2,15 +2,15 @@
 [kb_shared thread engine] [DEBUG] Thread 1 started.
 [DEBUG] [Main Thread] Refine handler thread created.
 [DEBUG] [Main Thread] Filter handler thread created.
-[filter thread engine] [DEBUG] Thread 4 started.
 [refine thread engine] [DEBUG] Thread 3 started.
+[filter thread engine] [DEBUG] Thread 4 started.
 [DEBUG] [Main Thread] Throttle handler thread created.
-[throttle thread engine] [DEBUG] Thread 5 started.
 [DEBUG] [Main Thread] Abstract handler thread created.
-[abstract thread engine] [DEBUG] Thread 6 started.
+[throttle thread engine] [DEBUG] Thread 5 started.
 [DEBUG] [Main Thread] Update handler thread created.
-[update thread engine] [DEBUG] Thread 7 started.
 [DEBUG] [Main Thread] Correlate handler thread created.
+[update thread engine] [DEBUG] Thread 7 started.
+[abstract thread engine] [DEBUG] Thread 6 started.
 [DEBUG] [Main Thread] Execute handler thread created.
 [correlate thread engine] [DEBUG] Thread 8 started.
 [execute thread engine] [DEBUG] Thread 9 started.
@@ -26,204 +26,426 @@
 [DEBUG] [Collector Handler 2] Socket bound to port 65432.
 [INFO] [Collector Handler 2] Server started and listening on port 65432
 [DEBUG] [Collector Handler 2] Waiting for new connections...
-Warning: /opt/automation/clickceler/src/C/engine/kb_shared.pl:15:
-Warning:    Singleton variables: [Main]
-[DEBUG] [Thread 140396088784576] Rules loaded from ../engine/kb_shared.pl
-[INFO] [Thread 140396088784576] Captured output: [2025-08-12T19:42:21] [info] [Kb_shared 140396088784576  ] Thread started
+[DEBUG] [Thread 139760711853760] Rules loaded from ../engine/kb_shared.pl
+[INFO] [Thread 139760711853760] Captured output: [2025-09-09T19:07:28] [info] [Kb_shared 139760711853760  ] Thread started
 
 [kb_shared thread engine] [INFO] Module 'kb_shared' successfully loaded.
-[DEBUG] [Thread 140395929380544] Rules loaded from ../engine/trigger.pl
-[INFO] [Thread 140395929380544] Captured output: [2025-08-12T19:42:21] [info] [Trigger 140395929380544] Thread started
+
+Warning: /opt/automation/clickceler/src/C/engine/filter.pl:8:
+Warning:    import/1: utils:eventlog_mutex/1 is not exported (still imported into filter)
+[Kb_shared] Starting kb_shared loopWarning: /opt/automation/clickceler/src/C/engine/trigger.pl:8:
+Warning:    import/1: utils:eventlog_mutex/1 is not exported (still imported into trigger)
+Warning: /opt/automation/clickceler/src/C/engine/propagate.pl:8:
+Warning:    import/1: utils:eventlog_mutex/1 is not exported (still imported into propagate)
+Warning: /opt/automation/clickceler/src/C/engine/update.pl:8:
+Warning:    import/1: utils:eventlog_mutex/1 is not exported (still imported into update)
+Warning: /opt/automation/clickceler/src/C/engine/execute.pl:8:
+Warning:    import/1: utils:eventlog_mutex/1 is not exported (still imported into execute)
+Warning: /opt/automation/clickceler/src/C/engine/refine.pl:9:
+Warning:    import/1: utils:eventlog_mutex/1 is not exported (still imported into refine)
+Warning: /opt/automation/clickceler/src/C/engine/correlate.pl:8:
+Warning:    import/1: utils:eventlog_mutex/1 is not exported (still imported into correlate)
+Warning: /opt/automation/clickceler/src/C/engine/timer.pl:8:
+Warning:    import/1: utils:eventlog_mutex/1 is not exported (still imported into timer)
+Warning: /opt/automation/clickceler/src/C/engine/throttle.pl:8:
+Warning:    import/1: utils:eventlog_mutex/1 is not exported (still imported into throttle)
+Warning: /opt/automation/clickceler/src/C/engine/trigger.pl:86:
+Warning:    Local definition of trigger:assert_event/1 overrides weak import from utils
+Warning: /opt/automation/clickceler/src/C/engine/update.pl:86:
+Warning:    Local definition of update:assert_event/1 overrides weak import from utils
+Warning: /opt/automation/clickceler/src/C/engine/execute.pl:87:
+Warning:    Local definition of execute:assert_event/1 overrides weak import from utils
+[DEBUG] [Thread 139760559441600] Rules loaded from ../engine/trigger.pl
+[INFO] [Thread 139760559441600] Captured output: [2025-09-09T19:07:28] [info] [Trigger 139760559441600] Thread started
 
 [trigger thread engine] [INFO] Module 'trigger' successfully loaded.
-[Kb_shared] Starting kb_shared loop[2025-08-12T19:42:21] [info] [Trigger] Warning: Rules file not found.
-[DEBUG] [Thread 140395946165952] Rules loaded from ../engine/timer.pl
-[2025-08-12T19:42:21] [info] [Trigger] Created message queue trigger
-[INFO] [Thread 140395946165952] Captured output: [2025-08-12T19:42:21] [info] [Timer 140395946165952] Thread started
-
-[timer thread engine] [INFO] Module 'timer' successfully loaded.
-[2025-08-12T19:42:21] [info] [Timer] Warning: Rules file not found.
-[DEBUG] [Thread 140396055213760] Rules loaded from ../engine/update.pl
-[2025-08-12T19:42:21] [info] [Timer] Created message queue timer
-[DEBUG] [Thread 140396080391872] Rules loaded from ../engine/refine.pl
-[DEBUG] [Thread 140396063606464] Rules loaded from ../engine/abstract.pl
-[INFO] [Thread 140396063606464] Captured output: [2025-08-12T19:42:21] [info] [Abstract 140396063606464] Thread started
-
-[abstract thread engine] [INFO] Module 'abstract' successfully loaded.
-[DEBUG] [Thread 140395937773248] Rules loaded from ../engine/propagate.pl
-[DEBUG] [Thread 140395954558656] Rules loaded from ../engine/execute.pl
-[INFO] [Thread 140396055213760] Captured output: [2025-08-12T19:42:21] [info] [Update 140396055213760] Thread started
+[2025-09-09T19:07:28] [info] [Trigger] Warning: Rules file not found.
+Warning: /opt/automation/clickceler/src/C/engine/abstract.pl:47:
+Warning:    Singleton variables: [DictOut,DictEnd]
+[2025-09-09T19:07:28] [info] [Trigger] Created message queue trigger
+[DEBUG] [Thread 139760678282944] Rules loaded from ../engine/update.pl
+[INFO] [Thread 139760678282944] Captured output: [2025-09-09T19:07:28] [info] [Update 139760678282944] Thread started
 
 [update thread engine] [INFO] Module 'update' successfully loaded.
-[2025-08-12T19:42:21] [info] [Update] Warning: Rules file not found.
-[2025-08-12T19:42:21] [info] [Update] Created message queue update
-[INFO] [Thread 140395937773248] Captured output: [2025-08-12T19:42:21] [info] [Propagate 140395937773248] Thread started
-
-[propagate thread engine] [INFO] Module 'propagate' successfully loaded.
-[2025-08-12T19:42:21] [warning] [Propagate] Rules file not found.
-[DEBUG] [Thread 140395971344064] Rules loaded from ../engine/filter.pl
-[2025-08-12T19:42:21] [info] [Propagate] Created message queue propagate
-[INFO] [Thread 140395954558656] Captured output: [2025-08-12T19:42:21] [info] [Execute 140395954558656] Thread started
+[DEBUG] [Thread 139760661395136] Rules loaded from ../engine/execute.pl
+[2025-09-09T19:07:28] [info] [Update] Warning: Rules file not found.
+[INFO] [Thread 139760661395136] Captured output: [2025-09-09T19:07:28] [info] [Execute 139760661395136] Thread started
 
 [execute thread engine] [INFO] Module 'execute' successfully loaded.
-[2025-08-12T19:42:21] [info] [Execute] Warning: Rules file not found.
-[2025-08-12T19:42:21] [info] [Execute] Created message queue execute
-[INFO] [Thread 140395971344064] Captured output: [2025-08-12T19:42:21] [info] [Filter 140395971344064] Thread started
+[2025-09-09T19:07:28] [info] [Update] Created message queue update
+[DEBUG] [Thread 139760584619712] Rules loaded from ../engine/filter.pl
+[2025-09-09T19:07:28] [info] [Execute] Warning: Rules file not found.
+[DEBUG] [Thread 139760703461056] Rules loaded from ../engine/refine.pl
+[INFO] [Thread 139760584619712] Captured output: [2025-09-09T19:07:28] [info] [Filter 139760584619712] Thread started
 
 [filter thread engine] [INFO] Module 'filter' successfully loaded.
-[2025-08-12T19:42:21] [info] [Abstract] Warning: Rules file not found.
-[2025-08-12T19:42:21] [info] [Abstract] Created message queue abstract
-ERROR: [Thread 5] /opt/automation/clickceler/src/C/engine/throttle.pl:88:90: Syntax error: Operator expected
-[DEBUG] [Thread 140395962951360] Rules loaded from ../engine/correlate.pl
-[INFO] [Thread 140395962951360] Captured output: [2025-08-12T19:42:21] [info] [Correlate 140395962951360] Thread started
-
-[correlate thread engine] [INFO] Module 'correlate' successfully loaded.
-[2025-08-12T19:42:21] [warning] [Correlate] Warning: Rules file not found.
-[2025-08-12T19:42:21] [info] [Correlate] Created message queue correlate
-[INFO] [Thread 140396080391872] Captured output: [2025-08-12T19:42:21] [info] [Refine 140396080391872] Thread started
-[2025-08-12T19:42:21] [info] [Refine] Created message queue refine
-[2025-08-12T19:42:21] [info] [Refine] Rules loaded from ../rules/refine.pl
+[2025-09-09T19:07:28] [info] [Execute] Created message queue execute
+[2025-09-09T19:07:28] [warning] [Filter] Warning: Rules file not found.
+Warning: /opt/automation/clickceler/src/C/engine/propagate.pl:86:
+Warning:    Local definition of propagate:assert_event/1 overrides weak import from utils
+[2025-09-09T19:07:28] [info] [Filter] Created message queue filter
+Warning: /opt/automation/clickceler/src/C/engine/correlate.pl:86:
+Warning:    Local definition of correlate:assert_event/1 overrides weak import from utils
+[INFO] [Thread 139760703461056] Captured output: [2025-09-09T19:07:28] [info] [Refine 139760703461056] Thread started
+[2025-09-09T19:07:28] [info] [Refine] Created message queue refine
+[2025-09-09T19:07:28] [warning] [Refine] Rules file not found.
 
 [refine thread engine] [INFO] Module 'refine' successfully loaded.
-[2025-08-12T19:42:21] [info] [Filter] Rules loaded from ../rules/filter.pl
-[2025-08-12T19:42:21] [info] [Filter] Created message queue filter
-Warning: /opt/automation/clickceler/src/C/engine/throttle.pl:90:
-Warning:    Singleton variables: [Pattern]
-[DEBUG] [Thread 140396071999168] Rules loaded from ../engine/throttle.pl
-[INFO] [Thread 140396071999168] Captured output: [2025-08-12T19:42:21] [info] [Throttle 140396071999168] Thread started
+Warning: /opt/automation/clickceler/src/C/engine/abstract.pl:47:
+Warning:    Singleton variable in branch: DictOut
+Warning:    Singleton variable in branch: DictEnd
+Warning: /opt/automation/clickceler/src/C/engine/timer.pl:86:
+Warning:    Local definition of timer:assert_event/1 overrides weak import from utils
+[DEBUG] [Thread 139760669890240] Rules loaded from ../engine/correlate.pl
+[DEBUG] [Thread 139760567834304] Rules loaded from ../engine/propagate.pl
+[INFO] [Thread 139760669890240] Captured output: [2025-09-09T19:07:28] [info] [Correlate 139760669890240] Thread started
+
+[correlate thread engine] [INFO] Module 'correlate' successfully loaded.
+[2025-09-09T19:07:28] [warning] [Correlate] Warning: Rules file not found.
+[INFO] [Thread 139760567834304] Captured output: [2025-09-09T19:07:28] [info] [Propagate 139760567834304] Thread started
+
+[propagate thread engine] [INFO] Module 'propagate' successfully loaded.
+[2025-09-09T19:07:28] [warning] [Propagate] Rules file not found.
+[2025-09-09T19:07:28] [info] [Correlate] Created message queue correlate
+[2025-09-09T19:07:28] [info] [Propagate] Created message queue propagate
+[DEBUG] [Thread 139760576227008] Rules loaded from ../engine/timer.pl
+[INFO] [Thread 139760576227008] Captured output: [2025-09-09T19:07:28] [info] [Timer 139760576227008] Thread started
+
+[timer thread engine] [INFO] Module 'timer' successfully loaded.
+[2025-09-09T19:07:28] [info] [Timer] Warning: Rules file not found.
+[2025-09-09T19:07:28] [info] [Timer] Created message queue timer
+[DEBUG] [Thread 139760686675648] Rules loaded from ../engine/abstract.pl
+[INFO] [Thread 139760686675648] Captured output: [2025-09-09T19:07:28] [info] [Abstract 139760686675648] Thread started
+
+[abstract thread engine] [INFO] Module 'abstract' successfully loaded.
+[DEBUG] [Thread 139760695068352] Rules loaded from ../engine/throttle.pl
+[INFO] [Thread 139760695068352] Captured output: [2025-09-09T19:07:28] [info] [Throttle 139760695068352] Thread started
 
 [throttle thread engine] [INFO] Module 'throttle' successfully loaded.
-[2025-08-12T19:42:21] [info] [Throttle] Rules loaded from ../rules/throttle.pl
-[2025-08-12T19:42:21] [info] [Throttle] Created message queue throttle
-[DEBUG] [Collector Handler 140395920987840] Accepted new connection on socket 4.
-[DEBUG] [Collector Handler 140395920987840] created thread.
+[2025-09-09T19:07:28] [warning] [Throttle]Rules file not found.
+[2025-09-09T19:07:28] [info] [Throttle] Created message queue throttle
+[2025-09-09T19:07:28] [info] [Abstract] Rules loaded from ../rules/abstract.pl
+[2025-09-09T19:07:28] [info] [Abstract] Created message queue abstract
+[DEBUG] [Collector Handler 139760549738176] Accepted new connection on socket 4.
+[DEBUG] [Collector Handler 139760549738176] created thread.
 [DEBUG] [Collector Handler 2] Waiting for new connections...
-[DEBUG] [Collector 140395920987840] Starting per_client_thread for socket 4
-[DEBUG] [Collector 140395920987840] Prolog engine attached.
-[DEBUG] [Thread 140395166037696] Rules loaded from ../engine/collector.pl
-[INFO] [Thread 140395166037696] Captured output: [2025-08-12T19:42:25] [info] [Collector 140395166037696] Thread started
+[DEBUG] [Collector 139760549738176] Starting per_client_thread for socket 4
+[DEBUG] [Collector 139760549738176] Prolog engine attached.
+Warning: /opt/automation/clickceler/src/C/engine/collector.pl:6:
+Warning:    import/1: utils:eventlog_mutex/1 is not exported (still imported into collector)
+Warning: /opt/automation/clickceler/src/C/engine/collector.pl:70:
+Warning:    Local definition of collector:assert_event/1 overrides weak import from utils
+[DEBUG] [Thread 139760540968640] Rules loaded from ../engine/collector.pl
+[INFO] [Thread 139760540968640] Captured output: [2025-09-09T19:07:56] [info] [Collector 139760540968640] Thread started
 
 [Collector] Rules loaded.
 [DEBUG] [Collector 13] Entering collector_handler for socket 4
 [Collector] ready to receive JSON EVENT or QUERY.
-[Collector] Received 391 bytes: EVENT [
+[Collector] Received 808 bytes: EVENT [
   {
-    "type": "snmptrap",
+    "type": "server",
+    "hostname": "server01",
     "status": "open",
-    "severity": "info",
-    "env": "dev",
-    "message": "Hello World!"
+    "severity": "critical",
+    "env": "dev"
+  },
+  {
+    "type": "disk",
+    "hostname": "disk01",
+    "status": "open",
+    "severity": "critical",
+    "used_space": 100,
+    "env": "dev"
+  },
+  {
+    "type": "memory",
+    "hostname": "memory01",
+    "status": "open",
+    "severity": "critical",
+    "free_memory": 0,
+    "env": "dev"
+  },
+  {
+    "type": "firewall",
+    "hostname": "fw01",
+    "status": "open",
+    "severity": "critical",
+    "env": "prod"
   },
   {
     "type": "snmptrap",
+    "hostname": "snmp01",
     "status": "open",
-    "severity": "info",
-    "env": "dev",
-    "message": "Hello World!"
+    "severity": "critical",
+    "env": "prod"
   },
   {
-    "type": "snmptrap",
-    "status": "open",
-    "severity": "info",
-    "env": "dev",
-    "message": "Hello World!"
+    "type": "ping",
+    "hostname": "router01",
+    "status": "failed",
+    "severity": "critical",
+    "env": "prod"
   }
 ]
 
 
 [DEBUG] [Collector 13] Identified as EVENT. JSON: [
   {
-    "type": "snmptrap",
+    "type": "server",
+    "hostname": "server01",
     "status": "open",
-    "severity": "info",
-    "env": "dev",
-    "message": "Hello World!"
+    "severity": "critical",
+    "env": "dev"
+  },
+  {
+    "type": "disk",
+    "hostname": "disk01",
+    "status": "open",
+    "severity": "critical",
+    "used_space": 100,
+    "env": "dev"
+  },
+  {
+    "type": "memory",
+    "hostname": "memory01",
+    "status": "open",
+    "severity": "critical",
+    "free_memory": 0,
+    "env": "dev"
+  },
+  {
+    "type": "firewall",
+    "hostname": "fw01",
+    "status": "open",
+    "severity": "critical",
+    "env": "prod"
   },
   {
     "type": "snmptrap",
+    "hostname": "snmp01",
     "status": "open",
-    "severity": "info",
-    "env": "dev",
-    "message": "Hello World!"
+    "severity": "critical",
+    "env": "prod"
   },
   {
-    "type": "snmptrap",
-    "status": "open",
-    "severity": "info",
-    "env": "dev",
-    "message": "Hello World!"
+    "type": "ping",
+    "hostname": "router01",
+    "status": "failed",
+    "severity": "critical",
+    "env": "prod"
   }
 ]
 
 
 Module name: collector
-[2025-08-12T19:42:25] [info] [Refine] Normalized DictIn: _10094{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808}
+[2025-09-09T19:07:56] [info] [Refine] Normalized DictIn: _250{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Refine] Matched rules: []
+[2025-09-09T19:07:56] [info] [Refine] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Refine] After apply_matching_rules: _250{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Refine] Final event to assert: event(server,_250{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152})
 [DEBUG] [Collector 13] collect_events/1 succeeded.
 [DEBUG] [Collector] Client disconnected from socket 4.
 [Collector] Collector handler finished.
-[2025-08-12T19:42:25] [info] [Refine] Matched rules: []
-[2025-08-12T19:42:25] [info] [Refine] Sorted rules by priority: []
-[2025-08-12T19:42:25] [info] [Refine] After apply_matching_rules: _10094{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808}
-[DEBUG] [Collector 140395920987840] Exiting per_client_thread.
-[2025-08-12T19:42:25] [info] [Refine] Final event to assert: event(snmptrap,_10094{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808})
-[2025-08-12T19:42:25] [info] [Refine] Received: event(snmptrap,_10094{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808})
-[2025-08-12T19:42:25] [info] [Refine] Normalized DictIn: _10676{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565}
-[2025-08-12T19:42:25] [info] [Filter] Normalized DictIn: _130{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808}
-[2025-08-12T19:42:25] [info] [Refine] Matched rules: []
-[2025-08-12T19:42:25] [info] [Refine] Sorted rules by priority: []
-[2025-08-12T19:42:25] [info] [Refine] After apply_matching_rules: _10676{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565}
-[2025-08-12T19:42:25] [info] [Filter] Matched rules: []
-[2025-08-12T19:42:25] [info] [Refine] Final event to assert: event(snmptrap,_10676{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565})
-[2025-08-12T19:42:25] [info] [Filter] Sorted rules by priority: []
-[2025-08-12T19:42:25] [info] [Refine] Received: event(snmptrap,_10676{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565})
-[2025-08-12T19:42:25] [info] [Refine] Normalized DictIn: _11258{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966}
-[2025-08-12T19:42:25] [info] [Refine] Matched rules: []
-[2025-08-12T19:42:25] [info] [Refine] Sorted rules by priority: []
-[2025-08-12T19:42:25] [info] [Refine] After apply_matching_rules: _11258{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966}
-[2025-08-12T19:42:25] [info] [Filter] Received: event(snmptrap,_130{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808})
-[2025-08-12T19:42:25] [info] [Throttle] Normalized DictIn: _7692{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808}
-[2025-08-12T19:42:25] [info] [Refine] Final event to assert: event(snmptrap,_11258{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966})[2025-08-12T19:42:25] [info] [2025-08-12T19:42:25] [info] [Filter] Normalized DictIn: _682{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565}
-[Throttle] snmptrap is subtype of snmptrap
-[2025-08-12T19:42:25] [info] [Filter] Matched rules: []
-
-[2025-08-12T19:42:25] [info] [Filter] Sorted rules by priority: [][2025-08-12T19:42:25] [info] [throttle] Matched rule: throttle_network_event
-
-[2025-08-12T19:42:25] [info] [Throttle] Matched rules: [throttle_rule(throttle_network_event,100,[snmptrap(_7938{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808})],[within(_7938{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808},severity,[info]),eq(_7938{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808},env,dev),contains(_7938{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808},message,"Hello World!")],[settings{delay:'15s',limit:2,on_exceed:reject,queue_size:100,window:'30s'}],[send_last])]
-[2025-08-12T19:42:25] [info] [2025-08-12T19:42:25] [info] [Throttle] Sorted rules by priority: [throttle_rule(throttle_network_event,100,[snmptrap(_7938{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808})],[within(_7938{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808},severity,[info]),eq(_7938{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808},env,dev),contains(_7938{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808},message,"Hello World!")],[settings{delay:'15s',limit:2,on_exceed:reject,queue_size:100,window:'30s'}],[send_last])]
-[Refine] Received: event(snmptrap,_11258{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966})
-[2025-08-12T19:42:25] [info] [Filter] Received: event(snmptrap,_682{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565})
-[2025-08-12T19:42:25] [info] [Throttle] Parsing settings: [settings{delay:'15s',limit:2,on_exceed:reject,queue_size:100,window:'30s'}] 
-[2025-08-12T19:42:25] [info] [2025-08-12T19:42:25] [info] [Throttle] Parsing settings: settings{delay:'15s',limit:2,on_exceed:reject,queue_size:100,window:'30s'} 
-[Filter] Normalized DictIn: _1234{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966}
-[2025-08-12T19:42:25] [info] [Filter] Matched rules: []
-[2025-08-12T19:42:25] [info] [Filter] Sorted rules by priority: []
-[2025-08-12T19:42:25] [info] [Throttle] Apply Rule throttle_network_event with Limit=2, Window=30s, Delay=15s, SendMethod=send_last
-[2025-08-12T19:42:25] [info] [Filter] Received: event(snmptrap,_1234{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966})
-[2025-08-12T19:42:25] [info] [Throttle] Received: event(snmptrap,_7692{counter:0,env:"dev",id:17550205455290001,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.5293808})
-[2025-08-12T19:42:25] [info] [Throttle] Normalized DictIn: _9716{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565}
-[2025-08-12T19:42:25] [info] [Throttle] snmptrap is subtype of snmptrap
-[2025-08-12T19:42:25] [info] [throttle] Matched rule: throttle_network_event
-[2025-08-12T19:42:25] [info] [Throttle] Matched rules: [throttle_rule(throttle_network_event,100,[snmptrap(_9962{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565})],[within(_9962{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565},severity,[info]),eq(_9962{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565},env,dev),contains(_9962{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565},message,"Hello World!")],[settings{delay:'15s',limit:2,on_exceed:reject,queue_size:100,window:'30s'}],[send_last])]
-[2025-08-12T19:42:25] [info] [Throttle] Sorted rules by priority: [throttle_rule(throttle_network_event,100,[snmptrap(_9962{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565})],[within(_9962{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565},severity,[info]),eq(_9962{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565},env,dev),contains(_9962{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565},message,"Hello World!")],[settings{delay:'15s',limit:2,on_exceed:reject,queue_size:100,window:'30s'}],[send_last])]
-[2025-08-12T19:42:25] [info] [Throttle] Parsing settings: [settings{delay:'15s',limit:2,on_exceed:reject,queue_size:100,window:'30s'}] 
-[2025-08-12T19:42:25] [info] [Throttle] Parsing settings: settings{delay:'15s',limit:2,on_exceed:reject,queue_size:100,window:'30s'} 
-[2025-08-12T19:42:25] [info] [Throttle] Apply Rule throttle_network_event with Limit=2, Window=30s, Delay=15s, SendMethod=send_last
-[2025-08-12T19:42:25] [info] [Throttle] Delaying 15s s ruleID: throttle_network_event send_last; event(snmptrap,_10822{counter:2,env:dev,id:17550205455290002,message:Hello World!,severity:info,status:open,timestamp_collected:1755020545.529565}) 
-[2025-08-12T19:42:25] [info] [Throttle] Buffer cleared: throttle_network_event 
-[2025-08-12T19:42:25] [info] [Throttle] Received: event(snmptrap,_9716{counter:0,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565})
-[2025-08-12T19:42:25] [info] [Throttle] Normalized DictIn: _11372{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966}
-[2025-08-12T19:42:25] [info] [Throttle] snmptrap is subtype of snmptrap
-[2025-08-12T19:42:25] [info] [throttle] Matched rule: throttle_network_event
-[2025-08-12T19:42:25] [info] [Throttle] Matched rules: [throttle_rule(throttle_network_event,100,[snmptrap(_11618{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966})],[within(_11618{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966},severity,[info]),eq(_11618{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966},env,dev),contains(_11618{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966},message,"Hello World!")],[settings{delay:'15s',limit:2,on_exceed:reject,queue_size:100,window:'30s'}],[send_last])]
-[2025-08-12T19:42:25] [info] [Throttle] Sorted rules by priority: [throttle_rule(throttle_network_event,100,[snmptrap(_11618{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966})],[within(_11618{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966},severity,[info]),eq(_11618{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966},env,dev),contains(_11618{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966},message,"Hello World!")],[settings{delay:'15s',limit:2,on_exceed:reject,queue_size:100,window:'30s'}],[send_last])]
-[2025-08-12T19:42:25] [info] [Throttle] Parsing settings: [settings{delay:'15s',limit:2,on_exceed:reject,queue_size:100,window:'30s'}] 
-[2025-08-12T19:42:25] [info] [Throttle] Parsing settings: settings{delay:'15s',limit:2,on_exceed:reject,queue_size:100,window:'30s'} 
-[2025-08-12T19:42:25] [info] [Throttle] Apply Rule throttle_network_event with Limit=2, Window=30s, Delay=15s, SendMethod=send_last
-[2025-08-12T19:42:25] [info] [Throttle] Received: event(snmptrap,_11372{counter:0,env:"dev",id:17550205455290003,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.52966})
-[2025-08-12T19:42:40] [info] [Throttle] Delayed throttle_network_event  RuleID: 15 throttling event sent to next phase: event(snmptrap,_22{counter:2,env:dev,id:17550205455290002,message:Hello World!,severity:info,status:open,timestamp_collected:1755020545.529565})
-[2025-08-12T19:42:40] [info] [Abstract] Normalized DictIn: _314{counter:2,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565}
-[2025-08-12T19:42:40] [info] [Abstract] Matched rules: []
-[2025-08-12T19:42:40] [info] [Abstract] Sorted rules by priority: []
-[2025-08-12T19:42:40] [error] [Abstract] Error: error(existence_error(procedure,abstract:apply_matching_rules/3),context(abstract:handle_event/1,_688))
-[2025-08-12T19:42:40] [warning] [Abstract] Warning: EventTerm not handled: event(snmptrap,_314{counter:2,env:dev,id:17550205455290002,message:Hello World!,severity:info,status:open,timestamp_collected:1755020545.529565})
-[2025-08-12T19:42:40] [info] [Abstract] Received: event(snmptrap,_314{counter:2,env:"dev",id:17550205455290002,message:"Hello World!",severity:"info",status:"open",timestamp_collected:1755020545.529565})
+[2025-09-09T19:07:56] [info] [Refine] Received: event(server,_250{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152})
+[2025-09-09T19:07:56] [info] [Refine] Normalized DictIn: _1024{counter:0,env:"dev",hostname:"disk01",id:17574376762660002,severity:"critical",status:"open",timestamp_collected:1757437676.266997,used_space:100}
+[2025-09-09T19:07:56] [info] [Refine] Matched rules: []
+[DEBUG] [Collector 139760549738176] Exiting per_client_thread.
+[2025-09-09T19:07:56] [info] [Filter] Normalized DictIn: _154{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Refine] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Filter] Matched rules: []
+[2025-09-09T19:07:56] [info] [Filter] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Refine] After apply_matching_rules: _1024{counter:0,env:"dev",hostname:"disk01",id:17574376762660002,severity:"critical",status:"open",timestamp_collected:1757437676.266997,used_space:100}
+[2025-09-09T19:07:56] [info] [Refine] Final event to assert: event(disk,_1024{counter:0,env:"dev",hostname:"disk01",id:17574376762660002,severity:"critical",status:"open",timestamp_collected:1757437676.266997,used_space:100})
+[2025-09-09T19:07:56] [info] [Refine] Received: event(disk,_1024{counter:0,env:"dev",hostname:"disk01",id:17574376762660002,severity:"critical",status:"open",timestamp_collected:1757437676.266997,used_space:100})
+[2025-09-09T19:07:56] [info] [Refine] Normalized DictIn: _1810{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17574376762670003,severity:"critical",status:"open",timestamp_collected:1757437676.2670724}
+[2025-09-09T19:07:56] [info] [Refine] Matched rules: []
+[2025-09-09T19:07:56] [info] [Filter] Received: event(server,_154{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152})
+[2025-09-09T19:07:56] [info] [Refine] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Filter] Normalized DictIn: _906{counter:0,env:"dev",hostname:"disk01",id:17574376762660002,severity:"critical",status:"open",timestamp_collected:1757437676.266997,used_space:100}
+[2025-09-09T19:07:56] [info] [Throttle] Normalized DictIn: _1378{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Refine] After apply_matching_rules: _1810{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17574376762670003,severity:"critical",status:"open",timestamp_collected:1757437676.2670724}
+[2025-09-09T19:07:56] [info] [Throttle] Matched rules: []
+[2025-09-09T19:07:56] [info] [Filter] Matched rules: []
+[2025-09-09T19:07:56] [info] [Filter] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Refine] Final event to assert: event(memory,_1810{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17574376762670003,severity:"critical",status:"open",timestamp_collected:1757437676.2670724})
+[2025-09-09T19:07:56] [info] [Throttle] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Refine] Received: event(memory,_1810{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17574376762670003,severity:"critical",status:"open",timestamp_collected:1757437676.2670724})
+[2025-09-09T19:07:56] [info] [Refine] Normalized DictIn: _2602{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133}
+[2025-09-09T19:07:56] [info] [Filter] Received: event(disk,_906{counter:0,env:"dev",hostname:"disk01",id:17574376762660002,severity:"critical",status:"open",timestamp_collected:1757437676.266997,used_space:100})
+[2025-09-09T19:07:56] [info] [Refine] Matched rules: []
+[2025-09-09T19:07:56] [info] [Refine] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Throttle] No more throttle rules, Prepare to send event with  a delay
+[2025-09-09T19:07:56] [info] [Filter] Normalized DictIn: _1664{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17574376762670003,severity:"critical",status:"open",timestamp_collected:1757437676.2670724}
+[2025-09-09T19:07:56] [info] [Filter] Matched rules: []
+[2025-09-09T19:07:56] [info] [Throttle] Received: event(server,_1378{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152})
+[2025-09-09T19:07:56] [info] [Refine] After apply_matching_rules: _2602{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133}
+[2025-09-09T19:07:56] [info] [Filter] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Refine] Final event to assert: event(firewall,_2602{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133})
+[2025-09-09T19:07:56] [info] [Throttle] Normalized DictIn: _2310{counter:0,env:"dev",hostname:"disk01",id:17574376762660002,severity:"critical",status:"open",timestamp_collected:1757437676.266997,used_space:100}
+[2025-09-09T19:07:56] [info] [Throttle] Matched rules: []
+[2025-09-09T19:07:56] [info] [Throttle] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Refine] Received: event(firewall,_2602{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133})
+[2025-09-09T19:07:56] [info] [Abstract] Received event: event(server,_2918{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152})
+[2025-09-09T19:07:56] [info] [Refine] Normalized DictIn: _3370{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765}
+[2025-09-09T19:07:56] [info] [Filter] Received: event(memory,_1664{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17574376762670003,severity:"critical",status:"open",timestamp_collected:1757437676.2670724})
+[2025-09-09T19:07:56] [info] [Refine] Matched rules: []
+[2025-09-09T19:07:56] [info] [Throttle] No more throttle rules, Prepare to send event with  a delay
+[2025-09-09T19:07:56] [info] [Abstract]  Entering abstract_rule_match 
+[2025-09-09T19:07:56] [info] [Refine] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Filter] Normalized DictIn: _2426{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133}
+[2025-09-09T19:07:56] [info] [Throttle] Received: event(disk,_2310{counter:0,env:"dev",hostname:"disk01",id:17574376762660002,severity:"critical",status:"open",timestamp_collected:1757437676.266997,used_space:100})
+[2025-09-09T19:07:56] [info] [Filter] Matched rules: []
+[2025-09-09T19:07:56] [info] [Filter] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Refine] After apply_matching_rules: _3370{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765}
+[2025-09-09T19:07:56] [info] [Abstract] EventType server matches Pattern type server
+[2025-09-09T19:07:56] [info] [Throttle] Normalized DictIn: _3248{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17574376762670003,severity:"critical",status:"open",timestamp_collected:1757437676.2670724}
+[2025-09-09T19:07:56] [info] [Refine] Final event to assert: event(snmptrap,_3370{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765})
+[2025-09-09T19:07:56] [info] [Throttle] Matched rules: []
+[2025-09-09T19:07:56] [info] [Abstract] Conditions matched for RuleID infrastructure_issue
+[2025-09-09T19:07:56] [info] [Filter] Received: event(firewall,_2426{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133})
+[2025-09-09T19:07:56] [info] [Throttle] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Refine] Received: event(snmptrap,_3370{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765})
+[2025-09-09T19:07:56] [info] [Filter] Normalized DictIn: _3174{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765}
+[2025-09-09T19:07:56] [info] [Abstract] Rule matched: infrastructure_issue (Priority: 100)
+[2025-09-09T19:07:56] [info] [Throttle] No more throttle rules, Prepare to send event with  a delay
+[2025-09-09T19:07:56] [info] [Filter] Matched rules: []
+[2025-09-09T19:07:56] [info] [Refine] Normalized DictIn: _4142{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366}
+[2025-09-09T19:07:56] [info] [Throttle] Received: event(memory,_3248{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17574376762670003,severity:"critical",status:"open",timestamp_collected:1757437676.2670724})
+[2025-09-09T19:07:56] [info] [Filter] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Refine] Matched rules: []
+[2025-09-09T19:07:56] [info] [Throttle] Normalized DictIn: _4194{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133}
+[2025-09-09T19:07:56] [info] [Refine] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Throttle] Matched rules: []
+[2025-09-09T19:07:56] [info] [Throttle] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Refine] After apply_matching_rules: _4142{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366}
+[2025-09-09T19:07:56] [info] [Abstract] RuleList: [abstract_rule(infrastructure_issue,100,[server(_3320{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152})],[eq(_3320{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152},status,open),eq(_3320{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152},severity,critical),eq(_3320{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152},env,dev)],[incident(_3434)],[set_field(_3434,status,open),set_field(_3434,severity,major),set_field(_3434,message,"infrastructure issue"),set_field(_3434,category,infrastructure),set_field(_3434,sub_category,"infrastructure issue"),set_field(_3434,priority,p2),set_field(_3434,impact,dev),set_field(_3434,reported_by,clickceller),set_field(_3434,hostname,"server01")])]
+[2025-09-09T19:07:56] [info] [Refine] Final event to assert: event(ping,_4142{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366})
+[2025-09-09T19:07:56] [info] [Filter] Received: event(snmptrap,_3174{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765})
+[2025-09-09T19:07:56] [info] [Throttle] No more throttle rules, Prepare to send event with  a delay
+[2025-09-09T19:07:56] [info] [Refine] Received: event(ping,_4142{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366})
+[2025-09-09T19:07:56] [info] [Throttle] Received: event(firewall,_4194{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133})
+[2025-09-09T19:07:56] [info] [Filter] Normalized DictIn: _3924{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366}
+[2025-09-09T19:07:56] [info] [Throttle] Normalized DictIn: _5118{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765}
+[2025-09-09T19:07:56] [info] [Abstract] Matched rules: [abstract_rule(infrastructure_issue,100,[server(_3320{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152})],[eq(_3320{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152},status,open),eq(_3320{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152},severity,critical),eq(_3320{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152},env,dev)],[incident(_3434)],[set_field(_3434,status,open),set_field(_3434,severity,major),set_field(_3434,message,"infrastructure issue"),set_field(_3434,category,infrastructure),set_field(_3434,sub_category,"infrastructure issue"),set_field(_3434,priority,p2),set_field(_3434,impact,dev),set_field(_3434,reported_by,clickceller),set_field(_3434,hostname,"server01")])]
+[2025-09-09T19:07:56] [info] [Filter] Matched rules: []
+[2025-09-09T19:07:56] [info] [Throttle] Matched rules: []
+[2025-09-09T19:07:56] [info] [Filter] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Throttle] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Throttle] No more throttle rules, Prepare to send event with  a delay
+[2025-09-09T19:07:56] [info] [Abstract] Sorted rules by priority: [abstract_rule(infrastructure_issue,100,[server(_3320{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152})],[eq(_3320{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152},status,open),eq(_3320{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152},severity,critical),eq(_3320{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152},env,dev)],[incident(_3434)],[set_field(_3434,status,open),set_field(_3434,severity,major),set_field(_3434,message,"infrastructure issue"),set_field(_3434,category,infrastructure),set_field(_3434,sub_category,"infrastructure issue"),set_field(_3434,priority,p2),set_field(_3434,impact,dev),set_field(_3434,reported_by,clickceller),set_field(_3434,hostname,"server01")])]
+[2025-09-09T19:07:56] [info] [Throttle] Received: event(snmptrap,_5118{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765})
+[2025-09-09T19:07:56] [info] [Abstract] Applying abstract_rule infrastructure_issue (Priority: 100)
+[2025-09-09T19:07:56] [info] [Throttle] Normalized DictIn: _6044{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366}
+[2025-09-09T19:07:56] [info] [Filter] Received: event(ping,_3924{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366})
+[2025-09-09T19:07:56] [info] [Debug] Pattern: server(_3320{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152}), Abstract: incident(_3434)
+[2025-09-09T19:07:56] [info] [Abstract] get_or_create_abstract for type incident
+[2025-09-09T19:07:56] [info] [Throttle] Matched rules: []
+[2025-09-09T19:07:56] [info] [Abstract] Enter existing_abstract
+[2025-09-09T19:07:56] [info] [Throttle] Sorted rules by priority: []
+[2025-09-09T19:07:56] [info] [Utils] Entering get_events_by_type
+[2025-09-09T19:07:56] [info] [Utils] List of events found []
+[2025-09-09T19:07:56] [info] [Throttle] No more throttle rules, Prepare to send event with  a delay
+[2025-09-09T19:07:56] [info] [Abstract] Generating Dictionary of new Abstract: incident
+[2025-09-09T19:07:56] [info] [Throttle] Received: event(ping,_6044{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366})
+[2025-09-09T19:07:56] [info] [Utils] Processed Transformation set_field(E,status,open); _2918{abstract_contrib:[],counter:0,env:dev,hostname:server01,id:17574376762700007,is_abstract:true,severity:critical,status:open,timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Utils] Processed Transformation set_field(E,severity,major); _2918{abstract_contrib:[],counter:0,env:dev,hostname:server01,id:17574376762700007,is_abstract:true,severity:major,status:open,timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Utils] Processed Transformation set_field(E,message,infrastructure issue); _2918{abstract_contrib:[],counter:0,env:dev,hostname:server01,id:17574376762700007,is_abstract:true,message:infrastructure issue,severity:major,status:open,timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Utils] Processed Transformation set_field(E,category,infrastructure); _2918{abstract_contrib:[],category:infrastructure,counter:0,env:dev,hostname:server01,id:17574376762700007,is_abstract:true,message:infrastructure issue,severity:major,status:open,timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Utils] Processed Transformation set_field(E,sub_category,infrastructure issue); _2918{abstract_contrib:[],category:infrastructure,counter:0,env:dev,hostname:server01,id:17574376762700007,is_abstract:true,message:infrastructure issue,severity:major,status:open,sub_category:infrastructure issue,timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Utils] Processed Transformation set_field(E,priority,p2); _2918{abstract_contrib:[],category:infrastructure,counter:0,env:dev,hostname:server01,id:17574376762700007,is_abstract:true,message:infrastructure issue,priority:p2,severity:major,status:open,sub_category:infrastructure issue,timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Utils] Processed Transformation set_field(E,impact,dev); _2918{abstract_contrib:[],category:infrastructure,counter:0,env:dev,hostname:server01,id:17574376762700007,impact:dev,is_abstract:true,message:infrastructure issue,priority:p2,severity:major,status:open,sub_category:infrastructure issue,timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Utils] Processed Transformation set_field(E,reported_by,clickceller); _2918{abstract_contrib:[],category:infrastructure,counter:0,env:dev,hostname:server01,id:17574376762700007,impact:dev,is_abstract:true,message:infrastructure issue,priority:p2,reported_by:clickceller,severity:major,status:open,sub_category:infrastructure issue,timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Utils] Processed Transformation set_field(E,hostname,server01); _2918{abstract_contrib:[],category:infrastructure,counter:0,env:dev,hostname:server01,id:17574376762700007,impact:dev,is_abstract:true,message:infrastructure issue,priority:p2,reported_by:clickceller,severity:major,status:open,sub_category:infrastructure issue,timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Utils] No more transformations, final Dict: _2918{abstract_contrib:[],category:infrastructure,counter:0,env:dev,hostname:server01,id:17574376762700007,impact:dev,is_abstract:true,message:infrastructure issue,priority:p2,reported_by:clickceller,severity:major,status:open,sub_category:infrastructure issue,timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Abstract] add_to_abstract_contrib Received EventDict: _2918{counter:0,env:dev,hostname:server01,id:17574376762660001,severity:critical,status:open,timestamp_collected:1757437676.2668152} AbsDict: _2918{abstract_contrib:[],category:infrastructure,counter:0,env:dev,hostname:server01,id:17574376762700007,impact:dev,is_abstract:true,message:infrastructure issue,priority:p2,reported_by:clickceller,severity:major,status:open,sub_category:infrastructure issue,timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Abstract] Existing contribution list found: []
+[2025-09-09T19:07:56] [info] [Abstract] Event ID to add: 17574376762660001
+[2025-09-09T19:07:56] [info] [Abstract] Updated contribution list: [17574376762660001]
+[2025-09-09T19:07:56] [info] [Abstract] AbsDict updated: _2918{abstract_contrib:[17574376762660001],category:infrastructure,counter:0,env:dev,hostname:server01,id:17574376762700007,impact:dev,is_abstract:true,message:infrastructure issue,priority:p2,reported_by:clickceller,severity:major,status:open,sub_category:infrastructure issue,timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Abstract] generate_abstract AbsDictUpdated: _2918{abstract_contrib:[17574376762660001],category:infrastructure,counter:0,env:dev,hostname:server01,id:17574376762700007,impact:dev,is_abstract:true,message:infrastructure issue,priority:p2,reported_by:clickceller,severity:major,status:open,sub_category:infrastructure issue,timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Abstract] Generated new abstract: event(incident,_2918{abstract_contrib:[17574376762660001],category:infrastructure,counter:0,env:dev,hostname:server01,id:17574376762700007,impact:dev,is_abstract:true,message:infrastructure issue,priority:p2,reported_by:clickceller,severity:major,status:open,sub_category:infrastructure issue,timestamp_collected:1757437676.2668152})
+[2025-09-09T19:07:56] [info] [Abstract] Updated linked_abstract for EventDict: _2918{counter:0,env:dev,hostname:server01,id:17574376762660001,linked_abstract:[17574376762700007],severity:critical,status:open,timestamp_collected:1757437676.2668152}
+[2025-09-09T19:07:56] [info] [Abstract] generate_abstract Updated Dict of Event: event(server,_2918{counter:0,env:dev,hostname:server01,id:17574376762660001,linked_abstract:[17574376762700007],severity:critical,status:open,timestamp_collected:1757437676.2668152})
+[2025-09-09T19:07:56] [info] [Debug] Rule applied successfully: infrastructure_issue
+[2025-09-09T19:07:56] [info] [Abstract] Received: event(server,_2918{counter:0,env:"dev",hostname:"server01",id:17574376762660001,severity:"critical",status:"open",timestamp_collected:1757437676.2668152})
+[2025-09-09T19:07:56] [info] [Abstract] Received event: event(disk,_14764{counter:0,env:"dev",hostname:"disk01",id:17574376762660002,severity:"critical",status:"open",timestamp_collected:1757437676.266997,used_space:100})
+[2025-09-09T19:07:56] [info] [Abstract]  Entering abstract_rule_match 
+[2025-09-09T19:07:56] [info] [Abstract] EventType disk matches Pattern type disk
+[2025-09-09T19:07:56] [info] [Abstract] Conditions FAILED for RuleID infrastructure_issue
+[2025-09-09T19:07:56] [info] [Abstract] RuleList: []
+[2025-09-09T19:07:56] [warning] [Abstract] No rules matched for EventTerm: event(disk,_14764{counter:0,env:dev,hostname:disk01,id:17574376762660002,severity:critical,status:open,timestamp_collected:1757437676.266997,used_space:100})
+[2025-09-09T19:07:56] [info] [Abstract] Received: event(disk,_14764{counter:0,env:"dev",hostname:"disk01",id:17574376762660002,severity:"critical",status:"open",timestamp_collected:1757437676.266997,used_space:100})
+[2025-09-09T19:07:56] [info] [Abstract] Received event: event(memory,_15450{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17574376762670003,severity:"critical",status:"open",timestamp_collected:1757437676.2670724})
+[2025-09-09T19:07:56] [info] [Abstract]  Entering abstract_rule_match 
+[2025-09-09T19:07:56] [info] [Abstract] EventType memory matches Pattern type memory
+[2025-09-09T19:07:56] [info] [Abstract] Conditions FAILED for RuleID infrastructure_issue
+[2025-09-09T19:07:56] [info] [Abstract] RuleList: []
+[2025-09-09T19:07:56] [warning] [Abstract] No rules matched for EventTerm: event(memory,_15450{counter:0,env:dev,free_memory:0,hostname:memory01,id:17574376762670003,severity:critical,status:open,timestamp_collected:1757437676.2670724})
+[2025-09-09T19:07:56] [info] [Abstract] Received: event(memory,_15450{counter:0,env:"dev",free_memory:0,hostname:"memory01",id:17574376762670003,severity:"critical",status:"open",timestamp_collected:1757437676.2670724})
+[2025-09-09T19:07:56] [info] [Abstract] Received event: event(firewall,_16138{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133})
+[2025-09-09T19:07:56] [info] [Abstract]  Entering abstract_rule_match 
+[2025-09-09T19:07:56] [info] [Abstract] EventType firewall matches Pattern type firewall
+[2025-09-09T19:07:56] [info] [Abstract] Conditions matched for RuleID abstract_network
+[2025-09-09T19:07:56] [info] [Abstract] Rule matched: abstract_network (Priority: 90)
+[2025-09-09T19:07:56] [info] [Abstract] RuleList: [abstract_rule(abstract_network,90,[firewall(_16538{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133})],[eq(_16538{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133},status,open),eq(_16538{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133},severity,critical),eq(_16538{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133},env,prod)],[network(_16650)],[set_field(_16650,severity,critical),set_field(_16650,message,"Network connectivity issue detected"),set_field(_16650,category,infrastructure),set_field(_16650,sub_category,network),set_field(_16650,priority,p1),set_field(_16650,impact,prod)])]
+[2025-09-09T19:07:56] [info] [Abstract] Matched rules: [abstract_rule(abstract_network,90,[firewall(_16538{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133})],[eq(_16538{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133},status,open),eq(_16538{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133},severity,critical),eq(_16538{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133},env,prod)],[network(_16650)],[set_field(_16650,severity,critical),set_field(_16650,message,"Network connectivity issue detected"),set_field(_16650,category,infrastructure),set_field(_16650,sub_category,network),set_field(_16650,priority,p1),set_field(_16650,impact,prod)])]
+[2025-09-09T19:07:56] [info] [Abstract] Sorted rules by priority: [abstract_rule(abstract_network,90,[firewall(_16538{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133})],[eq(_16538{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133},status,open),eq(_16538{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133},severity,critical),eq(_16538{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133},env,prod)],[network(_16650)],[set_field(_16650,severity,critical),set_field(_16650,message,"Network connectivity issue detected"),set_field(_16650,category,infrastructure),set_field(_16650,sub_category,network),set_field(_16650,priority,p1),set_field(_16650,impact,prod)])]
+[2025-09-09T19:07:56] [info] [Abstract] Applying abstract_rule abstract_network (Priority: 90)
+[2025-09-09T19:07:56] [info] [Debug] Pattern: firewall(_16538{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133}), Abstract: network(_16650)
+[2025-09-09T19:07:56] [info] [Abstract] get_or_create_abstract for type network
+[2025-09-09T19:07:56] [info] [Abstract] Enter existing_abstract
+[2025-09-09T19:07:56] [info] [Utils] Entering get_events_by_type
+[2025-09-09T19:07:56] [info] [Utils] List of events found []
+[2025-09-09T19:07:56] [info] [Abstract] Generating Dictionary of new Abstract: network
+[2025-09-09T19:07:56] [info] [Utils] Processed Transformation set_field(E,severity,critical); _16138{abstract_contrib:[],counter:0,env:prod,hostname:fw01,id:17574376762770008,is_abstract:true,severity:critical,status:open,timestamp_collected:1757437676.2672133}
+[2025-09-09T19:07:56] [info] [Utils] Processed Transformation set_field(E,message,Network connectivity issue detected); _16138{abstract_contrib:[],counter:0,env:prod,hostname:fw01,id:17574376762770008,is_abstract:true,message:Network connectivity issue detected,severity:critical,status:open,timestamp_collected:1757437676.2672133}
+[2025-09-09T19:07:56] [info] [Utils] Processed Transformation set_field(E,category,infrastructure); _16138{abstract_contrib:[],category:infrastructure,counter:0,env:prod,hostname:fw01,id:17574376762770008,is_abstract:true,message:Network connectivity issue detected,severity:critical,status:open,timestamp_collected:1757437676.2672133}
+[2025-09-09T19:07:56] [info] [Utils] Processed Transformation set_field(E,sub_category,network); _16138{abstract_contrib:[],category:infrastructure,counter:0,env:prod,hostname:fw01,id:17574376762770008,is_abstract:true,message:Network connectivity issue detected,severity:critical,status:open,sub_category:network,timestamp_collected:1757437676.2672133}
+[2025-09-09T19:07:56] [info] [Utils] Processed Transformation set_field(E,priority,p1); _16138{abstract_contrib:[],category:infrastructure,counter:0,env:prod,hostname:fw01,id:17574376762770008,is_abstract:true,message:Network connectivity issue detected,priority:p1,severity:critical,status:open,sub_category:network,timestamp_collected:1757437676.2672133}
+[2025-09-09T19:07:56] [info] [Utils] Processed Transformation set_field(E,impact,prod); _16138{abstract_contrib:[],category:infrastructure,counter:0,env:prod,hostname:fw01,id:17574376762770008,impact:prod,is_abstract:true,message:Network connectivity issue detected,priority:p1,severity:critical,status:open,sub_category:network,timestamp_collected:1757437676.2672133}
+[2025-09-09T19:07:56] [info] [Utils] No more transformations, final Dict: _16138{abstract_contrib:[],category:infrastructure,counter:0,env:prod,hostname:fw01,id:17574376762770008,impact:prod,is_abstract:true,message:Network connectivity issue detected,priority:p1,severity:critical,status:open,sub_category:network,timestamp_collected:1757437676.2672133}
+[2025-09-09T19:07:56] [info] [Abstract] add_to_abstract_contrib Received EventDict: _16138{counter:0,env:prod,hostname:fw01,id:17574376762670004,severity:critical,status:open,timestamp_collected:1757437676.2672133} AbsDict: _16138{abstract_contrib:[],category:infrastructure,counter:0,env:prod,hostname:fw01,id:17574376762770008,impact:prod,is_abstract:true,message:Network connectivity issue detected,priority:p1,severity:critical,status:open,sub_category:network,timestamp_collected:1757437676.2672133}
+[2025-09-09T19:07:56] [info] [Abstract] Existing contribution list found: []
+[2025-09-09T19:07:56] [info] [Abstract] Event ID to add: 17574376762670004
+[2025-09-09T19:07:56] [info] [Abstract] Updated contribution list: [17574376762670004]
+[2025-09-09T19:07:56] [info] [Abstract] AbsDict updated: _16138{abstract_contrib:[17574376762670004],category:infrastructure,counter:0,env:prod,hostname:fw01,id:17574376762770008,impact:prod,is_abstract:true,message:Network connectivity issue detected,priority:p1,severity:critical,status:open,sub_category:network,timestamp_collected:1757437676.2672133}
+[2025-09-09T19:07:56] [info] [Abstract] generate_abstract AbsDictUpdated: _16138{abstract_contrib:[17574376762670004],category:infrastructure,counter:0,env:prod,hostname:fw01,id:17574376762770008,impact:prod,is_abstract:true,message:Network connectivity issue detected,priority:p1,severity:critical,status:open,sub_category:network,timestamp_collected:1757437676.2672133}
+[2025-09-09T19:07:56] [info] [Abstract] Generated new abstract: event(network,_16138{abstract_contrib:[17574376762670004],category:infrastructure,counter:0,env:prod,hostname:fw01,id:17574376762770008,impact:prod,is_abstract:true,message:Network connectivity issue detected,priority:p1,severity:critical,status:open,sub_category:network,timestamp_collected:1757437676.2672133})
+[2025-09-09T19:07:56] [info] [Abstract] Updated linked_abstract for EventDict: _16138{counter:0,env:prod,hostname:fw01,id:17574376762670004,linked_abstract:[17574376762770008],severity:critical,status:open,timestamp_collected:1757437676.2672133}
+[2025-09-09T19:07:56] [info] [Abstract] generate_abstract Updated Dict of Event: event(firewall,_16138{counter:0,env:prod,hostname:fw01,id:17574376762670004,linked_abstract:[17574376762770008],severity:critical,status:open,timestamp_collected:1757437676.2672133})
+[2025-09-09T19:07:56] [info] [Debug] Rule applied successfully: abstract_network
+[2025-09-09T19:07:56] [info] [Abstract] Received: event(firewall,_16138{counter:0,env:"prod",hostname:"fw01",id:17574376762670004,severity:"critical",status:"open",timestamp_collected:1757437676.2672133})
+[2025-09-09T19:07:56] [info] [Abstract] Received event: event(snmptrap,_22160{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765})
+[2025-09-09T19:07:56] [info] [Abstract]  Entering abstract_rule_match 
+[2025-09-09T19:07:56] [info] [Abstract] EventType snmptrap matches Pattern type snmptrap
+[2025-09-09T19:07:56] [info] [Abstract] Conditions matched for RuleID abstract_network
+[2025-09-09T19:07:56] [info] [Abstract] Rule matched: abstract_network (Priority: 90)
+[2025-09-09T19:07:56] [info] [Abstract] RuleList: [abstract_rule(abstract_network,90,[snmptrap(_22562{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765})],[eq(_22562{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765},status,open),eq(_22562{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765},severity,critical),eq(_22562{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765},env,prod)],[network(_22674)],[set_field(_22674,severity,critical),set_field(_22674,message,"Network connectivity issue detected"),set_field(_22674,category,infrastructure),set_field(_22674,sub_category,network),set_field(_22674,priority,p1),set_field(_22674,impact,prod)])]
+[2025-09-09T19:07:56] [info] [Abstract] Matched rules: [abstract_rule(abstract_network,90,[snmptrap(_22562{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765})],[eq(_22562{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765},status,open),eq(_22562{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765},severity,critical),eq(_22562{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765},env,prod)],[network(_22674)],[set_field(_22674,severity,critical),set_field(_22674,message,"Network connectivity issue detected"),set_field(_22674,category,infrastructure),set_field(_22674,sub_category,network),set_field(_22674,priority,p1),set_field(_22674,impact,prod)])]
+[2025-09-09T19:07:56] [info] [Abstract] Sorted rules by priority: [abstract_rule(abstract_network,90,[snmptrap(_22562{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765})],[eq(_22562{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765},status,open),eq(_22562{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765},severity,critical),eq(_22562{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765},env,prod)],[network(_22674)],[set_field(_22674,severity,critical),set_field(_22674,message,"Network connectivity issue detected"),set_field(_22674,category,infrastructure),set_field(_22674,sub_category,network),set_field(_22674,priority,p1),set_field(_22674,impact,prod)])]
+[2025-09-09T19:07:56] [info] [Abstract] Applying abstract_rule abstract_network (Priority: 90)
+[2025-09-09T19:07:56] [info] [Debug] Pattern: snmptrap(_22562{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765}), Abstract: network(_22674)
+[2025-09-09T19:07:56] [info] [Abstract] get_or_create_abstract for type network
+[2025-09-09T19:07:56] [info] [Abstract] Enter existing_abstract
+[2025-09-09T19:07:56] [info] [Utils] Entering get_events_by_type
+[2025-09-09T19:07:56] [info] [Utils] List of events found [_24198{abstract_contrib:[17574376762670004],category:infrastructure,counter:0,env:prod,hostname:fw01,id:17574376762770008,impact:prod,is_abstract:true,message:Network connectivity issue detected,priority:p1,severity:critical,status:open,sub_category:network,timestamp_collected:1757437676.2672133}]
+[2025-09-09T19:07:56] [error] [Abstract] Error: error(existence_error(procedure,utils:(:-)/3),context(utils:find_event/3,_188))
+[2025-09-09T19:07:56] [warning] [Abstract] EventTerm not handled: event(snmptrap,_88{counter:0,env:prod,hostname:snmp01,id:17574376762670005,severity:critical,status:open,timestamp_collected:1757437676.2672765})
+[2025-09-09T19:07:56] [info] [Abstract] Received: event(snmptrap,_88{counter:0,env:"prod",hostname:"snmp01",id:17574376762670005,severity:"critical",status:"open",timestamp_collected:1757437676.2672765})
+[2025-09-09T19:07:56] [info] [Abstract] Received event: event(ping,_422{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366})
+[2025-09-09T19:07:56] [info] [Abstract]  Entering abstract_rule_match 
+[2025-09-09T19:07:56] [info] [Abstract] EventType ping matches Pattern type ping
+[2025-09-09T19:07:56] [info] [Abstract] Conditions matched for RuleID abstract_network
+[2025-09-09T19:07:56] [info] [Abstract] Rule matched: abstract_network (Priority: 90)
+[2025-09-09T19:07:56] [info] [Abstract] RuleList: [abstract_rule(abstract_network,90,[ping(_824{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366})],[eq(_824{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366},status,failed),eq(_824{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366},severity,critical),eq(_824{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366},env,prod)],[network(_938)],[set_field(_938,severity,critical),set_field(_938,message,"Network connectivity issue detected"),set_field(_938,category,infrastructure),set_field(_938,sub_category,network),set_field(_938,priority,p1),set_field(_938,impact,prod)])]
+[2025-09-09T19:07:56] [info] [Abstract] Matched rules: [abstract_rule(abstract_network,90,[ping(_824{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366})],[eq(_824{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366},status,failed),eq(_824{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366},severity,critical),eq(_824{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366},env,prod)],[network(_938)],[set_field(_938,severity,critical),set_field(_938,message,"Network connectivity issue detected"),set_field(_938,category,infrastructure),set_field(_938,sub_category,network),set_field(_938,priority,p1),set_field(_938,impact,prod)])]
+[2025-09-09T19:07:56] [info] [Abstract] Sorted rules by priority: [abstract_rule(abstract_network,90,[ping(_824{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366})],[eq(_824{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366},status,failed),eq(_824{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366},severity,critical),eq(_824{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366},env,prod)],[network(_938)],[set_field(_938,severity,critical),set_field(_938,message,"Network connectivity issue detected"),set_field(_938,category,infrastructure),set_field(_938,sub_category,network),set_field(_938,priority,p1),set_field(_938,impact,prod)])]
+[2025-09-09T19:07:56] [info] [Abstract] Applying abstract_rule abstract_network (Priority: 90)
+[2025-09-09T19:07:56] [info] [Debug] Pattern: ping(_824{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366}), Abstract: network(_938)
+[2025-09-09T19:07:56] [info] [Abstract] get_or_create_abstract for type network
+[2025-09-09T19:07:56] [info] [Abstract] Enter existing_abstract
+[2025-09-09T19:07:56] [info] [Utils] Entering get_events_by_type
+[2025-09-09T19:07:56] [info] [Utils] List of events found [_2454{abstract_contrib:[17574376762670004],category:infrastructure,counter:0,env:prod,hostname:fw01,id:17574376762770008,impact:prod,is_abstract:true,message:Network connectivity issue detected,priority:p1,severity:critical,status:open,sub_category:network,timestamp_collected:1757437676.2672133}]
+[2025-09-09T19:07:56] [error] [Abstract] Error: error(existence_error(procedure,utils:(:-)/3),context(utils:find_event/3,_2778))
+[2025-09-09T19:07:56] [warning] [Abstract] EventTerm not handled: event(ping,_422{counter:0,env:prod,hostname:router01,id:17574376762670006,severity:critical,status:failed,timestamp_collected:1757437676.2673366})
+[2025-09-09T19:07:56] [info] [Abstract] Received: event(ping,_422{counter:0,env:"prod",hostname:"router01",id:17574376762670006,severity:"critical",status:"failed",timestamp_collected:1757437676.2673366})
