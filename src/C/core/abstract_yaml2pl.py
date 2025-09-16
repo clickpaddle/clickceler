@@ -1,30 +1,36 @@
+#!/usr/bin/env python3
 import yaml
 from jinja2 import Environment, FileSystemLoader
-import os
+from pathlib import Path
 
 def convert_all_yaml_to_prolog():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    yaml_file = os.path.join(base_dir, "../yaml/abstract.yaml")
-    template_dir = os.path.join(base_dir, "./templates")
-    output_file = os.path.join(base_dir, "../rules/abstract.pl")
+    yaml_dir = Path('../yaml')       # dossier où se trouvent tes YAML
+    output_file = Path('../rules/abstract_rules.pl')  # fichier Prolog de sortie
+    template_dir = Path('./templates')  # dossier contenant le template Jinja2
 
-    # Load YAML
-    with open(yaml_file, "r") as f:
-        data = yaml.safe_load(f)
+    all_rules = []
 
-    # Jinja2 environment
-    env = Environment(loader=FileSystemLoader(template_dir))
-    template = env.get_template("abstract.j2")
+    # Charger tous les fichiers YAML
+    for yaml_file in yaml_dir.glob('*.yaml'):
+        with open(yaml_file, 'r') as f:
+            data = yaml.safe_load(f)
+            if 'abstract_rules' in data:
+                all_rules.extend(data['abstract_rules'])
 
-    # Render template
-    prolog_code = template.render(abstract_rules=data["abstract_rules"])
+    # Charger le template Jinja2
+    env = Environment(loader=FileSystemLoader(template_dir), trim_blocks=True, lstrip_blocks=True)
+    template = env.get_template('abstract.j2')
 
-    # Write output file
-    with open(output_file, "w") as f:
-        f.write(prolog_code)
+    # Générer le Prolog
+    output = template.render(abstract_rules=all_rules)
 
-    print(f"✅ abstract rules generated in {output_file}")
+    # Créer le dossier si nécessaire et écrire dans le fichier
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_file, 'w') as f:
+        f.write(output)
 
-if __name__ == "__main__":
+    print(f"✅ Prolog rules generated in {output_file}")
+
+if __name__ == '__main__':
     convert_all_yaml_to_prolog()
 

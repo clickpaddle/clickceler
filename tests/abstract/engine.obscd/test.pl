@@ -66,7 +66,6 @@ run_test :-
         timestamp_collected:1756560200.123456
     }),
     send_event(Event2),
-    sleep(35),
 
     % Event that matches the "memory" rule
     Event3 = event(memory, _{

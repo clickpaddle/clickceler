@@ -2,6 +2,8 @@ abstract_rules:
   - name: infrastructure_issue
     priority: 100
     abstract: incident(E)
+    settings :
+      - window: 5m 
     events:
       - event: server(F)
         conditions:
@@ -36,6 +38,8 @@ abstract_rules:
   - name: abstract_network
     priority: 90
     abstract: network(E)
+    settings :
+      - window: 5m
     events:
       - event: firewall(F)
         conditions:

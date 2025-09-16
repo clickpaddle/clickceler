@@ -17,7 +17,7 @@
     get_log_level/1,
     assert_event/1,
     get_events_by_type/2,
-    find_event/3,
+    find_event/4,
     replace_event/3,
     replace_event_without_mutex/3,
     generate_unique_event_id/1,
@@ -110,7 +110,7 @@ match_condition(gt(_E,Field, Value), Dict) :-
     get_dict(Field, Dict, V),
     greater_than(V, Value).
 
-match_condition(gte(_E,Field, Value), Dict) :-
+match_condition(ge(_E,Field, Value), Dict) :-
     get_dict(Field, Dict, V),
     greater_equal(V, Value).
 
@@ -118,7 +118,7 @@ match_condition(lt(_E,Field, Value), Dict) :-
     get_dict(Field, Dict, V),
     less_than(V, Value).
 
-match_condition(lte(_E,Field, Value), Dict) :-
+match_condition(le(_E,Field, Value), Dict) :-
     get_dict(Field, Dict, V),
     less_equal(V, Value).
 
@@ -309,7 +309,7 @@ assert_event(event(Type, Dict)) :-
 
 
 % Retrieve the first event of EventType matching Predicate
-find_event(EventType, KeysDict, Candidate) :-
+find_event(EventType, TimeWindow, KeysDict, Candidate) :-
     log_trace(info, '[Utils] find_event Enter for type ~w ~w', [EventType, KeysDict]),
     ( event_store(EventType, Events) ->
         log_trace(info, '[Utils] find_event event_store returned ~w events', [Events])
@@ -317,12 +317,18 @@ find_event(EventType, KeysDict, Candidate) :-
         fail
     ),
     Events \= [],
+    get_time(Now), 
     member(Candidate, Events),
     log_trace(info, '[Utils] find_event Considering Candidate: ~w', [Candidate]),
     nonvar(Candidate),
     dict_keys(KeysDict, Keys),
     match_keys(Keys, KeysDict, Candidate),
-    log_trace(info, '[Utils] find_event Found event ~w matching type ~w', [Candidate.id, EventType]),
+    get_dict(timestamp_collected, Candidate, Ts),
+    log_trace(info,'[Utils] find_event Candidate Abstract timestamp_collected: ~w',[Ts]),
+    Ts >= Now - TimeWindow,
+    Ts =< Now,
+    log_trace(info, '[Utils] find_event Found event ~w matching type ~w within TimeWindow ~w sec',
+              [Candidate.id, EventType, TimeWindow]),
     !.
 
 
@@ -394,9 +400,21 @@ replace_event_without_mutex(Type, OldDict, NewDict) :-
 
 
 % Generate unique id of event
+%generate_unique_event_id(Id) :-
+%    get_time(TS),
+%    TSint is floor(TS * 1000),  % ms depuis epoch
+%    mutex_lock(event_id_mutex),
+%    (   retract(event_id_counter(Count))
+%    ->  NewCount is Count + 1
+%    ;   NewCount = 1
+%    ),
+%    assertz(event_id_counter(NewCount)),
+%    mutex_unlock(event_id_mutex),
+%    % Compose un entier long : timestamp * 10000 + compteur (4 chiffres)
+%    Id is TSint * 10000 + NewCount.
+
 generate_unique_event_id(Id) :-
-    get_time(TS),
-    TSint is floor(TS * 1000),  % ms depuis epoch
+    get_time(TS),                        % TS en secondes float
     mutex_lock(event_id_mutex),
     (   retract(event_id_counter(Count))
     ->  NewCount is Count + 1
@@ -404,8 +422,8 @@ generate_unique_event_id(Id) :-
     ),
     assertz(event_id_counter(NewCount)),
     mutex_unlock(event_id_mutex),
-    % Compose un entier long : timestamp * 10000 + compteur (4 chiffres)
-    Id is TSint * 10000 + NewCount.
+    % Ajoute le compteur comme fraction de seconde
+    Id is TS + NewCount / 10000.0.
 
 
 % Collect all events and return an event per line
