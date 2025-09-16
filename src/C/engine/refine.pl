@@ -6,7 +6,7 @@
 :- use_module(library(time)).      % For time management and log formatting
 :- use_module(library(error)).     % For error handling (e.g., must_be/2)
 :- use_module('../types/types.pl',[subtype/2, valid_status/1, valid_severity/1]).
-:- use_module(kb_shared,[eventlog_mutex/1, log_event/1, is_subtype/2, print_all_events/1]).
+:- use_module(kb_shared).
 :- use_module(utils).
 :- dynamic kb_shared:event/2.
 :- multifile kb_shared:event/2.
@@ -21,9 +21,7 @@ init_queue :-
     ).
 
 thread_goal_refine(ClientID) :-
-    log_trace(info,'[Refine ~w] Thread started', [ClientID]),
-    init_queue, 
-    load_refine_rules.
+    log_trace(info,'[Refine ~w] Thread started', [ClientID]).
 
 % Load Dynamic rules
 
@@ -43,9 +41,11 @@ load_refine_rules :-
 % It continuously fetches messages from its message queue and processes them.
 
 start_refine_loop :-
+    init_queue,
+    load_refine_rules,
     refine_loop.
 
-    % Wait for a message.
+% Wait for a message.
 refine_loop :-
     thread_get_message(refine_queue, EventTerm),
     (   catch(handle_event(EventTerm), E,

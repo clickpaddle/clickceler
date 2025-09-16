@@ -5,7 +5,7 @@
 :- use_module(library(time)).      % For time management and log formatting
 :- use_module(library(error)).     % For error handling (e.g., must_be/2)
 :- use_module('../types/types.pl',[subtype/2, valid_severity/1, valid_status/1]).
-:- use_module(kb_shared,[eventlog_mutex/1, log_event/1, is_subtype/2, print_all_events/1]).
+:- use_module(kb_shared).
 :- use_module(library(apply)).
 :- use_module(utils).
 
