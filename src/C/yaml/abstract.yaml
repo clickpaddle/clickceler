@@ -7,7 +7,6 @@ abstract_rules:
     keys:           
       - hostname
       - origin
-      - subnet
       - source
 
     events:
