@@ -4,7 +4,7 @@ abstract_rules:
     abstract: incident(E)
     settings:
       - window: "5m"
-    key:           
+    keys:           
       - hostname
       - origin
       - subnet
