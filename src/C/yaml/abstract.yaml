@@ -2,8 +2,14 @@ abstract_rules:
   - name: infrastructure_issue
     priority: 100
     abstract: incident(E)
-    settings :
-      - window: 5m 
+    settings:
+      - window: "5m"
+    key:           
+      - hostname
+      - origin
+      - subnet
+      - source
+
     events:
       - event: server(F)
         conditions:
@@ -28,42 +34,9 @@ abstract_rules:
     actions:
       - set_field(E, status, open)
       - set_field(E, severity, major)
-      - set_field(E, message, "infrastructure issue")
+      - set_field(E, message, "<to_be_defined>")
       - set_field(E, category, infrastructure)
-      - set_field(E, sub_category, "infrastructure issue")
+      - set_field(E, sub_category, "<to_be_defined>")
       - set_field(E, priority, p2)
       - set_field(E, impact, dev)
       - set_field(E, reported_by, clickceller)
-
-  - name: abstract_network
-    priority: 90
-    abstract: network(E)
-    settings :
-      - window: 5m
-    events:
-      - event: firewall(F)
-        conditions:
-          - eq(F, status, open)
-          - eq(F, severity, critical)
-          - eq(F, env, prod)
-
-      - event: snmptrap(F)
-        conditions:
-          - eq(F, status, open)
-          - eq(F, severity, critical)
-          - eq(F, env, prod)
-
-      - event: ping(F)
-        conditions:
-          - eq(F, status, failed)
-          - eq(F, severity, critical)
-          - eq(F, env, prod)
-
-    actions:
-      - set_field(E, severity, critical)
-      - set_field(E, message, "Network connectivity issue detected")
-      - set_field(E, category, infrastructure)
-      - set_field(E, sub_category, network)
-      - set_field(E, priority, p1)
-      - set_field(E, impact, prod)
-

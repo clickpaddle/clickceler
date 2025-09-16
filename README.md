@@ -1,82 +1,77 @@
-# ClickCeler — Educational Event Management Expert System
+# Clickceler Mid-Term Plan for Industrial Operations (12–24 months)
 
-## Overview
+```mermaid
+flowchart TD
+    MTU["MTUs<br>(Sensors / Edge)"]
+    Edge["Clickceler Light<br>(Edge Processing)"]
+    Central["Clickceler Central<br>(Data Enrichment, Correlation, AI)"]
+    SCADA[SCADA Systems]
+    Dash["Dashboards / HMI / Reporting<br>(REST, MQTTS, Kafka)"]
 
-ClickCeler is simple educational implementation inspired by early expert systems for event management. Its goal is to help new generations understand how event-driven expert systems were designed and operated, using logic programming (Prolog) and rule-based reasoning.
-
-This project demonstrates the core concepts of:
-
-- Representing events as structured facts
-- Applying rule phases such as enrich, reset, link, launch
-- Using logic inference to reason on event data
-- Handling concurrent event inputs and queries via a simple server-client architecture
-
-It is not a production-ready system but a didactic tool to explore foundational ideas in expert systems and event or facts management.
-
-## How It Works
-
-- Events are modeled as Prolog facts with rich attributes: swipl on Linux
-- Rules written in Prolog are applied to update and correlate events.
-- A Python server receives event data (in JSON), asserts facts in Prolog, and allows queries: Python module pyswip
-
-This bridges modern application programming with classic logic-based reasoning engines.
-
-## Usage
-
-1. Load your events as JSON objects: events.json
-2. Convert them to Prolog facts using the provided Python scripts: clickpost.py < events.json
-3. Define your own Prolog rules for event enrich, reset, link, launch, filter: rules.pl
-4. Run the server to accept events and queries over TCP: ClickCeler.py
-5. Explore how logic rules process your events step by step: clickquery.py
+    MTU -->|"MODBUS TCP-RTU OPC-UA (HA)"| Edge
+    Edge -->|"MQTTS (HA)/Kafka(Cluster)"| Central
+    Central -->|"OPC-UA (HA / bidirectional)"| SCADA
+    Central -->|"REST / MQTTS / Kafka"| Dash
+```
+## 1. Vision & Objectives
+- Position Clickceler platform for industrial observability**.  
+- Enable **real-time monitoring, enrichment, correlation, and automation** across industrial SCADA and IT systems.  
+- Maintain **open-source accessibility** while leveraging expert knowledge in AI, SCADA and Observability systems.  
+- Ensure **security and compliance** with modern authentication and cybersecurity standards.  
 
 ---
 
-## Future Plans
+## 2. Key Strategic Pillars
 
-ClickCeler is an evolving educational project, and we have several exciting plans to enhance its capabilities and demonstrate more advanced concepts in event management and expert systems. Our future roadmap focuses on improving the solution's architecture, user interaction, automation, and deployment.
+### A. Technical Maturity
+- Deploy Clickceler on **modern SCADA architectures** with smart devices, MTUs, and edge computing.  
+- Integrate **MQTTS, Kafka, OPC-UA** for data ingestion and real-time event processing.  
+- Enhance **dashboard clarity, visualization, and decision-support tools**.  
+- Implement **real-time local enrichment and automation** before propagating to Control Centers.  
 
-### Architectural Documentation
+### B. Security & Compliance
+- Enforce **password best practices and multi-factor authentication**.  
+- Ensure **secure data transfer** via encrypted protocols (TLS/SSL).  
+- Regularly audit for **industrial cybersecurity compliance** (ISA/IEC 62443, NIST, etc.).  
 
-We aim to create comprehensive documentation detailing the **As-Is** and **To-Be** architecture of ClickCeler. This will provide a clear understanding of the current system design and how we envision its evolution, particularly regarding event flow, data persistence, and rule execution.
+### C. Industrial Observability & AI Integration
+- Correlate data from **SCADA, IoT sensors, and high-tech IT systems**.  
+- Enable **predictive analytics and anomaly detection** using AI.  
+- Provide **pre-consolidated dashboards** for faster operational decision-making.  
 
-### Event Visualization Web Interface
-
-To make the system more accessible and visually engaging, we plan to develop a small **web interface for visualizing events**. This interface will allow users to:
-
-* See incoming events in real-time.
-* Observe how rules process and transform events.
-* Query event data dynamically through a user-friendly graphical interface.
-
-### Automated Rule Execution
-
-Currently, rule execution might require manual triggers. Our goal is to **automate the execution of rules** upon the arrival of new events or changes to existing events. This will simulate a more reactive and autonomous expert system, where events are processed instantly as they occur.
-
-### NoSQL Database Integration
-
-To ensure robust event persistence and enable seamless server restarts without data loss, we intend to integrate ClickCeler with a **NoSQL database**. This will allow us to:
-
-* Store all incoming and processed events reliably.
-* Reload events efficiently upon server restarts, maintaining the system's state.
-
-### OCI Container Packaging
-
-For easier distribution, deployment, and portability, we will **package ClickCeler within an Open Container Initiative (OCI) compliant container**. This will encapsulate all necessary dependencies, ensuring the application runs consistently across different environments.
-
-### Kubernetes Deployment with ArgoCD
-
-Finally, to demonstrate modern deployment practices for event-driven systems, we plan to **deploy the ClickCeler OCI image on a Kubernetes cluster using a GitOps tool like ArgoCD**. This will showcase:
-
-* Automated, declarative deployments.
-* Scalability and resilience within a container orchestration environment.
-* Best practices for managing application lifecycles in cloud-native infrastructures.
+### D. Adoption & Expertise
+- Train internal teams and partners on **Clickceler’s open-source platform**.  
+- Build a **community of experts** who understand AI and SCADA evolution.  
+- Create **documentation, use-cases, and tutorials** for industrial adoption.  
 
 ---
 
-## Disclaimer
+## 3. Roadmap (12–24 months)
 
-This project is provided for educational and illustrative purposes only. It aims to demonstrate fundamental concepts of early expert systems for event management and is not intended as a production-ready solution.
+| Timeline      | Goals & Deliverables |
+|---------------|--------------------|
+| **Months 1–3**  | Audit current SCADA & IT infrastructure. Identify critical MTUs, sensors, and data flows. Set up Clickceler sandbox environment. |
+| **Months 4–6**  | Integrate **MQTTS, Kafka**, and edge processing. Deploy initial dashboards and visualization tools. |
+| **Months 7–12** | Implement **real-time local enrichment, correlation, and automation**. Apply cybersecurity best practices. Conduct first pilot with operational teams. |
+| **Months 13–18**| Expand to multiple production lines/sites. Integrate AI-based analytics for predictive maintenance and anomaly detection. |
+| **Months 19–24**| Optimize **pre-consolidated dashboards** for Control Centers. Evaluate ROI, fine-tune automation rules, and scale adoption across organization. |
 
-No guarantee or commitment is made regarding the future development, maintenance, or support of this project. Users and contributors engage with this codebase at their own discretion.
+---
 
-The author expressly disclaims any liability for the use or misuse of this software.
+## 4. Success Metrics
+- **Operational visibility:** % of critical assets monitored in real-time.  
+- **Incident response time:** Reduction in detection-to-action latency.  
+- **Automation coverage:** % of events automatically enriched, correlated, or acted upon locally.  
+- **User adoption:** # of trained operators and analysts actively using Clickceler.  
+- **Security compliance:** 100% of access through secure authentication protocols.  
+
+---
+
+## 5. Long-Term Vision
+- Position Clickceler as the **standard open source industrial observability platform**, bridging SCADA reliability with AI intelligence.  
+- Enable **smart factories and Industry 4.0 operations** with fully **secure, real-time, and automated industrial monitoring**.  
+
+
+ 
+
 

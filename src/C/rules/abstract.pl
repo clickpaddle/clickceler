@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 abstract_rule(infrastructure_issue, 100,
     [ server(F) ],
     [ eq(F, status, open), eq(F, severity, critical), eq(F, env, dev) ],
