@@ -40,14 +40,16 @@ end
 %% CD
 %% ======================
 subgraph CD["🚀 Continuous Deployment (ArgoCD)"]
-CD_SPACER[" "] --- C1[Write source code deployment.yaml, values.yaml, kustomize.yaml]
+CD_SPACER[" "] --- C1[Write deployment.yaml, values.yaml, kustomize.yaml]
 class CD_SPACER ghost-node
 C1 --> C3[Push to Git ArgoCD Kubernetes manifests]
 C3 --> C4["Create Pull Request (PR) in GitOps repo"]
 C4 --> C5[Code Review & Approval of deployment manifest]
 C5 --> C1
 C5 --> C6[Merge PR to main branch]
-C6 --> C9["ArgoCD sync trigger<br>(manual or auto-sync)"]
+C6 --> C7["Canary deployment<br>Deploy small % of traffic"]
+C7 --> C8["Monitor canary metrics<br>Health, errors, latency"]
+C8 --> C9["ArgoCD sync trigger<br>(manual or auto-sync)"]
 C9 --> C10["ArgoCD compares desired vs actual state"]
 C10 --> C11["Deploy signed image<br>to target namespace"]
 C11 --> C12["Health checks + automatic rollback on failure"]
@@ -70,5 +72,7 @@ end
 DEV --> CI
 CI --> CD
 CD --> MON
+MON --> DEV
+
 MON --> DEV
 ```
