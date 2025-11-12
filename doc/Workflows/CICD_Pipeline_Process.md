@@ -1,4 +1,6 @@
 ```mermaid
+
+
 flowchart LR
 classDef ghost-node fill:none, stroke:none, color:none, height:0, padding:0, margin:0;
 
@@ -47,8 +49,8 @@ C3 --> C4["Create Pull Request (PR) in GitOps repo"]
 C4 --> C5[Code Review & Approval of deployment manifest]
 C5 --> C1
 C5 --> C6[Merge PR to main branch]
-C6 --> C7["Canary deployment<br>Deploy small % of traffic"]
-C7 --> C8["Monitor canary metrics<br>Health, errors, latency"]
+C6 --> C7["Canary deployment<br>Deploy small5-10% of traffic"]
+C7 --> C8["Monitor canary metrics<br>Health, errors, latency"<br>Return to DEV<br>or Approval]
 C8 --> C9["ArgoCD sync trigger<br>(manual or auto-sync)"]
 C9 --> C10["ArgoCD compares desired vs actual state"]
 C10 --> C11["Deploy signed image<br>to target namespace"]
@@ -74,5 +76,5 @@ CI --> CD
 CD --> MON
 MON --> DEV
 
-MON --> DEV
+
 ```
