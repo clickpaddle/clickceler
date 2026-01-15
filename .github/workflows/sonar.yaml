@@ -37,8 +37,12 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
            args: >
-             -Dsonar.sources=.
-             -Dsonar.inclusions=**/*.c,**/*.pl,**/*.py,**/*.yaml,**/*.yml
+             "-Dsonar.sources=."
+             "-Dsonar.inclusions=**/*.c,**/*.pl,**/*.py,**/*.yaml,**/*.yml"
+             "-Dsonar.projectName=Clickceler"
+             "-Dsonar.projectKey=clickceler"
+             "-Dsonar.sourceEncoding=UTF-8"
+
 
   build_job:
     name: Build Application
@@ -48,4 +52,4 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Run Build
-        run: echo "Le build démarre car Sonar est terminé."
+        run: echo "Build can start now, Sonar scan is done"
