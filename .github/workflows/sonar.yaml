@@ -27,6 +27,7 @@ jobs:
           url: https://vault
           role: github-actions-role
           method: jwt
+          jwtGithubAudience: https://vault
           secrets: |
             secret/data/applications/prod/sonarqube/github-actions token | SONAR_TOKEN ;
             secret/data/applications/prod/sonarqube/github-actions host_url | SONAR_HOST_URL 
