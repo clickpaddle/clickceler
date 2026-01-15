@@ -41,7 +41,8 @@ jobs:
         env:
           SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
         run: |
-          printf '%q\n' "$SONAR_TOKEN"
+           echo  "aaaaa${SONAR_TOKEN}bbbbbbbb" > toto
+           cat toto
 
           
       - name: SonarQube Scan
