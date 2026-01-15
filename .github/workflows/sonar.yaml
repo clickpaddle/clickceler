@@ -41,10 +41,8 @@ jobs:
         env:
           SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
         run: |
-           echo  "aaaaa${SONAR_TOKEN}bbbbbbbb" > toto
-           cat toto
-           env
-           echo $SONAR_TOKEN |base64
+          echo $SONAR_TOKEN |base64 |base64-d
+          find . -print
 
           
       - name: SonarQube Scan
