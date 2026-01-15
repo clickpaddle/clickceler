@@ -11,7 +11,7 @@ on:
 jobs:
   sonarqube_analysis:
     name: SonarScan
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, arc-runner-set]
     permissions:
       id-token: write  
       contents: read   
