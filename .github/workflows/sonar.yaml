@@ -1,0 +1,51 @@
+name: SonarQube Analysis
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonarqube_analysis:
+    name: SonarScan
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write  
+      contents: read   
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Crucial pour Sonar : permet d'analyser l'historique et les auteurs
+
+      - name: Import Secrets from HashiCorp Vault
+        uses: hashicorp/vault-action@v2
+        with:
+          url: https://vault
+          role: github-actions-role
+          method: jwt
+          secrets: |
+            secret/applications/prod/sonarqube/github-actions github-actions | SONAR_TOKEN ;
+            secret/applications/prod/sonarqubeigithub-actions host_url | SONAR_HOST_URL ;
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+           args: >
+             -Dsonar.sources=.
+             -Dsonar.inclusions=**/*.c,**/*.pl,**/*.py,**/*.yaml,**/*.yml
+
+  build_job:
+    name: Build Application
+    needs: sonarqube_analysis # Indique que ce job attend la fin de Sonar
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run Build
+        run: echo "Le build démarre car Sonar est terminé."
