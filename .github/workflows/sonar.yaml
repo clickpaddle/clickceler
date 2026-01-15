@@ -41,7 +41,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
         run: |
-          find . -print
+          curl http://sonarqube:9000/api/server/version
 
           
       - name: SonarQube Scan
@@ -50,6 +50,7 @@ jobs:
           SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ env.SONAR_HOST_URL }}
         with:
+           scannerVersion: 8.0.1.6346
            args: >
              "-Dsonar.sources=."
              "-Dsonar.inclusions=**/*.c,**/*.pl,**/*.py,**/*.yaml,**/*.yml"
