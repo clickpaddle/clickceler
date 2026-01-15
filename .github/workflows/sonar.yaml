@@ -35,14 +35,12 @@ jobs:
           kubernetesTokenPath: /var/run/secrets/kubernetes.io/serviceaccount/token
           exportEnv: true
           exportToken: false
-          outputToken: false
-          jwtTtl: 3600
-          ignoreNotFound: false
+         
             
       - name: Debug Sonar env
         run: |
           echo "SONAR_HOST_URL=$SONAR_HOST_URL"
-          echo "SONAR_TOKEN is set? -> ${SONAR_TOKEN:+YES}"
+          echo "SONAR_TOKEN is set? -> ${SONAR_TOKEN}"
           
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
