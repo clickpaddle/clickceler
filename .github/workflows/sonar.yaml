@@ -19,7 +19,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Crucial pour Sonar : permet d'analyser l'historique et les auteurs
+          fetch-depth: 0 
 
       - name: Import Secrets from HashiCorp Vault
         uses: hashicorp/vault-action@v2
@@ -30,7 +30,7 @@ jobs:
           secrets: |
             secret/data/applications/prod/sonarqube/github-actions token | SONAR_TOKEN
             secret/data/applications/prod/sonarqube/github-actions host_url | SONAR_HOST_URL 
-          tlsSkipVerify: true        # <-- ne pas vérifier le certificat
+          tlsSkipVerify: true
           kubernetesTokenPath: /var/run/secrets/kubernetes.io/serviceaccount/token
           exportEnv: true
           exportToken: false
