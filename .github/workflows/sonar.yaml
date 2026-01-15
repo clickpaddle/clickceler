@@ -28,8 +28,8 @@ jobs:
           role: github-actions-role
           method: jwt
           secrets: |
-            applications/prod/sonarqube/github-actions token | SONAR_TOKEN
-            applications/prod/sonarqube/github-actions host_url | SONAR_HOST_URL 
+            secret/data/applications/prod/sonarqube/github-actions token | SONAR_TOKEN ;
+            secret/data/applications/prod/sonarqube/github-actions host_url | SONAR_HOST_URL 
           tlsSkipVerify: true
           kubernetesTokenPath: /var/run/secrets/kubernetes.io/serviceaccount/token
           exportEnv: true
