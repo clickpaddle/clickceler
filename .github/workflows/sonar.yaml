@@ -27,9 +27,10 @@ jobs:
           url: https://vault
           role: github-actions-role
           method: jwt
+          kvVersion: 2
           secrets: |
-            secret/data/applications/prod/sonarqube/github-actions#token|SONAR_TOKEN
-            secret/data/applications/prod/sonarqube/github-actions#host_url|SONAR_HOST_URL 
+            secret/applications/prod/sonarqube/github-actions token | SONAR_TOKEN
+            secret/applications/prod/sonarqube/github-actions host_url | SONAR_HOST_URL 
           tlsSkipVerify: true        # <-- ne pas vérifier le certificat
           kubernetesTokenPath: /var/run/secrets/kubernetes.io/serviceaccount/token
           exportEnv: true
