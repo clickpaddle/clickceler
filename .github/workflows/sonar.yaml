@@ -41,7 +41,6 @@ jobs:
         env:
           SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
         run: |
-          echo $SONAR_TOKEN |base64 |base64-d
           find . -print
 
           
