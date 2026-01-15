@@ -43,6 +43,7 @@ jobs:
         run: |
            echo  "aaaaa${SONAR_TOKEN}bbbbbbbb" > toto
            cat toto
+           env
 
           
       - name: SonarQube Scan
