@@ -30,6 +30,14 @@ jobs:
           secrets: |
             secret/applications/prod/sonarqube/github-actions github-actions | SONAR_TOKEN ;
             secret/applications/prod/sonarqubeigithub-actions host_url | SONAR_HOST_URL ;
+          tlsSkipVerify: true        # <-- ne pas vérifier le certificat
+          kubernetesTokenPath: /var/run/secrets/kubernetes.io/serviceaccount/token
+          exportEnv: true
+          exportToken: false
+          outputToken: false
+          jwtTtl: 3600
+          ignoreNotFound: false
+            
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
