@@ -28,7 +28,7 @@ jobs:
           role: github-actions-role
           method: jwt
           secrets: |
-            secret/applications/prod/sonarqube/github-actions github-actions | SONAR_TOKEN 
+            secret/applications/prod/sonarqube/github-actions token | SONAR_TOKEN 
             secret/applications/prod/sonarqubeigithub-actions host_url | SONAR_HOST_URL 
           tlsSkipVerify: true        # <-- ne pas vérifier le certificat
           kubernetesTokenPath: /var/run/secrets/kubernetes.io/serviceaccount/token
