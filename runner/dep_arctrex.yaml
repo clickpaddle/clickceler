@@ -1,3 +1,49 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: arctrex-runner-sa
+  namespace: arc-runners
+--
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: arctrex-runner-role
+  namespace: arc-runners
+rules:
+  # Lecture des pods
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+
+  # Création et suppression de pods si le runner autoscale
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["create", "delete"]
+
+  # Lecture des secrets si tu stockes le token GitHub ou Vault dedans
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+--
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: arctrex-runner-binding
+  namespace: arc-runners
+subjects:
+  - kind: ServiceAccount
+    name: arctrex-runner-sa
+    namespace: arc-runners
+roleRef:
+  kind: Role
+  name: arctrex-runner-role
+  apiGroup: rbac.authorization.k8s.io
+
+--
+
+--
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,6 +61,9 @@ spec:
       labels:
         app: arctrex-runner
     spec:
+    spec:
+      serviceAccountName: arctrex-runner-sa
+      automountServiceAccountToken: true
       containers:
         - name: runner
           image: 192.168.0.236:5000/arctrex:1.3
