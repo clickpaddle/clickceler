@@ -27,7 +27,6 @@ jobs:
           url: https://vault
           role: github-actions-role
           method: jwt
-          kvVersion: 2
           secrets: |
             applications/prod/sonarqube/github-actions#token|$SONAR_TOKEN
             applications/prod/sonarqube/github-actions#host_url|$SONAR_HOST_URL 
