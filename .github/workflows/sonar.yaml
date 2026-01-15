@@ -1,4 +1,4 @@
-etname: SonarQube Analysis
+name: SonarQube Analysis
 
 on:
   workflow_dispatch:
