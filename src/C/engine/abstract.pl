@@ -1,4 +1,4 @@
-:- module(abs, [thread_goal_abstract/1, start_abstract_loop/0]).
+:- module(abstract, [thread_goal_abstract/1, start_abstract_loop/0]).
 
 :- use_module(library(thread)).
 :- use_module(library(time)).

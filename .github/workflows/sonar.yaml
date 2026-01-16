@@ -1,6 +1,7 @@
 name: SonarQube Analysis
 
 on:
+<<<<<<< HEAD
   workflow_dispatch:
   push:
     branches:
@@ -36,13 +37,6 @@ jobs:
           exportEnv: true
           exportToken: false
           
-
-      - name: VERY UNSAFE debug
-        env:
-          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
-        run: |
-          curl http://sonarqube:9000/api/server/version
-
           
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
@@ -61,7 +55,7 @@ jobs:
 
   build_job:
     name: Build Application
-    needs: sonarqube_analysis # Indique que ce job attend la fin de Sonar
+    needs: sonarqube_analysis 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

@@ -1,0 +1,18 @@
+update_rules:
+  - name: update_cpu_status_and_metric
+    priority: 100
+    event:  cpu(E_source)
+    conditions:
+      - eq(E, status, open)
+    update: cpu(F_stored)
+    key:
+     - hosntame
+     - origin
+     - subnet
+    settings:
+      - window : "5m"
+    conditions:
+      - eq(F, status, open)
+    actions:
+      - set_field(F, load, E.load)
+      - increment(F,counter)      

@@ -1,0 +1,13 @@
+update_rules:
+  - name: update_cpu_status_and_metric 
+    priority: 100
+    event:  cpu(E)
+    conditions:
+      - eq(E, status, open)
+    update: cpu(F) 
+    conditions:
+      - eq(F, status, open)
+    actions:
+      - set_field(F, load, E.load)
+      - increment(F,counter) 
+      
