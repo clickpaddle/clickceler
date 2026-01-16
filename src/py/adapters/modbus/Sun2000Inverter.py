@@ -93,6 +93,4 @@ if inv.isConnected():
             cur.execute(query)
         except db.Error as e:
             print(f"MySQL Error: {e}")
-        finally:
-            if cnx.is
 
