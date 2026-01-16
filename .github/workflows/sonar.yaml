@@ -1,7 +1,6 @@
 name: SonarQube Analysis
 
 on:
-<<<<<<< HEAD
   workflow_dispatch:
   push:
     branches:
