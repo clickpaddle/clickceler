@@ -26,7 +26,7 @@ time.tzset()
 RA = 120  # number of readings (5 sec * 120 = 10 min)
 HOST_INVERTER = "10.0.1.32" # Replace with the IP address of the MTU
 DB_CONFIG = {
-    "host": "10.0.1.1"      # Replace with the IP address of your DB or eventual DB PRoxy
+    "host": "10.0.1.1" ,     # Replace with the IP address of your DB or eventual DB PRoxy
     "port": 4006,	    # Replace with the listening port of DB or eventual DB proxy
     "user": "energy",	     # Replace with your userid
     "password": "*********", # Replace with your password
