@@ -1,8 +1,8 @@
 FROM debian:bullseye-slim
 
 # Metadata
-LABEL maintainer="you@example.com"
-LABEL org.opencontainers.image.source="https://github.com/your/repo"
+LABEL maintainer="luc.dijon@clickpaddle.com"
+LABEL org.opencontainers.image.source="https://github.com/clickpaddle/clickceler"
 
 # Create a non-root user
 RUN groupadd -g 1001 runner && \
