@@ -1,4 +1,5 @@
-# ARCHITECTURE DOCUMENT: Centralized Border Control Data Hub (Open Source Edition)
+# ARCHITECTURE DOCUMENT: Central / Local Control Data Hub for Clickceler (Open Source Edition)
+## Open Source Hybrid Infrastructure Blueprint (Proxmox / Ceph / Kafka)
 
 **Project:** ACME Corp Centralized High-Performance Data Hub  
 **Platform:** Proxmox VE + Ceph Distributed Storage  
