@@ -186,6 +186,7 @@ graph TD
         subgraph Observability [Monitoring & Logs]
             OT[OpenTelemetry]
             Loki[Loki]
+            Clickceler 
             GF[Grafana Dashboards]
         end
     end
@@ -218,9 +219,10 @@ graph TD
 
     Brokers_A & Brokers_B -->|Consume messages| C_Central & C_Edge
     Brokers_A & Brokers_B -->|Metrics & Logs| OT
-    OT & Loki --> GF
+    OT & Loki --> Clickceler 
+    Clickceler --> GF
 
-    Vault -->|mTLS / SASL| Brokers_A & Brokers_B & Auth_Edge
+  Vault -->|mTLS / SASL| Brokers_A & Brokers_B & Auth_Edge
     AD -->|ACLs / Users| Brokers_A & Brokers_B & Auth_Edge
 
 %% ---------------- Styles ----------------%% Security - Violet Pastel Net
@@ -261,4 +263,3 @@ graph TD
   
 ```
 
-```mermaid
