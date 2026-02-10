@@ -133,7 +133,6 @@ graph TD
     
     %% ---------------- Central Hub ----------------
     subgraph Hub ["Central Hub (Proxmox + Ceph)"]
-        %% Firewall / DMZ
         subgraph FW_Central [Central Firewall - DNAT / DMZ]
         end
 
@@ -225,19 +224,42 @@ graph TD
     AD -->|ACLs / Users| Brokers_A & Brokers_B & Auth_Edge
 
     %% ---------------- Styles ----------------
-    style Auth_Edge fill:#fff9c4,stroke:#fbc02d
-    style Vault fill:#f3e5f5,stroke:#7b1fa2
-    style AD fill:#f3e5f5,stroke:#7b1fa2
-    style OT fill:#e8f5e9,stroke:#2e7d32
-    style Loki fill:#e0f7fa,stroke:#006064
-    style GF fill:#f1f8e9,stroke:#33691e
-    style Edge_App fill:#fff3e0,stroke:#e65100
-    style Edge_DB fill:#fff3e0,stroke:#e65100
-    style Edge_Deb fill:#fff3e0,stroke:#e65100
-    style Edge_S3 fill:#e0f7fa,stroke:#006064
-    style Hub fill:#eceff1,stroke:#455a64,stroke-dasharray: 5 5
-    style SiteA fill:#f1f8e9,stroke:#33691e
-    style SiteB fill:#f1f8e9,stroke:#33691e
+    %% ---------------- Styles ----------------
+    %% Security - Violet Pastel
+    style Security fill:#f3e5f5,stroke:#9575cd,stroke-width:2px,color:#4a148c
+    style Vault fill:#ffffff,stroke:#9575cd,color:#4a148c
+    style AD fill:#ffffff,stroke:#9575cd,color:#4a148c
+    style Auth_Edge fill:#f3e5f5,stroke:#9575cd,color:#4a148c
+
+    %% Storage & Central Logic - Deep Blue
+    style Hub fill:#f5f5f5,stroke:#263238,stroke-width:2px,stroke-dasharray: 5 5
+    style SiteA fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style SiteB fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style CEPH fill:#0d47a1,stroke:#1976d2,stroke-width:3px,color:#ffffff
+    style SiteC fill:#fff8e1,stroke:#ff8f00,stroke-width:2px
+
+    %% Edge & Consumers - Harmonized Orange/Ocre
+    style Producers fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style Edge_App fill:#ef6c00,stroke:#e65100,color:#ffffff
+    style Edge_DB fill:#ef6c00,stroke:#e65100,color:#ffffff
+    style Edge_Deb fill:#ef6c00,stroke:#e65100,color:#ffffff
+    style Edge_S3 fill:#006064,stroke:#00838f,color:#ffffff
+    style Consumers fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style C_Edge fill:#ef6c00,stroke:#e65100,color:#ffffff
+    style C_Central fill:#ef6c00,stroke:#e65100,color:#ffffff
+
+    %% Observability - Forest Green
+    style Observability fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style OT fill:#1b5e20,stroke:#2e7d32,color:#ffffff
+    style Loki fill:#004d40,stroke:#00695c,color:#ffffff
+    style GF fill:#33691e,stroke:#558b2f,color:#ffffff
+
+    %% Network - Dark Grey
+    style FW_Edge fill:#37474f,stroke:#263238,color:#ffffff
+    style FW_Central fill:#37474f,stroke:#263238,color:#ffffff
+
+    %% ---------------- Arrow Thickness (Link Styles) ----------------
+    linkStyle default stroke-width:4px,stroke:#333333
     style CEPH fill:#bbdefb,stroke:#1976d2,stroke-width:2px
     style SiteC fill:#ffecb3,stroke:#ffa000,stroke-dasharray: 5 5
     style FW_Edge fill:#ffe0b2,stroke:#e65100,stroke-dasharray: 3 3
