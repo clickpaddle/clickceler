@@ -259,7 +259,7 @@ graph TD
     style FW_Central fill:#37474f,stroke:#263238,color:#ffffff
 
     %% ---------------- Arrow Thickness (Link Styles) ----------------
-    linkStyle default stroke-width:4px,stroke:#333333
+    linkStyle default stroke-width:3px,stroke:#333333
     style CEPH fill:#bbdefb,stroke:#1976d2,stroke-width:2px
     style SiteC fill:#ffecb3,stroke:#ffa000,stroke-dasharray: 5 5
     style FW_Edge fill:#ffe0b2,stroke:#e65100,stroke-dasharray: 3 3
