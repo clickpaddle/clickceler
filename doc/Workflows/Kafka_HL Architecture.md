@@ -1,4 +1,4 @@
-# ARCHITECTURE DOCUMENT: Central and Local Control Data Hub for Clickceler (Open Source Edition)
+# ARCHITECTURE DOCUMENT: Central Control Data Hub for Clickceler (Open Source Edition)
 ## Open Source Hybrid Infrastructure Blueprint (Proxmox / Ceph / Kafka)
 
 **Project Identity:** Clickceler Event Management  
