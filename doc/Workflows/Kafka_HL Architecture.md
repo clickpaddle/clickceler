@@ -1,10 +1,11 @@
 # ARCHITECTURE DOCUMENT: Central / Local Control Data Hub for Clickceler (Open Source Edition)
 ## Open Source Hybrid Infrastructure Blueprint (Proxmox / Ceph / Kafka)
 
-**Project:** ACME Corp Centralized High-Performance Data Hub  
-**Platform:** Proxmox VE + Ceph Distributed Storage  
-**Scope:** 60 Global Branches to Central Stretched Cluster  
-**Compliance:** Enterprise-Grade High Availability & Zero-Trust Standards  
+**Project Identity:** Clickceler Event Management  
+**Context:** SCADA / Industry v4.0 Critical Infrastructure  
+**Infrastructure Stack:** Proxmox VE 8.x + Ceph Quincy/Reef + Apache Kafka  
+**Scope:** 60 Global Edge Branches to Central Stretched Hub  
+**Compliance:** Enterprise-Grade HA (RPO=0) & Zero-Trust mTLS Standards
 
 ---
 
@@ -14,12 +15,12 @@ This document defines an ultra-resilient infrastructure using **Open Source** te
 Emphasis is placed on:
 * **Zero Data Loss (RPO=0):** Achieved via Ceph synchronous replication across sites.
 * **Vendor Independence:** Leveraging KVM, Ceph, and Linux-native security.
-* **Biometric & Complex Data Handling:** Optimized via Claim Check patterns and S3-compatible storage.
+* **Complex Event Handling:** Optimized via Claim Check patterns and S3-compatible storage.
 
 ---
 
 ## 2. Central Hub: Infrastructure
-The central hub consists of **8 high-performance nodes** (4 per site) standardized on **HPE ProLiant DL380 Gen11**.
+The central hub consists of **8 high-performance nodes** (4 per site).
 
 ### Hardware Specifications
 | Component | Technical Details | Business Value |
