@@ -223,117 +223,7 @@ graph TD
     Vault -->|mTLS / SASL| Brokers_A & Brokers_B & Auth_Edge
     AD -->|ACLs / Users| Brokers_A & Brokers_B & Auth_Edge
 
-    %% ---------------- Styles ----------------
-    graph TD
-    %% ---------------- Producers / Edge ----------------
-    subgraph Producers [Edge: 60 Remote Branches / Producers]
-        Edge_Deb[Debezium Agent]
-        Edge_DB[Local DB / Outbox]
-        Edge_App[Clickceler Local / Producer]
-        Edge_S3[(S3 Local Storage / Claim Check)]
-        subgraph Auth_Edge [Security Context]
-            Cert_B{Cert mTLS}
-            Creds[SCRAM User/Pass]
-        end
-        subgraph FW_Edge [Edge Firewall]
-        end
-    end
-    Edge_S3 --> FW_Edge
-    
-    %% ---------------- Central Hub ----------------
-    subgraph Hub ["Central Hub (Proxmox + Ceph)"]
-        subgraph FW_Central [Central Firewall - DNAT / DMZ]
-        end
-
-        %% Site A
-        subgraph SiteA [Site A - 4 Nodes]
-            Brokers_A[Kafka Brokers A0-A3]
-            BR_A_Comment(("RF=3, ISR=2"))
-            SR_A[Schema Registry A]
-            S3_A[(Ceph S3 Pool A)]
-            LB_S3_A[LB S3 A]
-            LB_Schema_A[LB Schema A]
-            
-            Brokers_A --> BR_A_Comment
-            SR_A -->|_schemas topic| Brokers_A
-            LB_Schema_A --> SR_A
-        end
-
-        %% Site B
-        subgraph SiteB [Site B - 4 Nodes]
-            Brokers_B[Kafka Brokers B0-B3]
-            BR_B_Comment(("RF=3, ISR=2"))
-            SR_B[Schema Registry B]
-            S3_B[(Ceph S3 Pool B)]
-            LB_S3_B[LB S3 B]
-            LB_Schema_B[LB Schema B]
-
-            Brokers_B --> BR_B_Comment
-            SR_B -->|_schemas topic| Brokers_B
-            LB_Schema_B --> SR_B
-        end
-    
-        %% Ceph Stretched Layer (Replacing vSAN)
-        CEPH{Ceph CRUSH Map: Site-Aware}
-        Brokers_A & Brokers_B & S3_A & S3_B --- CEPH
-
-        %% Site C - The Tie-Breaker
-        subgraph SiteC [Site C - Witness]
-            QDev[Proxmox QDevice]
-            MON_C[Ceph Monitor C]
-            note_C(("Quorum Arbitrator"))
-        end
-        SiteC -.->|Voting & Quorum| CEPH
-
-        %% ---------------- Security ----------------
-        subgraph Security [Central Security]
-            Vault[HashiCorp Vault / PKI & KMS / Secrets]
-            AD[(Active Directory / LDAP)]
-        end
-
-        %% ---------------- Observability ----------------
-        subgraph Observability [Monitoring & Logs]
-            OT[OpenTelemetry]
-            Loki[Loki]
-            GF[Grafana Dashboards]
-        end
-    end
-
-    %% ---------------- Consumers ----------------
-    subgraph Consumers [Consumers / Dashboards]
-        C_Edge[Edge Dashboards / Consumers]
-        C_Central[Clickceler Central / Analytics / Reporting]
-    end
-
-    %% ---------------- Data Flows ----------------
-    Edge_Deb -->|Produce events| FW_Edge
-    Edge_App -->|Produce events| Edge_DB
-    FW_Edge --> FW_Central
-    
-    FW_Central --> LB_Schema_A & LB_Schema_B
-    FW_Central --> LB_S3_A & LB_S3_B
-    LB_S3_A --> S3_A
-    LB_S3_B --> S3_B
-    
-    Vault -.->|KMS / LUKS| CEPH
-    
-    Edge_App -->|Files| Edge_S3
-    Edge_DB --> Edge_Deb
-    Edge_Deb -.->|Uses| Cert_B
-    Edge_Deb -.->|Uses| Creds
-
-    FW_Central --> Brokers_A & Brokers_B
-    FW_Central --> Loki
-
-    Brokers_A & Brokers_B -->|Consume messages| C_Central & C_Edge
-    Brokers_A & Brokers_B -->|Metrics & Logs| OT
-    OT & Loki --> GF
-
-    Vault -->|mTLS / SASL| Brokers_A & Brokers_B & Auth_Edge
-    AD -->|ACLs / Users| Brokers_A & Brokers_B & Auth_Edge
-
-%% ---------------- Styles ----------------
-%% Security - Violet Pastel Net
+%% ---------------- Styles ----------------%% Security - Violet Pastel Net
     style Security fill:#f3e5f5,stroke:#9575cd,stroke-width:2px,color:#4a148c
     style Vault fill:#ffffff,stroke:#9575cd,color:#4a148c
     style AD fill:#ffffff,stroke:#9575cd,color:#4a148c
@@ -370,3 +260,5 @@ graph TD
     linkStyle default stroke-width:2px,stroke:#222222
   
 ```
+
+```mermaid
